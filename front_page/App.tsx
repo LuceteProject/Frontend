@@ -1,78 +1,178 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-import React, { useState } from 'react';
+/* http://rn.mobile.ant.design/components/checkbox/
+just copy & paste
+need to search more
+*/
 
+import React from 'react'
+import { ScrollView } from 'react-native'
 import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+  Button,
+  Checkbox,
+  Flex,
+  List,
+  WingBlank,
+} from '@ant-design/react-native'
+const AgreeItem = Checkbox.AgreeItem
+const CheckboxItem = Checkbox.CheckboxItem
 
-const { Header, Content, Footer, Sider } = Layout;
+export default class BasicCheckboxExample extends React.Component<any, any> {
+  constructor(props: any, context: any) {
+    super(props, context)
+    this.state = {
+      checked: true,
+      disabled: false,
 
-type MenuItem = Required<MenuProps>['items'][number];
+      checkBox1: true,
+      agreeItem1: true,
+      checkboxItem1: true,
+    }
+  }
 
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
+  onChange = (e: { target: { checked: boolean } }) => {
+    console.log(`checked = ${e.target.checked}`)
+  }
+
+  toggleChecked = () => {
+    this.setState({ checked: !this.state.checked })
+  }
+
+  toggleDisable = () => {
+    this.setState({ disabled: !this.state.disabled })
+  }
+  onChange2 = (e: { target: { checked: boolean } }) => {
+    console.log('checked = ', e.target.checked)
+    this.setState({
+      checked: e.target.checked,
+    })
+  }
+
+  render() {
+    const label = `${this.state.checked ? 'Checked' : 'Unchecked'}-${
+      this.state.disabled ? 'Disabled' : 'Enabled'
+    }`
+    return (
+      <ScrollView>
+        <List renderHeader="基本用法">
+          <List.Item
+            thumb={<Checkbox onChange={this.onChange}>Checkbox</Checkbox>}
+          />
+        </List>
+        <List renderHeader="不可用">
+          <List.Item thumb={<Checkbox defaultChecked={false} disabled />} />
+          <List.Item thumb={<Checkbox defaultChecked disabled />} />
+        </List>
+        <List
+          renderHeader="受控的Checkbox"
+          renderFooter={
+            <Flex>
+              <Flex.Item style={{ margin: 10 }}>
+                <Button
+                  type="primary"
+                  size="small"
+                  onPress={this.toggleChecked}>
+                  {!this.state.checked ? 'Check' : 'Uncheck'}
+                </Button>
+              </Flex.Item>
+              <Flex.Item style={{ margin: 10 }}>
+                <Button
+                  type="primary"
+                  size="small"
+                  onPress={this.toggleDisable}>
+                  {!this.state.disabled ? 'Disable' : 'Enable'}
+                </Button>
+              </Flex.Item>
+            </Flex>
+          }>
+          <List.Item
+            thumb={
+              <Checkbox
+                checked={this.state.checked}
+                disabled={this.state.disabled}
+                onChange={this.onChange2}>
+                {label}
+              </Checkbox>
+            }
+          />
+        </List>
+        <List renderHeader="AgreeItem">
+          <AgreeItem>
+            Agree agreement agreement agreement agreement agreement agreement
+            agreement
+          </AgreeItem>
+        </List>
+        <List renderHeader="CheckboxItem">
+          <CheckboxItem
+            checked={this.state.checkboxItem1}
+            onChange={(event) => {
+              this.setState({ checkboxItem1: event.target.checked })
+            }}>
+            Option 1
+          </CheckboxItem>
+          <CheckboxItem>Option 2</CheckboxItem>
+          <CheckboxItem disabled>Option 3</CheckboxItem>
+          <CheckboxItem disabled checked right>
+            More...
+          </CheckboxItem>
+        </List>
+        <List
+          renderHeader={
+            '全选\n在实现全选效果时，你可能会用到 indeterminate 属性。'
+          }>
+          <CheckboxGroupExample />
+        </List>
+      </ScrollView>
+    )
+  }
 }
 
-const items: MenuItem[] = [
-  getItem('Option 1', '1', <PieChartOutlined />),
-  getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('Tom', '3'),
-    getItem('Bill', '4'),
-    getItem('Alex', '5'),
-  ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  getItem('Files', '9', <FileOutlined />),
-];
+const plainOptions = ['Apple', 'Pear', 'Orange']
+const defaultCheckedList = ['Apple', 'Orange']
 
-const App: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
+const CheckboxGroupExample = () => {
+  const [checkedList, setCheckedList] = React.useState(
+    new Set(defaultCheckedList),
+  )
+  const [indeterminate, setIndeterminate] = React.useState(true)
+  const [checkAll, setCheckAll] = React.useState(false)
+
+  const onChange = (value: any, e: { target: { checked: boolean } }) => {
+    if (e.target.checked) {
+      checkedList.add(value)
+    } else {
+      checkedList.delete(value)
+    }
+
+    setCheckedList(new Set(checkedList))
+    setIndeterminate(
+      !!checkedList.size && checkedList.size < plainOptions.length,
+    )
+    setCheckAll(checkedList.size === plainOptions.length)
+  }
+
+  const onCheckAllChange = (e: { target: { checked: boolean } }) => {
+    setCheckedList(e.target.checked ? new Set(plainOptions) : new Set())
+    setIndeterminate(false)
+    setCheckAll(e.target.checked)
+  }
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-        <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} />
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
-      </Sider>
-      <Layout className="site-layout">
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
-          <div style={{ padding: 24, minHeight: 360, background: colorBgContainer }}>
-            Bill is a cat.
-          </div>
-        </Content>
-        <Footer style={{ textAlign: 'center' }}>Ant Design ©2023 Created by Ant UED</Footer>
-      </Layout>
-    </Layout>
-  );
-};
-
-export default App;
+    <>
+      <CheckboxItem
+        indeterminate={indeterminate}
+        onChange={onCheckAllChange}
+        checked={checkAll}>
+        Check all
+      </CheckboxItem>
+      <WingBlank>
+        {plainOptions.map((a) => (
+          <CheckboxItem
+            key={a}
+            onChange={onChange.bind(this, a)}
+            checked={checkedList.has(a)}>
+            {a}
+          </CheckboxItem>
+        ))}
+      </WingBlank>
+    </>
+  )
+}
