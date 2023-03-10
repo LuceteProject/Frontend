@@ -3,7 +3,12 @@ import { Alert, View } from 'react-native'
 import { Text } from 'react-native'
 import { DatePickerView, WhiteSpace } from '@ant-design/react-native'
 import { DatePicker, List, Provider, SearchBar } from '@ant-design/react-native'
+import { Calendar } from 'antd-mobile'
 
+const locale = {
+  prevText: '이전',
+  nextText: '다음',
+}
 const localeDate = {
   DatePickerLocale : {
     year:'년',
@@ -29,10 +34,6 @@ export default class SearchBarDemo extends React.Component<any, any> {
     value: undefined,
     value12hours: undefined,
   }
-
-  state3 = {
-    value: undefined,
-  }
   onChange = (value: any) => {
     this.setState({ value })
   }
@@ -47,7 +48,7 @@ export default class SearchBarDemo extends React.Component<any, any> {
     return (
       
       <View style={{ marginTop: 30 }}>
-        <Text>use12Hours</Text>
+        <Text style={{ margin: 16 }}>use12Hours</Text>
         <DatePickerView
           mode='date'
           locale={localeDate}
@@ -85,7 +86,6 @@ export default class SearchBarDemo extends React.Component<any, any> {
           </DatePicker>
         </List>
       </Provider>
-     
       </View>
       
     )
