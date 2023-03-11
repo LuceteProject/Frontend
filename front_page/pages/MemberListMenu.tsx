@@ -1,7 +1,7 @@
 // tslint:disable:no-empty
 import React, { useEffect, useState } from 'react'
 
-import { StyleSheet, Image, ScrollView, Text, View, FlatList, SafeAreaView, KeyboardAvoidingView} from 'react-native'
+import { StyleSheet, Image, ScrollView, Text, View, FlatList, SafeAreaView, KeyboardAvoidingView } from 'react-native'
 import { List, NoticeBar } from '@ant-design/react-native'
 
 /* 
@@ -11,41 +11,39 @@ List.Item List.Item.Brief 대신 사용
 const Item = List.Item
 const Brief = Item.Brief
 
-/* values from API 
-유저 정보에서 받아올 내용 : 기수/이름/팀/역할/상메/번호/메일 
-*/
-//const [items, setItems] = useState([]);
-
-/* 분리
-const itemHandler= () => {
-  let item_ = [...items];
-
-  setItems(item_);
-};
-
-*/
-
-/* For date fetch from server
-useEffect(() => {
-  const fetchContentData = async () => {
-    try {
-        
-    } catch (err) {
-        
-    }
-};
-
-fetchContentData();
-}, []);
-*/
-
 /* Screen */
-const MemberList = ()=> {
+const MemberList = () => {
+  /* values from API 
+  유저 정보에서 받아올 내용 : 기수/이름/팀/역할/상메/번호/메일 
+  */
+  //const [items, setItems] = useState([]);
 
-    return (
-      <>
-      <SafeAreaView 
-      style={styles.container}></SafeAreaView>
+  /* 분리
+  const itemHandler= () => {
+    let item_ = [...items];
+  
+    setItems(item_);
+  };
+  
+  */
+
+  /* For Data fetch from server
+  useEffect(() => {
+    const fetchContentData = async () => {
+      try {
+          
+      } catch (err) {
+          
+      }
+  };
+  
+  fetchContentData();
+  }, []);
+  */
+  return (
+    <>
+      <SafeAreaView
+        style={styles.container}></SafeAreaView>
       <Text> Here's header area</Text>
       <ScrollView
         style={styles.background}
@@ -60,10 +58,10 @@ const MemberList = ()=> {
             // thumb : image link, extra : 오른쪽에 sub로 들어가는 text, multipleLine : 여러줄 가능
             thumb="https://os.alipayobjects.com/rmsportal/mOoPurdIfmcuqtr.png"
             extra={
-            <View>
-              <Brief style={{ textAlign: 'right' }}>01012345678</Brief>
-              <Brief style={{ textAlign: 'right' }}>mail@gmail.com</Brief>
-            </View>}
+              <View>
+                <Brief style={{ textAlign: 'right' }}>01012345678</Brief>
+                <Brief style={{ textAlign: 'right' }}>mail@gmail.com</Brief>
+              </View>}
             // View Component 안에 <Brief> 커스텀 컴포넌트 사용해 추가내용 넣음
             multipleLine>
             기수 이름
@@ -102,26 +100,26 @@ const MemberList = ()=> {
           </Item>
 
         </List>
-        
+
       </ScrollView>
       <View
-      style={ {paddingBottom: 20}}>
+        style={{ paddingBottom: 20 }}>
       </View>
-      </>
-    )
+    </>
+  )
 }
 
 
 export default MemberList;
 
 const styles = StyleSheet.create({
-  background : {
-          flex: 1, 
-          backgroundColor: '#f5f5f9',
-        },
+  background: {
+    flex: 1,
+    backgroundColor: '#f5f5f9',
+  },
 
   container: {
     // for empty space in iOS
     height: 10
-        },
+  },
 });

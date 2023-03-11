@@ -1,20 +1,43 @@
 // tslint:disable:no-empty
-import React from 'react'
-import { StyleSheet, Image, ScrollView, Text, View, FlatList, SafeAreaView} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { StyleSheet, Image, ScrollView, Text, View, FlatList, SafeAreaView } from 'react-native'
 import { List, NoticeBar } from '@ant-design/react-native'
 
 const Item = List.Item
 const Brief = Item.Brief
 
-const BoardList = ()=> {
+const BoardList = () => {
 
+  /* 
+  Values from API 
   
-    return (
-      <>
-      <SafeAreaView>
-        
-      </SafeAreaView>
-      
+  */
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    console.log("screen update");
+  }, []);
+
+  /* For Data fetch from server
+  useEffect(() => {
+    const fetchContentData = async () => {
+      try {
+          
+      } catch (err) {
+          
+      }
+  };
+  
+  fetchContentData();
+  }, []);
+  */
+
+  return (
+    <>
+      <SafeAreaView
+        style={styles.container}></SafeAreaView>
+      <Text> Here's header area</Text>
+
       <ScrollView
         style={styles.background}
         // 이게 뭔지 나도 찾아봐야함
@@ -22,9 +45,7 @@ const BoardList = ()=> {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
 
-        <Text>Prototype</Text>
-
-        <List renderHeader={'게시판 포맷은?'}
+        <List renderHeader={'게시판 이름 여기'}
         >
           <Item
             extra={<Brief>댓글 수</Brief>}
@@ -64,26 +85,23 @@ const BoardList = ()=> {
             extra Image
           </Item>
         </List>
-        
+
       </ScrollView>
       <View
-      style={ {paddingBottom: 20}}>
+        style={{ paddingBottom: 20 }}>
       </View>
-      </>
-    )
+    </>
+  )
 }
 export default BoardList;
 
 const styles = StyleSheet.create({
-  background : {
-          flex: 1, 
-          backgroundColor: '#f5f5f9',
-        },
-
-  centeredView: {
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginTop: 22,
-        },
+  background: {
+    flex: 1,
+    backgroundColor: '#f5f5f9',
+  },
+  container: {
+    // for empty space in iOS
+    height: 5
+  },
 });
