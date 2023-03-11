@@ -2,14 +2,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, Platform, View, Text } from 'react-native';
 
-export default class App extends Component {
-  render() {
+const MainMenu = ()=> {
+  
     return (
       <View style={styles.container}>
         <Text>MainScreen</Text>
       </View>
     );
-  }
+  
 }
 
 const styles = StyleSheet.create({
@@ -19,3 +19,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+export default MainMenu;
