@@ -1,93 +1,47 @@
-import React from 'react'
-import { Alert, View } from 'react-native'
-import { Text } from 'react-native'
-import { DatePickerView, WhiteSpace } from '@ant-design/react-native'
-import { DatePicker, List, Provider, SearchBar } from '@ant-design/react-native'
+import {
+  Button,
+  Icon,
+  List,
+  Switch,
+  WhiteSpace,
+  WingBlank,
+} from '@ant-design/react-native'
+import React, { useEffect, useState } from 'react'
+import { ScrollView } from 'react-native'
 
-const localeDate = {
-  DatePickerLocale : {
-    year:'년',
-    month:'월',
-    day:'일',
-    hour:'시',
-    minute:'분',
-    am:'오전',
-    pm:'오후'
-  },
-  extra:'',
-  okText:'OK',
-  dismissText:'Cancel'
-}
 
-export default class SearchBarDemo extends React.Component<any, any> {
+const MenuHandler = () => {
   
-  state = {
-    value: '검색어를 입력하세요.',
-    
-  }
-  state2 = {
-    value: undefined,
-    value12hours: undefined,
-  }
+  const [disabled, setDisabled] = useState(true);
 
-  state3 = {
-    value: undefined,
-  }
-  onChange = (value: any) => {
-    this.setState({ value })
-  }
-  onValueChange = (...args: any[]) => {
-    console.log(args)
-  }
-  clear = () => {
-    this.setState({ value: '' })
-  }
+  useEffect( () => {
+    console.log("changed");
+  }, [disabled]);
 
-  render() {
-    return (
-      
-      <View style={{ marginTop: 30 }}>
-        <Text>use12Hours</Text>
-        <DatePickerView
-          mode='date'
-          locale={localeDate}
-          value={this.state2.value12hours}
-          onChange={(v) => this.setState({ value12hours: v })}
-      
-        />
-        
-      <WhiteSpace />
-        <SearchBar defaultValue="검색어를 입력하세요." placeholder="검색" />
+  return (
+    <ScrollView>
+      <List renderHeader="알림">
+        <List.Item extra={<Switch />}>공지사항</List.Item>
+        <List.Item extra={<Switch />}>일정</List.Item>
+        <List.Item extra={<Switch />}>쪽지</List.Item>
+      </List>
+      <List renderHeader="화면">
         <WhiteSpace />
-        <SearchBar
-          value={this.state.value}
-          placeholder="검색"
-          onSubmit={(value: any) => Alert.alert(value)}
-          onCancel={this.clear}
-          onChange={this.onChange}
-          showCancelButton
-          cancelText='취소'
-        />
-<WhiteSpace />
-<Provider>
-        <List>
-          <DatePicker
-            title="날짜 선택"
-            mode="date"
-            extra='날짜를 선택하세요.'
-            locale={localeDate}
-            defaultDate={new Date()}
-            minDate={new Date(2015, 7, 6)}
-            maxDate={new Date(2026, 11, 3)}
-            onChange={this.onChange}
-            format="YYYY-MM-DD">
-            <List.Item arrow="horizontal">Select Date</List.Item>
-          </DatePicker>
-        </List>
-      </Provider>
-     
-      </View>
-      
-    )
-  }
-}
+        <WingBlank>
+          <Button type="primary" onPress={()=> setDisabled(!disabled)}>
+            글씨 크기
+          </Button>
+        </WingBlank>
+      </List>
+      <WhiteSpace />
+      <List>
+        <List.Item extra={<Switch checked color="black" />}>
+          다크모드
+        </List.Item>
+      </List>
+    </ScrollView>
+  )
+};
+
+
+export default MenuHandler;
