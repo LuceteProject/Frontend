@@ -8,23 +8,29 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { NoticeBar } from '@ant-design/react-native';
 
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
+/* 
+Create a function
+1. function name() : extendClass? {}
+2. name = () => {}
+*/
 
-function getItem(
+const getItem = (
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
+  ) => {
+    return {
+      key,
+      icon,
+      children,
+      label,
+    } as MenuItem;
 }
 
 const items: MenuItem[] = [
@@ -39,7 +45,7 @@ const items: MenuItem[] = [
   getItem('Files', '9', <FileOutlined />),
 ];
 
-const App: React.FC = () => {
+const App= () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -53,6 +59,16 @@ const App: React.FC = () => {
       </Sider>
       <Layout className="site-layout">
         <Header style={{ padding: 0, background: colorBgContainer }} />
+        <NoticeBar
+          /** 중요 공지사항 가장 위쪽에 올리는 용도로 사용
+           * mode='link' 다른 게시글에 연결 가능
+           * marqueeProps 속성 설정
+           *
+           */
+          mode='link'
+          marqueeProps={{ loop: true, style: { fontSize: 15, color: 'red' } }}>
+          Notice: 여기에 공지사항을 넣으면 될것 같은데 달력 쪽에?
+        </NoticeBar>
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
             <Breadcrumb.Item>User</Breadcrumb.Item>
