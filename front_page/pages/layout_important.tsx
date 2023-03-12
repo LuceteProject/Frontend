@@ -7,11 +7,14 @@ import {StyleSheet, View} from 'react-native';
 /* functional execution */
 const App = () => {
 	return 
-        <View>{
+        <>
+        <View style={styles.centeredView}>{
         
-        /*화면 내용 여기에 */
+                /*화면 내용 여기에 */
+        
 
         }</View>
+        </>
 }
 
 
