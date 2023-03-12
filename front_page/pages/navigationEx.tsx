@@ -1,4 +1,4 @@
-// Stack example -> 우리는 Drawer 사용하니까 사실 필요없지만 일단 냅둠
+// Stack example -> 우리는 Drawer 사용하니까 사실 필요없지만 일단 냅둠 
 
 import React, { useEffect } from 'react';
 import { View, Button, Text, TextInput, Alert } from 'react-native';

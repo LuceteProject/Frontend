@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { ScrollView } from 'react-native'
 
-const SettingScreen = () => {
+const PersonalSetting = () => {
   
   const [disabled, setDisabled] = useState(true);
 
@@ -43,7 +43,7 @@ const SettingScreen = () => {
 };
 
 
-export default SettingScreen;
+export default PersonalSetting;
 
 /*
 
