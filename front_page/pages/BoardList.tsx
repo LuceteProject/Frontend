@@ -1,6 +1,6 @@
 // tslint:disable:no-empty
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, ScrollView, Text, View, FlatList, SafeAreaView } from 'react-native'
+import { StyleSheet, Image, ScrollView, Text, View, SectionList, SafeAreaView, TouchableOpacity, Alert } from 'react-native'
 import { List, NoticeBar } from '@ant-design/react-native'
 
 const Item = List.Item
@@ -13,6 +13,30 @@ const BoardList = () => {
   
   */
   const [list, setList] = useState([]);
+
+  //sample data
+  const DATA = [
+    {
+      title: 'Main dishes',
+      data: ['Pizza', 'Burger', 'Risotto'],
+    },
+    {
+      title: 'Sides',
+      data: ['French Fries', 'Onion Rings', 'Fried Shrimps'],
+    },
+    {
+      title: 'Drinks',
+      data: ['Water', 'Coke', 'Beer'],
+    },
+    {
+      title: 'Desserts',
+      data: ['Cheese Cake', 'Ice Cream'],
+    },
+  ];
+
+  const clickHandler = () => {
+    ;
+  }
 
   useEffect(() => {
     console.log("screen update");
@@ -37,7 +61,7 @@ const BoardList = () => {
       <SafeAreaView
         style={styles.container}></SafeAreaView>
       <Text> Here's header area</Text>
-
+      
       <ScrollView
         style={styles.background}
         // 이게 뭔지 나도 찾아봐야함
@@ -45,10 +69,13 @@ const BoardList = () => {
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
 
-        <List renderHeader={'게시판 이름 여기'}
-        >
+        <List renderHeader={'게시판 이름 여기'}>
           <Item
             extra={<Brief>댓글 수</Brief>}
+            onPress={()=> {
+              // add event handler
+              Alert.alert("pressed");
+            }}
             multipleLine>
             게시글 제목 /*title*/
             <Brief>작성 시간</Brief>
@@ -103,5 +130,8 @@ const styles = StyleSheet.create({
   container: {
     // for empty space in iOS
     height: 5
+  },
+  title: {
+    fontSize: 24,
   },
 });
