@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
-function  HomeScreen({ navigation, route }) {
+const  HomeScreen = ({ navigation, route } : any) => {
   useEffect(() => {
     if (route.params?.post) {
       // Post updated, do something with `route.params.post`
@@ -44,7 +44,7 @@ function  HomeScreen({ navigation, route }) {
     </View>
   );
 }
-function CreatePostScreen({ navigation, route }) {
+const CreatePostScreen = ({ navigation, route } : any) => {
   const [postText, setPostText] = React.useState('');
 
   return (
@@ -71,7 +71,7 @@ function CreatePostScreen({ navigation, route }) {
   );
 
 }
-function DetailsScreen({ route, navigation }) {
+const DetailsScreen = ({ navigation, route } : any) => {
   /* 2. Get the param */
   const { itemId, otherParam } = route.params;
   return (
@@ -109,7 +109,7 @@ const App = () =>  {
         },
         headerRight: () => (
           <Button
-            onPress={() => alert('This is a button!')}
+            onPress={() => Alert.alert('This is a button!')}
             title="버튼"
             color="#000"
           />

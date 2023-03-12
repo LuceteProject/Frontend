@@ -1,7 +1,6 @@
 // In App.js in a new project
 
 import React, { useEffect } from 'react';
-import { Linking } from 'react-native';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import {
@@ -9,39 +8,42 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
   DrawerItem,
+  DrawerToggleButton 
 } from '@react-navigation/drawer';
 
 import MemberList from './pages/MemberListMenu';
 import BoardList from './pages/BoardList';
 import PersonalSetting from './pages/PersonalSetting';
 
-
 const Drawer = createDrawerNavigator();
 
-function CustomDrawerContent(props) {
+const CustomDrawerContent = (props : any) => {
   //이거 props API에서 받아온 값 넣으면 되는지 확인
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
       <DrawerItem
         label="Help"
-        onPress={() => Linking.openURL('https://www.naver.com')}
+        onPress={() => console.log("help pressed")}
       />
     </DrawerContentScrollView>
   );
 }
 
 
-function DrawerGenerator() {
+const DrawerGenerator = () =>{
   return (
     <>
 
       <Drawer.Navigator
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         defaultStatus='closed'
+
         screenOptions={{
           drawerType: 'back',
           drawerPosition: 'right',
+          headerRight: () => <DrawerToggleButton />,
+          headerLeft: () => false,
           drawerStyle: {
             /* drawer 열었을 때 배경 스타일
             참조 - https://reactnavigation.org/docs/drawer-navigator#drawercontentstyle
@@ -51,7 +53,6 @@ function DrawerGenerator() {
           },
           drawerActiveTintColor: 'white'
         }}>
-
         <Drawer.Screen name="부원목록" component={MemberList} />
         <Drawer.Screen name="캘린더" component={MemberList} />
         <Drawer.Screen name="투두리스트" component={MemberList} />
