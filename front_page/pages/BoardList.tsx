@@ -1,6 +1,6 @@
 // tslint:disable:no-empty
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, ScrollView, Text, View, SectionList, SafeAreaView, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Image, ScrollView, Text, View, Alert } from 'react-native'
 import { List, NoticeBar } from '@ant-design/react-native'
 
 const Item = List.Item
@@ -58,21 +58,27 @@ const BoardList = () => {
 
   return (
     <>
-      <SafeAreaView
-        style={styles.container}></SafeAreaView>
-      <Text> Here's header area</Text>
-      
       <ScrollView
         style={styles.background}
         // 이게 뭔지 나도 찾아봐야함
         automaticallyAdjustContentInsets={false}
         showsHorizontalScrollIndicator={false}
         showsVerticalScrollIndicator={false}>
-
+        <NoticeBar
+          /** 중요 공지사항 가장 위쪽에 올리는 용도로 사용
+           * mode='link' 다른 게시글에 연결 가능
+           * marqueeProps 속성 설정
+           * 
+           * from 'ant-design'
+           */
+          mode='link'
+          marqueeProps={{ loop: true, style: { fontSize: 15, color: 'red' } }}>
+          Notice: 여기에 공지사항을 넣으면 될것 같은데 달력 쪽에?
+        </NoticeBar>
         <List renderHeader={'게시판 이름 여기'}>
           <Item
             extra={<Brief>댓글 수</Brief>}
-            onPress={()=> {
+            onPress={() => {
               // add event handler
               Alert.alert("pressed");
             }}
