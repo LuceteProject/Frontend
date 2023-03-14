@@ -16,7 +16,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 
 import MemberList from './pages/MemberList';
-import BoardList from './pages/BoardList';
+import Board from './pages/Board';
 import PersonalSetting from './pages/PersonalSetting';
 import TodoList from './pages/TodoList';
 
@@ -95,6 +95,7 @@ const Tabs = () => {
           </>
 
         ),
+        headerShown: false,
         tabBarActiveTintColor: '#900',
 
         tabBarIcon: ({ focused, color, size }) => {
@@ -122,14 +123,14 @@ const Tabs = () => {
           //@ts-ignore
           return <Icon name={iconName} size={size} color={color} />;
         },
-
+        // 각 스크린 안에 Stack navigator 추가하기
 
       })}>
-      <Tab.Screen name="Board" component={BoardList} />
+      <Tab.Screen name="Board" component={Board} />
       <Tab.Screen name="Todo" component={TodoList} />
       <Tab.Screen name="Calender" component={MemberList}/>
       <Tab.Screen name="Drive" component={TodoList} />
-      <Tab.Screen name="Profile" component={BoardList} />
+      <Tab.Screen name="Profile" component={Board} />
 
 
     </Tab.Navigator>
