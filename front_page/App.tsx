@@ -1,7 +1,7 @@
 // In App.js in a new project
 
 import React, { useEffect } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Button, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -20,6 +20,10 @@ import BoardList from './pages/BoardList';
 import PersonalSetting from './pages/PersonalSetting';
 import TodoList from './pages/TodoList';
 
+//import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+// Navigator
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -37,17 +41,17 @@ const CustomDrawerContent = (props: any) => {
           borderBottomColor: 'black',
           borderBottomWidth: StyleSheet.hairlineWidth,
         }}>
-<View
-        style={{
-          //flexDirection: "row", //content 정렬
-          padding: 30,
-          backgroundColor: "white",
-          alignItems: "center",
+        <View
+          style={{
+            //flexDirection: "row", //content 정렬
+            padding: 30,
+            backgroundColor: "white",
+            alignItems: "center",
 
-          borderBottomColor: 'black',
-          borderBottomWidth: StyleSheet.hairlineWidth,
-        }}>
-</View>
+            borderBottomColor: 'black',
+            borderBottomWidth: StyleSheet.hairlineWidth,
+          }}>
+        </View>
         <Text
           /* 받아오는 값은 ${user_num} 이런식으로? */
           style={{ color: '#000', fontSize: 14 }}>
@@ -69,13 +73,65 @@ const CustomDrawerContent = (props: any) => {
     </DrawerContentScrollView>
   );
 }
-const Tabs = ()=> {
+
+// 현재 사용하는 navigator
+const Tabs = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="부원목록" component={MemberList} />
-      <Tab.Screen name="캘린더" component={BoardList} />
-      <Tab.Screen name="투두리스트" component={TodoList} />
-      <Tab.Screen name="드라이브" component={BoardList} />
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerRight: () => (
+          <>
+            <Icon name="notifications" size={30} color="#000"
+              style={{
+                // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
+                width: 40,
+                height: 40,
+                borderRadius: 100,
+                backgroundColor: '#fff'
+              }
+
+              } />
+
+          </>
+
+        ),
+        tabBarActiveTintColor: '#900',
+
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+          // icon URL : https://ionic.io/ionicons/
+          if (route.name === 'Calender') {
+            iconName = focused
+              ? 'calendar'
+              : 'calendar-outline';
+          }
+          else if (route.name === 'Board') {
+            iconName = focused ? 'list' : 'list-outline';
+          }
+          else if (route.name === 'Todo') {
+            iconName = focused ? 'checkmark-circle' : 'checkmark-circle-outline';
+          }
+          else if (route.name === 'Drive') {
+            iconName = focused ? 'cloud' : 'cloud-outline';
+          }
+          else if (route.name === 'Profile') {
+            iconName = focused ? 'person' : 'person-outline';
+          }
+
+          // You can return any component that you like here!
+          //@ts-ignore
+          return <Icon name={iconName} size={size} color={color} />;
+        },
+
+
+      })}>
+      <Tab.Screen name="Board" component={BoardList} />
+      <Tab.Screen name="Todo" component={TodoList} />
+      <Tab.Screen name="Calender" component={MemberList}/>
+      <Tab.Screen name="Drive" component={TodoList} />
+      <Tab.Screen name="Profile" component={BoardList} />
+
+
     </Tab.Navigator>
   );
 }
@@ -83,7 +139,6 @@ const Tabs = ()=> {
 const DrawerGenerator = () => {
   return (
     <>
-
       <Drawer.Navigator
         drawerContent={(props) => <CustomDrawerContent {...props} />}
         defaultStatus='closed'
@@ -100,7 +155,9 @@ const DrawerGenerator = () => {
             backgroundColor: '#c6cbef',
             width: 240,
           },
-          drawerActiveTintColor: 'white'
+          drawerActiveTintColor: 'white',
+
+
         }}>
         <Drawer.Screen name="부원목록" component={MemberList} />
         <Drawer.Screen name="캘린더" component={MemberList} />
@@ -124,6 +181,7 @@ const DrawerGenerator = () => {
   );
 }
 
+/* main part */
 const App = () => {
   return (
     <NavigationContainer>

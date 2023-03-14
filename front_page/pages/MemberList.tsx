@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 
 import { StyleSheet, Image, ScrollView, Text, View, FlatList, SafeAreaView, KeyboardAvoidingView } from 'react-native'
-import { List, NoticeBar } from '@ant-design/react-native'
+import { List } from '@ant-design/react-native'
 
 /* 
 List 항목을 좀 더 깔끔하게 표현하기 위해 만든 컴포넌트
@@ -42,9 +42,6 @@ const MemberList = () => {
   */
   return (
     <>
-      <SafeAreaView
-        style={styles.container}></SafeAreaView>
-      <Text> Here's header area</Text>
       <ScrollView
         style={styles.background}
         // Todo : 아래 내용은 나도 찾아봐야함

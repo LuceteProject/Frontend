@@ -72,8 +72,8 @@ const BoardList = () => {
            * from 'ant-design'
            */
           mode='link'
-          marqueeProps={{ loop: true, style: { fontSize: 15, color: 'red' } }}>
-          Notice: 여기에 공지사항을 넣으면 될것 같은데 달력 쪽에?
+          marqueeProps={{ loop: true, style: { fontSize: 15, color: 'black' } }}>
+          여러분 공지 좀 읽으세요~~
         </NoticeBar>
         <List renderHeader={'게시판 이름 여기'}>
           <Item
@@ -84,7 +84,7 @@ const BoardList = () => {
             }}
             multipleLine>
             게시글 제목 /*title*/
-            <Brief>작성 시간</Brief>
+            <Brief>작성자 / 작성 시간</Brief>
           </Item>
 
           <Item
