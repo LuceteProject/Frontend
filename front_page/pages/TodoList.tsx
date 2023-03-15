@@ -1,6 +1,6 @@
 // tslint:disable:no-empty
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, ScrollView, Text, View, SafeAreaView, KeyboardAvoidingView, Alert, Keyboard, Platform, TextInput } from 'react-native'
+import { StyleSheet, ScrollView, Text, View, KeyboardAvoidingView, Alert, Keyboard, Platform, TextInput } from 'react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -25,12 +25,13 @@ const TodoList = () => {
     setItems(item_);
   };
     
-  */
   const handleAddTask = () => {
     Keyboard.dismiss();
     setTaskItems([...taskItems, task])
     setTask(null);
   }
+  */
+
 
   const completeTask = ({ index }: any) => {
     let itemsCopy = [...taskItems];
@@ -95,8 +96,8 @@ const TodoList = () => {
           //onChangeText={text => setTask(text)}
           />
           <TouchableOpacity onPress={() =>
-            handleAddTask()
-            //console.log('add task')
+            //handleAddTask()
+            console.log('add task')
           }>
             <View style={styles.addWrapper}>
               <Text style={styles.addText}>+</Text>
@@ -141,8 +142,7 @@ const TodoList = () => {
 
       </Stack.Navigator>
     </>
-
-  )
+  );
 }
 
 

@@ -75,7 +75,7 @@ const Board = () => {
   */
 
   // 게시판
-  const BoardList = ({ navigation }: any) => {
+  const Main = ({ navigation }: any) => {
     return (
       <>
         <ScrollView
@@ -192,18 +192,22 @@ const Board = () => {
         screenOptions={{
           headerRight: () => (
             <>
+            <TouchableOpacity
+              // Notification icon - components 분리할 수 있으면 뺴기
+              onPress={() => {
+                // 오 되나?
+                Alert.alert("pressed!");
+              }}>
               <Icon name="notifications" size={30} color="#000"
                 style={{
                   // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
                   width: 40,
                   height: 40,
                   borderRadius: 100,
-                  backgroundColor: '#fff'
-                }
-
-                } />
-
-            </>
+                }}
+              />
+            </TouchableOpacity>
+          </>
 
           )
           // only in iOS - headerBackTitleVisible='false'
@@ -211,7 +215,7 @@ const Board = () => {
       >
         <Stack.Screen
           name="게시판"
-          component={BoardList}
+          component={Main}
         />
         <Stack.Screen
           name="Write"
@@ -233,7 +237,7 @@ const Board = () => {
       </Stack.Navigator>
 
     </>
-  )
+  );
 }
 export default Board;
 

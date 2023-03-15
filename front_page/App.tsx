@@ -27,52 +27,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
-const CustomDrawerContent = (props: any) => {
-  //이거 props API에서 받아온 값 넣으면 되는지 확인
-  return (
-    <DrawerContentScrollView {...props}>
-      <View
-        style={{
-          //flexDirection: "row", //content 정렬
-          padding: 30,
-          backgroundColor: "white",
-          alignItems: "center",
 
-          borderBottomColor: 'black',
-          borderBottomWidth: StyleSheet.hairlineWidth,
-        }}>
-        <View
-          style={{
-            //flexDirection: "row", //content 정렬
-            padding: 30,
-            backgroundColor: "white",
-            alignItems: "center",
-
-            borderBottomColor: 'black',
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          }}>
-        </View>
-        <Text
-          /* 받아오는 값은 ${user_num} 이런식으로? */
-          style={{ color: '#000', fontSize: 14 }}>
-          User Num </Text>
-        <Text
-          style={{ color: '#000', fontSize: 14 }}>
-          User name</Text>
-        <Text
-          style={{ color: '#000', fontSize: 12 }}>
-          Message</Text>
-      </View>
-      <DrawerItemList {...props} />
-
-      <View>
-        <TouchableOpacity>
-          <Text>Logout</Text>
-        </TouchableOpacity>
-      </View>
-    </DrawerContentScrollView>
-  );
-}
 
 // 현재 사용하는 navigator
 const Tabs = () => {
@@ -126,9 +81,10 @@ const Tabs = () => {
         // 각 스크린 안에 Stack navigator 추가하기
 
       })}>
+        {/* 달력 우선 부원목록 연결해둠 */}
       <Tab.Screen name="Board" component={Board} />
       <Tab.Screen name="Todo" component={TodoList} />
-      <Tab.Screen name="Calender" component={MemberList}/>
+      <Tab.Screen name="Calender" component={MemberList}/> 
       <Tab.Screen name="Drive" component={TodoList} />
       <Tab.Screen name="Profile" component={Board} />
 
@@ -136,7 +92,52 @@ const Tabs = () => {
     </Tab.Navigator>
   );
 }
+const CustomDrawerContent = (props: any) => {
+  //이거 props API에서 받아온 값 넣으면 되는지 확인
+  return (
+    <DrawerContentScrollView {...props}>
+      <View
+        style={{
+          //flexDirection: "row", //content 정렬
+          padding: 30,
+          backgroundColor: "white",
+          alignItems: "center",
 
+          borderBottomColor: 'black',
+          borderBottomWidth: StyleSheet.hairlineWidth,
+        }}>
+        <View
+          style={{
+            //flexDirection: "row", //content 정렬
+            padding: 30,
+            backgroundColor: "white",
+            alignItems: "center",
+
+            borderBottomColor: 'black',
+            borderBottomWidth: StyleSheet.hairlineWidth,
+          }}>
+        </View>
+        <Text
+          /* 받아오는 값은 ${user_num} 이런식으로? */
+          style={{ color: '#000', fontSize: 14 }}>
+          User Num </Text>
+        <Text
+          style={{ color: '#000', fontSize: 14 }}>
+          User name</Text>
+        <Text
+          style={{ color: '#000', fontSize: 12 }}>
+          Message</Text>
+      </View>
+      <DrawerItemList {...props} />
+
+      <View>
+        <TouchableOpacity>
+          <Text>Logout</Text>
+        </TouchableOpacity>
+      </View>
+    </DrawerContentScrollView>
+  );
+}
 const DrawerGenerator = () => {
   return (
     <>
@@ -164,7 +165,7 @@ const DrawerGenerator = () => {
         <Drawer.Screen name="캘린더" component={MemberList} />
         <Drawer.Screen name="투두리스트" component={MemberList} />
         <Drawer.Screen name="드라이브" component={MemberList} />
-        <Drawer.Screen name="게시판" component={BoardList} />
+        <Drawer.Screen name="게시판" component={Board} />
         <Drawer.Screen name="출석체크" component={MemberList} />
         <Drawer.Screen name="환경설정" component={PersonalSetting} />
         <Drawer.Group

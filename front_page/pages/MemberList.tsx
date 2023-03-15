@@ -1,15 +1,19 @@
 // tslint:disable:no-empty
 import React, { useEffect, useState } from 'react'
 
-import { StyleSheet, Image, ScrollView, Text, View, FlatList, SafeAreaView, KeyboardAvoidingView } from 'react-native'
+import { StyleSheet, Image, ScrollView, Text, View, FlatList, SafeAreaView, KeyboardAvoidingView, TouchableOpacity, Alert } from 'react-native'
 import { List } from '@ant-design/react-native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
+import Icon from 'react-native-vector-icons/Ionicons';
 /* 
 List 항목을 좀 더 깔끔하게 표현하기 위해 만든 컴포넌트
 List.Item List.Item.Brief 대신 사용 
 */
 const Item = List.Item
 const Brief = Item.Brief
+const Stack = createNativeStackNavigator();
+
 
 /* Screen */
 const MemberList = () => {
@@ -40,8 +44,10 @@ const MemberList = () => {
   fetchContentData();
   }, []);
   */
-  return (
-    <>
+
+  const Main = () => {
+    return (
+<>
       <ScrollView
         style={styles.background}
         // Todo : 아래 내용은 나도 찾아봐야함
@@ -103,7 +109,42 @@ const MemberList = () => {
         style={{ paddingBottom: 20 }}>
       </View>
     </>
-  )
+    );
+  }
+  return (
+    <>
+      <Stack.Navigator
+        screenOptions={{
+          headerRight: () => (
+            <>
+              <TouchableOpacity
+                // Notification icon - components 분리할 수 있으면 뺴기
+                onPress={() => {
+                  // 왜 이건 눌리지
+                  Alert.alert("pressed!");
+                }}>
+                <Icon name="notifications" size={30} color="#000"
+                  style={{
+                    // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
+                    width: 40,
+                    height: 40,
+                    borderRadius: 100,
+                  }}
+                />
+              </TouchableOpacity>
+            </>
+          )
+          // only in iOS - headerBackTitleVisible='false'
+        }}
+      >
+        <Stack.Screen
+          name="Member List"
+          component={Main}
+        />
+
+      </Stack.Navigator>
+    </>
+  );
 }
 
 
