@@ -1,14 +1,11 @@
 // tslint:disable:no-empty
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, ScrollView, Text, View, Alert, Button } from 'react-native'
-import { List, NoticeBar } from '@ant-design/react-native'
+import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity } from 'react-native'
+import { NoticeBar } from '@ant-design/react-native'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Option } from 'antd/es/mentions';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const Item = List.Item
-const Brief = Item.Brief
 
 const Stack = createNativeStackNavigator();
 
@@ -18,32 +15,51 @@ const Board = () => {
   Values from API 
   
   */
-  const [list, setList] = useState([]);
 
-  //sample data
-  const DATA = [
-    {
-      title: 'Main dishes',
-      data: ['Pizza', 'Burger', 'Risotto'],
-    },
-    {
-      title: 'Sides',
-      data: ['French Fries', 'Onion Rings', 'Fried Shrimps'],
-    },
-    {
-      title: 'Drinks',
-      data: ['Water', 'Coke', 'Beer'],
-    },
-    {
-      title: 'Desserts',
-      data: ['Cheese Cake', 'Ice Cream'],
-    },
-  ];
+  // floating button press 구분하기
+  const floatingBtnClick = ({ navigation }: any) => {
+    Alert.alert("pressed!");
+    //이걸로 연결하면 navigate 에러남 왜지..
+    navigation.navigate('Write');
 
+  }
   const clickHandler = () => {
-    ;
+    Alert.alert("pressed!");
   }
 
+  const BoardItem = () => {
+    return (
+      // 각 게시글 항목
+      <>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'stretch',
+            justifyContent: 'space-between',
+            paddingBottom: 10,
+            paddingTop: 10
+          }}>
+          <View>
+            <Text> 게시글 제목 </Text>
+            <Text> 작성자 / 작성 시간 </Text>
+          </View>
+          <View>
+            <Text
+              style={{
+                padding: 10
+              }}>댓글 수</Text>
+          </View>
+        </View>
+        <View
+          // 구분선
+          style={{
+            borderBottomColor: 'gray',
+            borderBottomWidth: StyleSheet.hairlineWidth,
+          }}
+        />
+      </>
+    )
+  }
   /* For Data fetch from server
   useEffect(() => {
     const fetchContentData = async () => {
@@ -79,49 +95,41 @@ const Board = () => {
             marqueeProps={{ loop: true, style: { fontSize: 15, color: 'black' } }}>
             여러분 공지 좀 읽으세요~~
           </NoticeBar>
-          <List renderHeader={'게시판 이름 여기'}>
-            <Item
-              extra={<Brief>댓글 수</Brief>}
-              onPress={() => {
-                // add event handler
-                Alert.alert("pressed");
-              }}
-              multipleLine>
-              게시글 제목 /*title*/
-              <Brief>작성자 / 작성 시간</Brief>
-            </Item>
+          <View
+            style={
+              {
+                margin: 10,
+                flexDirection: 'row', //정렬 방향
+                justifyContent: 'space-around'
+              }
+            }>
+            <TouchableOpacity onPress={clickHandler}>
+              <Text>자유게시판</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={clickHandler}> 
+            <Text>익명게시판</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={clickHandler}> 
+            <Text style={{ color: 'red' }}>임원게시판</Text>
+            </TouchableOpacity>
+          </View>
 
-            <Item
-              extra={<View>
-                ㄴ3
-                <Brief style={{ textAlign: 'right' }}>2023.03.10 14:22</Brief>
-              </View>}
-              multipleLine
-              align="bottom">
-              게시글 제목 /*title*/
-            </Item>
-          </List>
+          <View
+            // 구분선
+            style={{
+              borderBottomColor: 'black',
+              borderBottomWidth: StyleSheet.hairlineWidth,
+            }}
+          />
+          <BoardItem />
+          <BoardItem />
 
-          <List renderHeader={'썸네일 가져오기'}>
+          <View
+            style={{
+              margin: 10
+            }}>
+          </View>
 
-            <Item thumb="https://os.alipayobjects.com/rmsportal/mOoPurdIfmcuqtr.png">
-              thumb
-            </Item>
-            <Item
-              thumb="https://os.alipayobjects.com/rmsportal/mOoPurdIfmcuqtr.png"
-              arrow="horizontal">
-              thumb
-            </Item>
-            <Item
-              extra={<Image
-                source={{
-                  uri: 'https://os.alipayobjects.com/rmsportal/mOoPurdIfmcuqtr.png',
-                }}
-                style={{ width: 29, height: 29 }} />}
-              arrow="horizontal">
-              extra Image
-            </Item>
-          </List>
           <Button
             title="Go to Write"
             onPress={() => {
@@ -137,10 +145,21 @@ const Board = () => {
             }}
           />
         </ScrollView>
-        <View
-          style={{ paddingBottom: 20 }}>
-          <Text>Board list in here.</Text>
-        </View></>
+
+        <TouchableOpacity
+        // 글쓰기 버튼
+          activeOpacity={0.7}
+          onPress={() => {
+            /* 1. Navigate to the Details route with params */
+            Alert.alert("pressed!");
+            navigation.navigate('Write');
+          }}
+          style={styles.touchableOpacityStyle}>
+          <Icon name="pencil" size={40} color="#000"
+            style={styles.floatingButtonStyle}
+          />
+        </TouchableOpacity>
+      </>
 
     );
   }
@@ -151,6 +170,7 @@ const Board = () => {
       <View>
         <Text>Write a new post.</Text>
         <Button title="Go back" onPress={() => navigation.goBack()} />
+
       </View>
     );
   }
@@ -190,7 +210,7 @@ const Board = () => {
         }}
       >
         <Stack.Screen
-          name="List"
+          name="게시판"
           component={BoardList}
         />
         <Stack.Screen
@@ -228,5 +248,22 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+  },
+  /* 밑에 두개 floating button style
+  이거 왜 가운데에 안오냐 ....? ㅁㄹ...*/
+  touchableOpacityStyle: {
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    right: 30,
+    bottom: 30,
+  },
+  floatingButtonStyle: {
+    borderRadius: 50,
+    width: 50,
+    height: 50,
+    backgroundColor: '#fff'
   },
 });
