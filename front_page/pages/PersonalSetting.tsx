@@ -3,7 +3,7 @@ import {
   Icon,
   List,
   Switch,
-  WhiteSpace,
+  WhiteSpace, //이거 항목 따로 설정해서 만들수있을듯
   WingBlank,
 } from '@ant-design/react-native'
 import React, { useEffect, useState } from 'react'

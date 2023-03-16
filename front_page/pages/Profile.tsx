@@ -1,63 +1,120 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 
-/* 사용할 컴포넌트 여기에서 import */
-// Ex: import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+const Stack = createNativeStackNavigator();
 
 /* functional execution */
 const Profile = () => {
     // Profile Information update
-    const PItem = () => {
+    const ProfileScreen = () => {
         return (
             <>
                 <View
                     style={{
                         flexDirection: "row", //content 정렬
-                        padding: 30,
+                        padding: 10,
                         backgroundColor: "white",
                         alignItems: "center",
 
                         borderBottomColor: 'black',
                         borderBottomWidth: StyleSheet.hairlineWidth,
                     }}>
-                    <View
-                        style={{
-                            //flexDirection: "row", //content 정렬
-                            padding: 30,
-                            backgroundColor: "white",
-                            alignItems: "center",
-
-                            borderBottomColor: 'black',
-                            borderBottomWidth: StyleSheet.hairlineWidth,
-                        }}>
-                    </View>
+                    <Image
+                    //for test, use logo imgs
+                    source={require('../img/logo.jpg')}
+                    style={{
+                       //{size}
+                        width: 80,
+                        height: 80,
+                        borderRadius: 50,
+                        margin: 5
+                    }}
+                    />
+                    <View>
                     <Text
                         /* 받아오는 값은 ${user_num} 이런식으로? */
-                        style={{ color: '#000', fontSize: 14 }}>
-                        User Num </Text>
+                        style={{ 
+                            color: '#000', 
+                            fontSize: 16,
+                            }}>
+                        기수</Text>
                     <Text
-                        style={{ color: '#000', fontSize: 14 }}>
-                        User name</Text>
+                        style={{ color: '#000', fontSize: 16 }}>
+                        어떤 팀 이땡땡</Text>
                     <Text
-                        style={{ color: '#000', fontSize: 12 }}>
+                        style={{ 
+                            color: '#000', 
+                            fontSize: 14 ,
+                            paddingTop: 10
+                            }}>
                         Message</Text>
+                    </View>
+                    
                 </View>
+                <View
+                        style={{
+                            borderBottomColor: 'black',
+                            borderBottomWidth: StyleSheet.hairlineWidth,
+                        }} />
             </>
         );
     }
 
-    const List = (props: any) => {
+    const ListScreen = (props: any) => {
         return (
             <>
-            
+
             </>
         );
     }
 
+    const Main = ({ navigation }: any) => {
+        return (
+            <>
+                <ProfileScreen />
+                {/*설정 목록 아래에 */}
+            </>);
+    }
 
     return (
         <>
-            <PItem />
+<Stack.Navigator
+        screenOptions={{
+          /* 없어도 되지 않을까?
+          headerRight: () => (
+            <>
+              <TouchableOpacity
+                // Notification icon - components 분리할 수 있으면 뺴기
+                onPress={() => {
+                  Alert.alert("pressed!");
+                }}>
+                <Icon name="notifications" size={30} color="#000"
+                  style={{
+                    // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
+                    width: 40,
+                    height: 40,
+                    borderRadius: 100,
+                  }}
+                />
+              </TouchableOpacity>
+            </>
+
+          )
+          */
+          //headerShown: false
+          // only in iOS - headerBackTitleVisible='false'
+        }}
+      >
+        <Stack.Screen
+          name="Profile"
+          component={Main}
+        />
+
+
+      </Stack.Navigator>
         </>
     )
 }

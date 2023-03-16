@@ -13,16 +13,29 @@ const Board = () => {
 
   /* 
   Values from API 
-  
   */
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(10);
+  
+  /* For Data fetch from server
+    useEffect(() => {
+      const fetchContentData = async () => {
+        try {
+            setLoading(true);
+            const response = await axios.get();
+            setPosts(response.data);
+            setLoading(false);
+        } catch (err) {
+            
+        }
+    };
+    
+    fetchContentData();
+    }, []);
+    */
 
-  // floating button press 구분하기
-  const floatingBtnClick = ({ navigation }: any) => {
-    Alert.alert("pressed!");
-    //이걸로 연결하면 navigate 에러남 왜지..
-    navigation.navigate('Write');
-
-  }
   const clickHandler = () => {
     Alert.alert("pressed!");
   }
@@ -60,19 +73,6 @@ const Board = () => {
       </>
     )
   }
-  /* For Data fetch from server
-  useEffect(() => {
-    const fetchContentData = async () => {
-      try {
-          
-      } catch (err) {
-          
-      }
-  };
-  
-  fetchContentData();
-  }, []);
-  */
 
   // 게시판
   const Main = ({ navigation }: any) => {
@@ -106,11 +106,11 @@ const Board = () => {
             <TouchableOpacity onPress={clickHandler}>
               <Text>자유게시판</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={clickHandler}> 
-            <Text>익명게시판</Text>
+            <TouchableOpacity onPress={clickHandler}>
+              <Text>익명게시판</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={clickHandler}> 
-            <Text style={{ color: 'red' }}>임원게시판</Text>
+            <TouchableOpacity onPress={clickHandler}>
+              <Text style={{ color: 'red' }}>임원게시판</Text>
             </TouchableOpacity>
           </View>
 
@@ -128,6 +128,10 @@ const Board = () => {
             style={{
               margin: 10
             }}>
+          </View>
+          <View>
+            {/* 게시판 목록 index*/}
+
           </View>
 
           <Button
@@ -147,11 +151,9 @@ const Board = () => {
         </ScrollView>
 
         <TouchableOpacity
-        // 글쓰기 버튼
+          // 글쓰기 버튼
           activeOpacity={0.7}
           onPress={() => {
-            /* 1. Navigate to the Details route with params */
-            Alert.alert("pressed!");
             navigation.navigate('Write');
           }}
           style={styles.touchableOpacityStyle}>
@@ -192,22 +194,21 @@ const Board = () => {
         screenOptions={{
           headerRight: () => (
             <>
-            <TouchableOpacity
-              // Notification icon - components 분리할 수 있으면 뺴기
-              onPress={() => {
-                // 오 되나?
-                Alert.alert("pressed!");
-              }}>
-              <Icon name="notifications" size={30} color="#000"
-                style={{
-                  // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
-                  width: 40,
-                  height: 40,
-                  borderRadius: 100,
-                }}
-              />
-            </TouchableOpacity>
-          </>
+              <TouchableOpacity
+                // Notification icon - components 분리할 수 있으면 뺴기
+                onPress={() => {
+                  Alert.alert("pressed!");
+                }}>
+                <Icon name="notifications" size={30} color="#000"
+                  style={{
+                    // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
+                    width: 40,
+                    height: 40,
+                    borderRadius: 100,
+                  }}
+                />
+              </TouchableOpacity>
+            </>
 
           )
           // only in iOS - headerBackTitleVisible='false'
@@ -224,6 +225,7 @@ const Board = () => {
           options={
             {
               presentation: 'modal',
+              headerShown: false
             }
           }
 

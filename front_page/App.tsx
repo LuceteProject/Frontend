@@ -17,8 +17,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import MemberList from './pages/MemberList';
 import Board from './pages/Board';
-import PersonalSetting from './pages/PersonalSetting';
 import TodoList from './pages/TodoList';
+import Profile from './pages/Profile';
+/* 나중에 지워야 할 것 */
+import PersonalSetting from './pages/PersonalSetting';
 
 //import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -86,7 +88,7 @@ const Tabs = () => {
       <Tab.Screen name="Todo" component={TodoList} />
       <Tab.Screen name="Calender" component={MemberList}/> 
       <Tab.Screen name="Drive" component={TodoList} />
-      <Tab.Screen name="Profile" component={Board} />
+      <Tab.Screen name="Profile" component={Profile} />
 
 
     </Tab.Navigator>
