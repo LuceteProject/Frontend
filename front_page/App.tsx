@@ -19,6 +19,7 @@ import MemberList from './pages/MemberList';
 import Board from './pages/Board';
 import TodoList from './pages/TodoList';
 import Profile from './pages/Profile';
+import Calendar from './pages/Calendar';
 /* 나중에 지워야 할 것 */
 import PersonalSetting from './pages/PersonalSetting';
 
@@ -86,7 +87,7 @@ const Tabs = () => {
         {/* 달력 우선 부원목록 연결해둠 */}
       <Tab.Screen name="Board" component={Board} />
       <Tab.Screen name="Todo" component={TodoList} />
-      <Tab.Screen name="Calender" component={MemberList}/> 
+      <Tab.Screen name="Calender" component={Calendar}/> 
       <Tab.Screen name="Drive" component={TodoList} />
       <Tab.Screen name="Profile" component={Profile} />
 

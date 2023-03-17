@@ -7,7 +7,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const Stack = createNativeStackNavigator();
 
 /* functional execution */
-const Profile = () => {
+const ProfileScreen = () => {
     // Profile Information update
     const ProfileScreen = () => {
         return (
@@ -142,4 +142,4 @@ const styles = StyleSheet.create({
 });
 
 /* page return */
-export default Profile;
+export default ProfileScreen;
