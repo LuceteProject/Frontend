@@ -1,7 +1,7 @@
 // tslint:disable:no-empty
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity } from 'react-native'
-import { NoticeBar } from '@ant-design/react-native'
+import QRCode from 'react-native-qrcode-svg';
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -61,9 +61,33 @@ const Screen = () => {
                         <Text>출석 기록</Text>
                     </TouchableOpacity>
                 </View>
-                
-                <View>
 
+                <View
+                    style={{
+                        marginTop: 50,
+                        alignItems: 'center'
+
+                    }}>
+                    <QRCode
+                        //value값을 api에 맞춰서 setting 가능!! -> 출석 방식에 맞추면 될듯
+                        value="http://www.naver.com"
+                        //size를 화면 비율에 맞출 수 있는 방법? 
+                        size={250}
+                        logoBackgroundColor='transparent'
+                    />
+                    <Text
+                        style={{
+                            marginTop: 30,
+                            marginBottom: 30,
+                        }}>
+                        출석이 확인되었습니다. (상황에 따라 값 변경)</Text>
+                    <Button
+                        title='내 출석 기록 확인(삭제예정)'
+                        onPress={() => {
+                            /* 1. Navigate to the Details route with params */
+                            navigation.navigate('출석기록확인');
+                          }}
+                    />
                 </View>
 
 
@@ -73,10 +97,10 @@ const Screen = () => {
     }
 
     // 출결 목록 확인
-    const WritePost = ({ navigation }: any) => {
+    const CheckRecord = ({ navigation }: any) => {
         return (
             <View>
-                <Text>Write a new post.</Text>
+                <Text>출석 기록 확인</Text>
                 <Button title="Go back" onPress={() => navigation.goBack()} />
 
             </View>
@@ -110,8 +134,12 @@ const Screen = () => {
                 }}
             >
                 <Stack.Screen
-                    name="게시판"
+                    name="출석 확인"
                     component={Main}
+                />
+                <Stack.Screen
+                    name="출석기록확인"
+                    component={CheckRecord}
                 />
 
 
