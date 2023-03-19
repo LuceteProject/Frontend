@@ -16,7 +16,7 @@ const Stack = createNativeStackNavigator();
 
 
 /* Screen */
-const MemberList = () => {
+const Screen = () => {
   /* values from API 
   유저 정보에서 받아올 내용 : 기수/이름/팀/역할/상메/번호/메일 
   */
@@ -148,7 +148,7 @@ const MemberList = () => {
 }
 
 
-export default MemberList;
+export default Screen;
 
 const styles = StyleSheet.create({
   background: {

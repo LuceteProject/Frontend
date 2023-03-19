@@ -10,7 +10,7 @@ import Task from '../components/Task';
 const Stack = createNativeStackNavigator();
 
 /* Screen */
-const TodoList = () => {
+const Screen = () => {
   /* values from API 
   유저 정보에서 받아올 내용 : 기수/이름/팀/역할/상메/번호/메일 
   */
@@ -19,7 +19,7 @@ const TodoList = () => {
   const [taskItems, setTaskItems] = useState([]);
 
   /* 분리
-  const itemHandler= () => {
+   const itemHandler= () => {
     let item_ = [...items];
   
     setItems(item_);
@@ -30,15 +30,15 @@ const TodoList = () => {
     setTaskItems([...taskItems, task])
     setTask(null);
   }
-  */
-
-
   const completeTask = ({ index }: any) => {
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index, 1);
     setTaskItems(itemsCopy)
   }
 
+
+  */
+  
   /* For Data fetch from server
   useEffect(() => {
     const fetchContentData = async () => {
@@ -70,7 +70,9 @@ const TodoList = () => {
               {
                 taskItems.map((item, index) => {
                   return (
-                    <TouchableOpacity key={index} onPress={() => completeTask(index)}>
+                    <TouchableOpacity key={index} 
+                    //onPress={() => completeTask(index)}
+                    >
                       <Task text={item} />
                     </TouchableOpacity>
                   )
@@ -93,7 +95,7 @@ const TodoList = () => {
             style={styles.input}
             placeholder={'Write a task'}
             value={task}
-          //onChangeText={text => setTask(text)}
+            //onChangeText={text => setTask(text)}
           />
           <TouchableOpacity onPress={() =>
             //handleAddTask()
@@ -146,7 +148,7 @@ const TodoList = () => {
 }
 
 
-export default TodoList;
+export default Screen;
 
 const styles = StyleSheet.create({
   background: {

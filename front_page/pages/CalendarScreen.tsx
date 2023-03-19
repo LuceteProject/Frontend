@@ -8,7 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const Stack = createNativeStackNavigator();
 
-const CalendarScreen = () => {
+const Screen = () => {
 
     /* mode 변경 어떻게 해야할지 아직 모르겠음 
     우선 DB에서 팀 일정만 불러오기
@@ -209,7 +209,8 @@ const CalendarScreen = () => {
     );
 
 }
-
+/* page return */
+export default Screen;
 
 /* style 형식 지정은 여기에서 */
 const styles = StyleSheet.create({
@@ -251,6 +252,3 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff'
     },
 });
-
-/* page return */
-export default CalendarScreen;

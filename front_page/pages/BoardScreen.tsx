@@ -9,7 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const Stack = createNativeStackNavigator();
 
-const Board = () => {
+const Screen = () => {
 
   /* 
   Values from API 
@@ -123,6 +123,7 @@ const Board = () => {
           />
           <BoardItem />
           <BoardItem />
+        
 
           <View
             style={{
@@ -221,6 +222,7 @@ const Board = () => {
         <Stack.Screen
           name="Write"
           component={WritePost}
+          // 얘를 BoardContent.jsx 파일로 연결해야 하는데 왜 안되ㅑㄴ잉,,
           // configure the style for rendering and transitions (card / modal / transparentModal)
           options={
             {
@@ -241,7 +243,7 @@ const Board = () => {
     </>
   );
 }
-export default Board;
+export default Screen;
 
 const styles = StyleSheet.create({
   background: {
