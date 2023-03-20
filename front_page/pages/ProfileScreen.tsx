@@ -69,6 +69,7 @@ const Screen = () => {
     );
   }
 
+  /* Error 해결 필요 */
   const ListPart = ({ navigation }: any) => {
     return (
       <>
@@ -136,7 +137,7 @@ const Screen = () => {
     <>
       <Stack.Navigator
         screenOptions={{
-
+          headerShown: false,
           headerRight: () => (
             <>
               <TouchableOpacity
@@ -164,33 +165,25 @@ const Screen = () => {
         <Stack.Screen
           name="Main"
           component={Main}
+          options={
+            {
+              headerShown: true
+            }
+          }
         />
         <Stack.Screen
           name="Attendance"
           component={AttendancePage}
-          options={
-            {
-              headerShown: false
-            }
-          }
+
         />
         <Stack.Screen
           name="MemberList"
           component={MemberPage}
-          options={
-            {
-              headerShown: false
-            }
-          }
+
         />
         <Stack.Screen
           name="Personal Setting"
           component={PersonalSetting}
-          options={
-            {
-              headerShown: false
-            }
-          }
         />
 
 
