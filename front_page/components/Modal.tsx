@@ -1,12 +1,20 @@
 import React, {useState} from 'react';
 import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
 
-/* Modal 컴포넌트화 하기 */
-const App = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  return (
-    <View style={styles.centeredView}>
-      <Modal
+/* Modal 컴포넌트화 하기
+[Modal]
+로그인/비밀번호 - 아이디찾기, 중복확인, 비밀번호 확인, 가입신청 완료
+클라우드 - 파일 다운로드 안내
+클립보드 - 복사
+
+*/
+/* 정보 안내 */
+
+const BasicModal = (text: string) => {
+    const [modalVisible, setModalVisible] = useState(false);
+
+    return (
+        <Modal
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -25,14 +33,17 @@ const App = () => {
           </View>
         </View>
       </Modal>
-      <Pressable
-        style={[styles.button, styles.buttonOpen]}
-        onPress={() => setModalVisible(true)}>
-        <Text style={styles.textStyle}>Show Modal</Text>
-      </Pressable>
-    </View>
-  );
-};
+    )
+}
+
+/* 선택항목 
+팀 선택, 기수, 역할 선택
+투두리스트 항목 관리
+
+*/
+const SelectModal = () => {
+
+}
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -78,4 +89,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export {BasicModal};
