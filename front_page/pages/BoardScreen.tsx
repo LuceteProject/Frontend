@@ -6,6 +6,7 @@ import { NoticeBar } from '@ant-design/react-native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import BoardContent from './BoardContents';
 
 const Stack = createNativeStackNavigator();
 
@@ -178,17 +179,6 @@ const Screen = () => {
     );
   }
 
-  // 게시글 클릭
-  const ViewPost = ({ navigation }: any) => {
-    return (
-      <View>
-        <Text>View a new post.</Text>
-        <Button title="Go back" onPress={() => navigation.goBack()} />
-      </View>
-
-    );
-  }
-
   return (
     <>
       <Stack.Navigator
@@ -234,12 +224,10 @@ const Screen = () => {
         />
         <Stack.Screen
           name="View"
-          component={ViewPost}
+          component={BoardContent}
         />
 
-
       </Stack.Navigator>
-
     </>
   );
 }
