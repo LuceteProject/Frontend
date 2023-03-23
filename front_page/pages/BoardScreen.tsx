@@ -1,8 +1,7 @@
 // tslint:disable:no-empty
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity } from 'react-native'
+import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, TextInput } from 'react-native'
 import { NoticeBar } from '@ant-design/react-native'
-
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -10,6 +9,15 @@ import BoardContent from './BoardContents';
 
 const Stack = createNativeStackNavigator();
 
+type SearchBarComponentProps = {};
+
+const SwitchComponent = () => {
+  const [search, setSearch] = useState("");
+
+  const updateSearch = (search: React.SetStateAction<string>) => {
+    setSearch(search);
+  };
+}
 const Screen = () => {
 
   /* 
@@ -19,7 +27,8 @@ const Screen = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(10);
-  
+  const [text, onChangeText] = useState('');
+
   /* For Data fetch from server
     useEffect(() => {
       const fetchContentData = async () => {
@@ -36,6 +45,7 @@ const Screen = () => {
     fetchContentData();
     }, []);
     */
+  // on searching text changed
 
   const clickHandler = () => {
     Alert.alert("pressed!");
@@ -77,6 +87,10 @@ const Screen = () => {
 
   // 게시판
   const Main = ({ navigation }: any) => {
+
+    
+    const [number, onChangeNumber] = useState('');
+
     return (
       <>
         <ScrollView
@@ -122,9 +136,30 @@ const Screen = () => {
               borderBottomWidth: StyleSheet.hairlineWidth,
             }}
           />
+          {/* Search bar in here */}
+          <View
+            id='SearchBar'
+            style={{ flexDirection: 'row', justifyContent : 'space-between' }}
+          >
+            <TextInput
+              style={styles.input}
+              onChangeText={onChangeText}
+              placeholder={'검색어를 입력하세요.'}
+              value={text}
+            />
+            <TouchableOpacity 
+            style={styles.searchbtn
+            }
+            onPress={clickHandler}>
+              <Icon name="search" size={20} color="#000"
+              />
+            </TouchableOpacity>
+          </View>
+
+          {/*for sample item*/}
           <BoardItem />
           <BoardItem />
-        
+
 
           <View
             style={{
@@ -244,6 +279,23 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+  },
+  input: {
+    height: 40,
+    width: '80%',
+    margin: 12,
+    borderRadius: 10,
+    backgroundColor: '#D9D9D9',
+    padding: 10,
+  },
+  searchbtn: {
+    height: 40,
+    width: '10%',
+    margin: 12,
+    marginLeft: 0,
+    borderRadius: 50,
+    backgroundColor: '#D9D9D9',
+    padding: 10,
   },
   /* 밑에 두개 floating button style
   이거 왜 가운데에 안오냐 ....? ㅁㄹ...*/
