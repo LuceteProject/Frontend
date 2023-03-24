@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, Button } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, Button, TextInput, Modal } from 'react-native';
 
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
+import DatePicker from 'react-native-date-picker';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -9,6 +10,10 @@ import Icon from 'react-native-vector-icons/Ionicons';
 const Stack = createNativeStackNavigator();
 
 const Screen = () => {
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const [text, onChangeText] = useState('');
+    const [title, onChangeTitle] = useState('');
 
     /* mode 변경 어떻게 해야할지 아직 모르겠음 
     우선 DB에서 팀 일정만 불러오기
@@ -28,30 +33,104 @@ const Screen = () => {
         }, [mode]);
     
     */
-   
-    const ListSample = (props : any) => {
+
+    const ListSample = (props: any) => {
         return (
             <View
-            style={{
-                flexDirection:'row',
-                justifyContent:'space-around'
-            }}>
+                style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-around'
+                }}>
                 <Text>{props.time}</Text>
                 <Text>{props.text}</Text>
             </View>
         );
 
     }
+    const AddPlan = () => {
+        const [date, setDate] = useState(new Date());
+        const [place, setPlace] = useState('');
+        const [memo, setMemo] = useState('');
+        return (
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    Alert.alert('Modal has been closed.');
+                    setModalVisible(!modalVisible);
+                }}>
+                <View>
+                    <Text> Write new plan </Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={onChangeTitle}
+                        placeholder={'제목'}
+                        value={title}
+                    />
+                </View>
+                <View
+                    id='inputDates'
+                    style={{
+                        margin: 10,
+                        backgroundColor: '#000',
+                        flexDirection: 'row',
+                        alignItems: 'stretch',
+                        justifyContent: 'space-around'
 
-    const Main = () => {
+                    }}>
+                    <TouchableOpacity
+                        id='startTime'
+                        onPress={() => {
+                            return <DatePicker date={date} onDateChange={setDate} />
+                        }}>
+                        <Text>Sample Date</Text>
+                        <Text>Sample Time</Text>
+                    </TouchableOpacity>
+                    <Icon name="arrow-forward" size={40} color="#fff" />
+                    <TouchableOpacity
+                        id='endTime'
+                        onPress={() => {
+                            return <DatePicker date={date} onDateChange={setDate} />
+                        }}>
+                        <Text>Sample Date2</Text>
+                        <Text>Sample Time2</Text>
+                    </TouchableOpacity>
+
+                </View>
+                <View
+                    style={{
+                        alignItems: 'stretch',
+                        justifyContent: 'space-around',
+                        padding: 10,
+                    }}>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setPlace}
+                        placeholder={'장소'}
+                        value={place}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={setMemo}
+                        placeholder={'메모'}
+                        value={memo}
+                    />
+                </View>
+            </Modal>
+
+        )
+    };
+
+    const Main = ({ navigation }: any) => {
         return (
             <>
                 <TouchableOpacity
                     // 일정 추가 버튼
                     activeOpacity={0.7}
                     onPress={() => {
-                        //navigation.navigate('Write');
-                        console.log("pressed");
+                        setModalVisible(true);
+
                     }}
                     style={styles.touchableOpacityStyle}
                 >
@@ -76,10 +155,20 @@ const Screen = () => {
                     markingType={'period'}
                     markedDates={{
                         // {} API에서 받아오기
+                        ['2023-03-15']: { selected: true, disableTouchEvent: true, selectedColor: 'skyblue' }
                     }}
                     onDayPress={day => {
                         console.log('selected day', day);
+                        () => {
+                            // 아래 리스트에 일정 받아오기
+                        };
+                    }
+                    }
+                    onDayLongPress={day => {
+                        console.log('long selected day', day);
+                        // 일정 추가?
                     }}
+
 
                 />
 
@@ -152,20 +241,21 @@ const Screen = () => {
                     <Button
                         title="모드 변경"
                         onPress={() => {
-                            console.log('모드 변경')
+                            Alert.alert('모드가 변경되었습니다.');
+                            // API 데이터 다시 받아와서 흩뿌리기
                         }}
                     />
 
                 </View>
 
                 <View>
-                    <ListSample time='08:00' text = '세부내용 1'/>
-                    <ListSample time='09:00' text = '세부내용 2' />
-                    <ListSample time='10:00' text = '세부내용 3' />
+                    <ListSample time='08:00' text='세부내용 1' />
+                    <ListSample time='09:00' text='세부내용 2' />
+                    <ListSample time='10:00' text='세부내용 3' />
                 </View>
             </>
         );
-    }
+    };
 
     return (
         <>
@@ -196,6 +286,14 @@ const Screen = () => {
                 <Stack.Screen
                     name="Main"
                     component={Main}
+                    options={{
+                        title: 'Calendar',
+                    }
+                    }
+                />
+                <Stack.Screen
+                    name="AddPlan"
+                    component={AddPlan}
                     options={{
                         title: 'Calendar',
                     }
@@ -233,6 +331,23 @@ const styles = StyleSheet.create({
         //justifyContent: 'space-around', //공백이 있는 양쪽정렬
         backgroundColor: '#fff',
 
+    },
+    input: {
+        height: 40,
+        width: '80%',
+        margin: 12,
+        borderRadius: 10,
+        backgroundColor: '#D9D9D9',
+        padding: 10,
+    },
+    searchbtn: {
+        height: 40,
+        width: '10%',
+        margin: 12,
+        marginLeft: 0,
+        borderRadius: 50,
+        backgroundColor: '#D9D9D9',
+        padding: 10,
     },
     /* 밑에 두개 floating button style
 이거 왜 가운데에 안오냐 ....? ㅁㄹ...*/
