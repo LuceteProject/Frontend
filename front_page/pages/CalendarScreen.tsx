@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, Button, TextInput, Modal } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, Button, TextInput, Modal, FlatList } from 'react-native';
 
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import DatePicker from 'react-native-date-picker';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-
 const Stack = createNativeStackNavigator();
 
 const Screen = () => {
-    const [modalVisible, setModalVisible] = useState(false);
 
     const [text, onChangeText] = useState('');
     const [title, onChangeTitle] = useState('');
@@ -47,90 +45,241 @@ const Screen = () => {
         );
 
     }
-    const AddPlan = () => {
-        const [date, setDate] = useState(new Date());
+    
+    const Main = ({ navigation }: any) => {
+        const [modalVisible, setModalVisible] = useState(false);
+        const [modalVisibleButton, setModalVisibleButton] = useState(false);
+        const DATA = [
+            {
+                id: 0,
+                title: '전체',
+            },
+            {
+                id: 1,
+                title: '팀',
+            },
+        ];
+
+        const [openStart, setOpenStart] = useState(false);
+        const [openEnd, setOpenEnd] = useState(false);
+        const [dateStart, setDateStart] = useState(new Date());
+        const [dateEnd, setDateEnd] = useState(new Date());
         const [place, setPlace] = useState('');
         const [memo, setMemo] = useState('');
-        return (
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
-                    setModalVisible(!modalVisible);
-                }}>
-                <View>
-                    <Text> Write new plan </Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={onChangeTitle}
-                        placeholder={'제목'}
-                        value={title}
-                    />
-                </View>
-                <View
-                    id='inputDates'
-                    style={{
-                        margin: 10,
-                        backgroundColor: '#000',
-                        flexDirection: 'row',
-                        alignItems: 'stretch',
-                        justifyContent: 'space-around'
 
-                    }}>
-                    <TouchableOpacity
-                        id='startTime'
-                        onPress={() => {
-                            return <DatePicker date={date} onDateChange={setDate} />
-                        }}>
-                        <Text>Sample Date</Text>
-                        <Text>Sample Time</Text>
-                    </TouchableOpacity>
-                    <Icon name="arrow-forward" size={40} color="#fff" />
-                    <TouchableOpacity
-                        id='endTime'
-                        onPress={() => {
-                            return <DatePicker date={date} onDateChange={setDate} />
-                        }}>
-                        <Text>Sample Date2</Text>
-                        <Text>Sample Time2</Text>
-                    </TouchableOpacity>
-
-                </View>
-                <View
-                    style={{
-                        alignItems: 'stretch',
-                        justifyContent: 'space-around',
-                        padding: 10,
-                    }}>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={setPlace}
-                        placeholder={'장소'}
-                        value={place}
-                    />
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={setMemo}
-                        placeholder={'메모'}
-                        value={memo}
-                    />
-                </View>
-            </Modal>
-
-        )
-    };
-
-    const Main = ({ navigation }: any) => {
         return (
             <>
+                <Modal
+                    animationType="slide"
+                    visible={modalVisible}
+
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                        setModalVisible(!modalVisible);
+                    }}>
+                    <View>
+                        <Icon name="calendar" size={30} color="#000" />
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={onChangeTitle}
+                            placeholder={'제목'}
+                            value={title}
+                        />
+                    </View>
+
+                    <View
+                        id='inputDates'
+                        style={{
+                            height: 150,
+                            padding: 10,
+                            backgroundColor: '#F0EEEE',
+                            flexDirection: 'row',
+                            alignItems: 'stretch',
+                            justifyContent: 'space-around',
+
+                        }}>
+                        <TouchableOpacity
+                            // time 모듈 따로 빼서 정리 필요할듯
+                            id='startTime'
+                            style={{
+
+                            }}
+                            onPress={() => setOpenStart(true)}>
+                            <Text
+                                style={{
+                                    fontSize: 23,
+                                    fontWeight: 'bold',
+                                }}>시작일</Text>
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    fontWeight: 'normal',
+                                    marginTop: 15,
+                                }}>
+                                {/*근데 어차피 이거 api로 넘겨줘야하는거라 포맷팅 하는 부분 따로 빼는게 나을지도 */}
+                                {(dateStart.getMonth() + 1).toString()}월&nbsp;
+                                {dateStart.getDate().toString()}일{'\n'}
+                                {dateStart.getHours().toString()} : {dateStart.getMinutes().toString()}
+                            </Text>
+                        </TouchableOpacity>
+
+                        <Icon name="arrow-forward" size={40} color="#000" style={{ paddingTop: 30, paddingBottom: 30 }} />
+                        <TouchableOpacity
+                            id='endTime'
+                            onPress={() => {
+                                setOpenEnd(true);
+                            }}>
+                            <Text
+                                style={{
+                                    fontSize: 23,
+                                    fontWeight: 'bold',
+                                }}>종료일</Text>
+                            <Text
+                                style={{
+                                    fontSize: 20,
+                                    fontWeight: 'normal',
+                                    marginTop: 15,
+                                }}>
+                                {(dateEnd.getMonth() + 1).toString()}월&nbsp;
+                                {dateEnd.getDate().toString()}일{'\n'}
+                                {dateEnd.getHours().toString()} : {dateEnd.getMinutes().toString()}
+                            </Text>
+                        </TouchableOpacity>
+                        <DatePicker
+                            // one for start time
+                            modal
+                            open={openStart}
+                            date={dateStart}
+                            onConfirm={(date) => {
+                                setOpenStart(false);
+                                setDateStart(date);
+                            }}
+                            onCancel={() => {
+                                setOpenStart(false);
+                            }}
+                        />
+                        <DatePicker
+                            // one for end time
+                            modal
+                            open={openEnd}
+                            date={dateEnd}
+                            onConfirm={(dateEnd) => {
+                                //console.log(dateEnd);
+                                setOpenEnd(false);
+                                setDateEnd(dateEnd);
+                            }}
+                            onCancel={() => {
+                                setOpenEnd(false);
+                            }}
+                        />
+                    </View>
+                    <View
+                        id='notification'
+                        style={{
+                            margin: 10,
+                            //backgroundColor: '#F0EEEE',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                        }}>
+                        <Button
+                            title="캘린더 선택"
+                            onPress={() => {
+                                //Alert.alert('clicked');
+                                setModalVisibleButton(true);
+
+                            }}
+                        />
+                        <Button
+                            title="알림 설정"
+                            onPress={() => {
+                                Alert.alert('clicked');
+
+                            }}
+                        />
+                        <Modal
+                            style={{
+                                margin: 20,
+                                backgroundColor: 'white',
+                                borderRadius: 20,
+                                padding: 35,
+                                alignItems: 'center',
+                                shadowColor: '#000',
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 2,
+                                },
+                                shadowOpacity: 0.25,
+                                shadowRadius: 4,
+                                elevation: 5,
+
+                            }}
+                            visible={modalVisibleButton}
+                            onRequestClose={() => {
+                                //Alert.alert('Modal has been closed.');
+                                setModalVisibleButton(!modalVisibleButton);
+                            }}
+                        >
+                            <FlatList
+                                data={DATA}
+                                renderItem={({ item }) => <Text> {item.title} </Text>}
+                            />
+                        </Modal>
+
+                    </View>
+                    <View
+                        style={{
+                            borderBottomColor: 'black',
+                            borderBottomWidth: StyleSheet.hairlineWidth,
+                        }}
+                    />
+
+                    <View
+                        style={{
+                            alignItems: 'stretch',
+                            justifyContent: 'space-around',
+                            padding: 10,
+                        }}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Icon name="location" size={20} color="#000" />
+                            <Text style={{ fontSize: 15 }}>장소</Text>
+                        </View>
+
+                        <TextInput
+                            style={styles.input}
+                            onChangeText={setPlace}
+                            placeholder={'장소'}
+                            value={place}
+                        />
+                        <View style={{ flexDirection: 'row' }}>
+                            <Icon name="reader" size={20} color="#000" />
+                            <Text style={{ fontSize: 15 }}>메모</Text>
+                        </View>
+                        <TextInput
+                            editable
+                            multiline
+                            numberOfLines={4}
+                            maxLength={100}
+                            style={{
+                                width: '90%',
+                                marginLeft: 12,
+                                //marginRight: 12,
+                                borderRadius: 5,
+                                backgroundColor: '#D9D9D9',
+                            }}
+                            onChangeText={setMemo}
+                            onEndEditing={() => { }
+                            }
+                            placeholder={'메모'}
+                            value={memo}
+                        />
+                    </View>
+                </Modal>
                 <TouchableOpacity
                     // 일정 추가 버튼
                     activeOpacity={0.7}
                     onPress={() => {
+                        console.log('clicked');
                         setModalVisible(true);
-
                     }}
                     style={styles.touchableOpacityStyle}
                 >
@@ -291,6 +440,7 @@ const Screen = () => {
                     }
                     }
                 />
+                {/*
                 <Stack.Screen
                     name="AddPlan"
                     component={AddPlan}
@@ -299,6 +449,9 @@ const Screen = () => {
                     }
                     }
                 />
+
+            
+                 */}
 
 
             </Stack.Navigator>
@@ -334,11 +487,11 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 40,
-        width: '80%',
+        width: '90%',
         margin: 12,
-        borderRadius: 10,
+        borderRadius: 5,
         backgroundColor: '#D9D9D9',
-        padding: 10,
+        //padding: 10,
     },
     searchbtn: {
         height: 40,
