@@ -5,13 +5,13 @@ import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import DatePicker from 'react-native-date-picker';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { CheckBox, Dialog } from '@rneui/themed';
 
 const Stack = createNativeStackNavigator();
 
 const Screen = () => {
 
     const [text, onChangeText] = useState('');
-    const [title, onChangeTitle] = useState('');
 
     /* mode 변경 어떻게 해야할지 아직 모르겠음 
     우선 DB에서 팀 일정만 불러오기
@@ -45,8 +45,9 @@ const Screen = () => {
         );
 
     }
-    
+
     const Main = ({ navigation }: any) => {
+        // 일정 추가 Modal 창
         const [modalVisible, setModalVisible] = useState(false);
         const [modalVisibleButton, setModalVisibleButton] = useState(false);
         const DATA = [
@@ -59,7 +60,28 @@ const Screen = () => {
                 title: '팀',
             },
         ];
+        /* 일정 추가 -> 캘린더 선택 */
+        //1) 캘린더 선택
+        const [visibleCalType, setVisibleCalType] = useState(false);
+        const toggleDialogCalType = () => {
+            setVisibleCalType(!visibleCalType);
+        };
+        const [checked, setChecked] = useState(1);
+        const [btnName, setBtnName] = useState('캘린더 선택');
+        const afterButtonSelected = (index: string) => {
+           setBtnName(index);
+        }
+        //2) 알림 설정
+        const [btnAlarmName, setBtnAlarmName] = useState('알림 설정');
+        const afterButtonAlarmSelected = (index: string) => {
+            setBtnAlarmName(index);
+         }
+        const [visibleAlarmType, setVisibleAlarmType] = useState(false);
+        const toggleDialogAlarmType = () => {
+            setVisibleAlarmType(!visibleAlarmType);
+        };
 
+        const [title, onChangeTitle] = useState('');
         const [openStart, setOpenStart] = useState(false);
         const [openEnd, setOpenEnd] = useState(false);
         const [dateStart, setDateStart] = useState(new Date());
@@ -182,48 +204,83 @@ const Screen = () => {
                             justifyContent: 'space-between',
                         }}>
                         <Button
-                            title="캘린더 선택"
+                            title={btnName}
                             onPress={() => {
-                                //Alert.alert('clicked');
-                                setModalVisibleButton(true);
-
+                                toggleDialogCalType();
+                                console.log("pressed");
                             }}
                         />
-                        <Button
-                            title="알림 설정"
-                            onPress={() => {
-                                Alert.alert('clicked');
-
-                            }}
-                        />
-                        <Modal
-                            style={{
-                                margin: 20,
-                                backgroundColor: 'white',
-                                borderRadius: 20,
-                                padding: 35,
-                                alignItems: 'center',
-                                shadowColor: '#000',
-                                shadowOffset: {
-                                    width: 0,
-                                    height: 2,
-                                },
-                                shadowOpacity: 0.25,
-                                shadowRadius: 4,
-                                elevation: 5,
-
-                            }}
-                            visible={modalVisibleButton}
-                            onRequestClose={() => {
-                                //Alert.alert('Modal has been closed.');
-                                setModalVisibleButton(!modalVisibleButton);
-                            }}
+                        <Dialog
+                            isVisible={visibleCalType}
+                            onBackdropPress={toggleDialogCalType}
                         >
-                            <FlatList
-                                data={DATA}
-                                renderItem={({ item }) => <Text> {item.title} </Text>}
-                            />
-                        </Modal>
+                            <Dialog.Title title='캘린더 종류를 선택하세요' />
+                            {['전체 캘린더', '팀 캘린더'].map((l, i) => (
+                                <CheckBox
+                                    key={i}
+                                    title={l}
+                                    containerStyle={{ backgroundColor: 'white', borderWidth: 0 }}
+                                    checkedIcon="dot-circle-o"
+                                    uncheckedIcon="circle-o"
+                                    checked={checked === i + 1}
+                                    onPress={() => {setChecked(i + 1); afterButtonSelected(l);}}
+                                />
+                            ))}
+
+                            <Dialog.Actions>
+                                <Dialog.Button
+                                    title="확인"
+                                    onPress={() => {
+                                        //console.log(`Option ${checked} was selected!`);
+                                        toggleDialogCalType();
+                                        
+                                    }}
+                                />
+                                <Dialog.Button title="취소" onPress={() => {
+                                    setBtnName('캘린더 선택');
+                                    toggleDialogCalType();
+                                }} />
+                            </Dialog.Actions>
+                        </Dialog>
+                        <Button
+                            title={btnAlarmName}
+                            onPress={() => {
+                                toggleDialogAlarmType();
+                            }}
+                        />
+                        <Dialog
+                            isVisible={visibleAlarmType}
+                            onBackdropPress={toggleDialogAlarmType}
+                        >
+                            <Dialog.Title title="알림" />
+                            {['일정 시작 시간', '10분 전', '1시간 전', '1일 전'].map((l, i) => (
+                                <CheckBox
+                                    key={i}
+                                    title={l}
+                                    containerStyle={{ backgroundColor: 'white', borderWidth: 0 }}
+                                    checkedIcon="dot-circle-o"
+                                    uncheckedIcon="circle-o"
+                                    checked={checked === i + 1}
+                                    onPress={() => { setChecked(i + 1); afterButtonAlarmSelected(l); }}
+                                />
+                            ))}
+
+                            <Dialog.Actions>
+                                <Dialog.Button
+                                    title="확인"
+                                    onPress={() => {
+                                        //console.log(`Option ${checked} was selected!`);
+                                        toggleDialogAlarmType();
+
+                                    }}
+                                />
+                                <Dialog.Button title="취소" onPress={() => {
+                                    toggleDialogAlarmType();
+                                    setBtnAlarmName('알림 설정');
+                                }} />
+                            </Dialog.Actions>
+                        </Dialog>
+
 
                     </View>
                     <View
@@ -273,12 +330,18 @@ const Screen = () => {
                             value={memo}
                         />
                     </View>
+                    <Button title='확인' onPress={ 
+                        ()=> {
+                            Alert.alert('Success');
+                            setModalVisible(!modalVisible);}
+                        /* submit DATA to API */}/>
+                    <Button title='취소'  onPress={ 
+                        ()=> {setModalVisible(!modalVisible);}}/>
                 </Modal>
                 <TouchableOpacity
-                    // 일정 추가 버튼
+                    // FBA (일정 추가)
                     activeOpacity={0.7}
                     onPress={() => {
-                        console.log('clicked');
                         setModalVisible(true);
                     }}
                     style={styles.touchableOpacityStyle}
