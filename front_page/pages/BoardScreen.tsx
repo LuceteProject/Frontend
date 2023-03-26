@@ -1,9 +1,11 @@
 // tslint:disable:no-empty
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, TextInput } from 'react-native'
-import { NoticeBar } from '@ant-design/react-native'
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, TextInput } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Tab } from '@rneui/themed';
+import { NoticeBar } from '@ant-design/react-native'
 
 import BoardContent from './BoardContents';
 
@@ -87,8 +89,7 @@ const Screen = () => {
 
   // 게시판
   const Main = ({ navigation }: any) => {
-
-    
+    const [index, setIndex] = React.useState(0);
     const [number, onChangeNumber] = useState('');
 
     return (
@@ -110,6 +111,13 @@ const Screen = () => {
             marqueeProps={{ loop: true, style: { fontSize: 15, color: 'black' } }}>
             여러분 공지 좀 읽으세요~~
           </NoticeBar>
+          <Tab value={index} onChange={setIndex} dense>
+            <Tab.Item>자유게시판</Tab.Item>
+            <Tab.Item>익명게시판</Tab.Item>
+            <Tab.Item>임원진게시판</Tab.Item>
+          </Tab>
+          {/*
+          
           <View
             style={
               {
@@ -136,10 +144,12 @@ const Screen = () => {
               borderBottomWidth: StyleSheet.hairlineWidth,
             }}
           />
+          */}
+          
           {/* Search bar in here */}
           <View
             id='SearchBar'
-            style={{ flexDirection: 'row', justifyContent : 'space-between' }}
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
           >
             <TextInput
               style={styles.input}
@@ -147,10 +157,10 @@ const Screen = () => {
               placeholder={'검색어를 입력하세요.'}
               value={text}
             />
-            <TouchableOpacity 
-            style={styles.searchbtn
-            }
-            onPress={clickHandler}>
+            <TouchableOpacity
+              style={styles.searchbtn
+              }
+              onPress={clickHandler}>
               <Icon name="search" size={20} color="#000"
               />
             </TouchableOpacity>
