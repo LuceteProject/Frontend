@@ -1,9 +1,10 @@
 // tslint:disable:no-empty
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity } from 'react-native'
+import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, ActivityIndicator } from 'react-native'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,31 +35,140 @@ const Screen = () => {
         Alert.alert("pressed!");
     }
 
-    // 게시판
-    const Main = ({ navigation }: any) => {
+    const Reply = () => {
+
         return (
             <>
-                <View
+                <View id='metadata'
                     style={{
-                        marginTop: 50,
-                        alignItems: 'center'
-
+                        margin: 5,
+                        flexDirection: 'row',
+                        //justifyContent: 'space-between'
                     }}>
 
-                    <Text
+                    <Image
+                        //for test, use logo imgs
+                        //src
+                        source={require('../img/logo.jpg')}
                         style={{
-                            marginTop: 30,
-                            marginBottom: 30,
-                        }}>
-                        게시글 페이지
-                    </Text>
+                            //{size}
+                            width: 50,
+                            height: 50,
+                            borderRadius: 50,
+                            margin: 5
+                        }}
+                    />
+                    <View style={{
+                        marginLeft:10,
+                    }}>
+                        <View style={{
+                            //flexDirection:'row', 
+                            justifyContent:'space-around'}}>
+                            <Text style={{
+                                fontSize: 15,
+                            }}>이름</Text>
+                            <Text style={{
+                                textAlign:'right'
+                            }}>날짜 및 시간</Text>
+                        </View>
+
+                        <Text>댓글 내용</Text>
+                    </View>
+
+
 
                 </View>
 
- 
 
+                <View
+                    style={{
+                        borderBottomColor: '#D9D9D9',
+                        borderBottomWidth: StyleSheet.hairlineWidth,
+                    }}
+                />
             </>
+        );
+    }
+    // 게시판
+    const Main = ({ navigation }: any) => {
+        return (
+            <SafeAreaView>
+                <ScrollView>
+                    <Text style={{ marginTop: 10, marginLeft: 10 }} >게시판 종류</Text>
+                    <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
 
+                        <Text style={{
+                            fontWeight: 'bold',
+                            fontSize: 25,
+
+                        }}>게시글 제목</Text>
+                        <TouchableOpacity
+                            accessibilityLabel='owner'
+                        //disabled
+                        >
+                            <Icon name="ellipsis-vertical" size={20} color="#000" />
+                        </TouchableOpacity>
+
+                    </View>
+                    <View id='metadata'
+                        style={{
+                            margin: 5,
+                            flexDirection: 'row',
+                            //justifyContent: 'space-between'
+                        }}>
+
+                        <Image
+                            //for test, use logo imgs
+                            //src
+                            source={require('../img/logo.jpg')}
+                            style={{
+                                //{size}
+                                width: 50,
+                                height: 50,
+                                borderRadius: 50,
+                                margin: 5
+                            }}
+                        />
+                        <Text style={{
+                            margin: 15,
+                            fontSize: 15,
+                        }}>글쓴이</Text>
+
+                    </View>
+                    <Text style={{
+                        textAlign: 'right',
+                        marginBottom: 10,
+                        marginRight: 10,
+                    }}>날짜 및 시간</Text>
+                    <View
+                        style={{
+                            borderBottomColor: '#D9D9D9',
+                            borderBottomWidth: StyleSheet.hairlineWidth,
+                        }}
+                    />
+                    <View style={{ minHeight: 200, padding: 10 }}>
+                        <Text>in here text</Text>
+                    </View>
+
+
+                    <View
+                        style={{
+                            borderBottomColor: 'black',
+                            borderBottomWidth: StyleSheet.hairlineWidth,
+                        }}
+                    />
+                    <Reply />
+                    <Reply />
+                    <Reply />
+                    <Reply />
+                    <Reply />
+                    <Reply />
+                    <Reply />
+                    <Reply />
+                </ScrollView>
+
+
+            </SafeAreaView>
         );
     }
 
@@ -130,6 +240,6 @@ const styles = StyleSheet.create({
         bottom: 30,
     },
     floatingButtonStyle: {
-       backgroundColor: '#fff'
+        backgroundColor: '#fff'
     },
 });

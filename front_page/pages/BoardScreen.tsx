@@ -56,7 +56,7 @@ const Screen = () => {
   const BoardItem = () => {
     return (
       // 각 게시글 항목
-      <>
+      <TouchableOpacity>
         <View
           style={{
             flexDirection: 'row',
@@ -83,7 +83,7 @@ const Screen = () => {
             borderBottomWidth: StyleSheet.hairlineWidth,
           }}
         />
-      </>
+      </TouchableOpacity>
     )
   }
 
@@ -167,6 +167,7 @@ const Screen = () => {
           </View>
 
           {/*for sample item*/}
+          <BoardItem />
           <BoardItem />
           <BoardItem />
 
@@ -270,6 +271,11 @@ const Screen = () => {
         <Stack.Screen
           name="View"
           component={BoardContent}
+          options={
+            {
+              headerShown: false
+            }
+          }
         />
 
       </Stack.Navigator>
