@@ -94,10 +94,15 @@ const Screen = () => {
                 <Modal
                     animationType="slide"
                     visible={modalVisible}
-
+                    //transparent={true}
                     onRequestClose={() => {
                         Alert.alert('Modal has been closed.');
                         setModalVisible(!modalVisible);
+                    }}
+                    style={{
+                        //backgroundColor:'#000',
+                        //height:'60%',
+                        //width:'100%'
                     }}>
                     <View>
                         <Icon name="calendar" size={30} color="#000" />
@@ -496,10 +501,10 @@ const Screen = () => {
                 }}
             >
                 <Stack.Screen
-                    name="Main"
+                    name="CalendarTab"
                     component={Main}
                     options={{
-                        title: 'Calendar',
+                        title: '캘린더',
                     }
                     }
                 />

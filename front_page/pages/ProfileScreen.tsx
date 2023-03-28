@@ -137,7 +137,7 @@ const Screen = () => {
     <>
       <Stack.Navigator
         screenOptions={{
-          headerShown: false,
+          //headerShown: false,
           headerRight: () => (
             <>
               <TouchableOpacity
@@ -163,22 +163,43 @@ const Screen = () => {
         }}
       >
         <Stack.Screen
-          name="Main"
+          name="ProfileTab"
           component={Main}
           options={
             {
-              headerShown: true
+              headerShown: true,
+              title:'프로필'
             }
           }
         />
         <Stack.Screen
           name="Attendance"
           component={AttendancePage}
+          options={
+            {
+              
+              headerRight: ()=> {
+                return <></>;
+              },
+              title:'부원 목록',
+              
+            }
+          }
 
         />
         <Stack.Screen
           name="MemberList"
           component={MemberPage}
+          options={
+            {
+              //headerShown: true,
+              headerRight: ()=> {
+                return <></>;
+              },
+              title:'부원 목록',
+              
+            }
+          }
 
         />
         <Stack.Screen

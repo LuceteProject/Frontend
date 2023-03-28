@@ -138,8 +138,12 @@ const Screen = () => {
         }}
       >
         <Stack.Screen
-          name="To Do List"
+          name="TodoListTab"
           component={Main}
+          options={{
+            title: '투두리스트',
+        }
+        }
         />
 
       </Stack.Navigator>

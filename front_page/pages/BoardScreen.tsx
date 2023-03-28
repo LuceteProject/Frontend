@@ -193,7 +193,7 @@ const Screen = () => {
             title="Go to View"
             onPress={() => {
               /* 1. Navigate to the Details route with params */
-              navigation.push('View');
+              navigation.push('ViewPost');
             }}
           />
         </ScrollView>
@@ -252,11 +252,15 @@ const Screen = () => {
         }}
       >
         <Stack.Screen
-          name="게시판"
+          name="PostListTab"
           component={Main}
+          options={{
+            title: '게시판',
+        }
+        }
         />
         <Stack.Screen
-          name="Write"
+          name="WritePost"
           component={WritePost}
           // 얘를 BoardContent.jsx 파일로 연결해야 하는데 왜 안되ㅑㄴ잉,,
           // configure the style for rendering and transitions (card / modal / transparentModal)
@@ -269,11 +273,14 @@ const Screen = () => {
 
         />
         <Stack.Screen
-          name="View"
+          name="ViewPost"
           component={BoardContent}
           options={
             {
-              headerShown: false
+              headerRight: ()=> {
+                return <></>;
+              }
+              //headerShown: false
             }
           }
         />

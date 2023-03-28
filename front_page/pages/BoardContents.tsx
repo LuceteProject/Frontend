@@ -31,12 +31,12 @@ const Screen = () => {
       }, []);
       */
 
-    const clickHandler = () => {
+    const clickOptionHandler = () => {
         Alert.alert("pressed!");
     }
 
     const Reply = () => {
-
+        // 댓글 리스트 API에서 가져오기
         return (
             <>
                 <View id='metadata'
@@ -91,6 +91,8 @@ const Screen = () => {
     }
     // 게시판
     const Main = ({ navigation }: any) => {
+        const [haveAccess, setHaveAccess] = useState(false);
+
         return (
             <SafeAreaView>
                 <ScrollView>
@@ -103,10 +105,12 @@ const Screen = () => {
 
                         }}>게시글 제목</Text>
                         <TouchableOpacity
-                            accessibilityLabel='owner'
+                            accessibilityLabel='owner' // {haveAccess}
+                            onPress={clickOptionHandler}
                         //disabled
                         >
                             <Icon name="ellipsis-vertical" size={20} color="#000" />
+                           
                         </TouchableOpacity>
 
                     </View>
@@ -203,8 +207,13 @@ const Screen = () => {
                 }}
             >
                 <Stack.Screen
-                    name="main"
+                    name="Post"
                     component={Main}
+                    options={{
+                        headerRight: ()=> {
+                            return <></>;
+                          }
+                    }}
                 />
 
 
