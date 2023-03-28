@@ -8,7 +8,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator();
 
-const Screen = () => {
+const Screen = (props : any) => {
+    //props
 
     /* 
     Values from API 
@@ -66,13 +67,13 @@ const Screen = () => {
                             justifyContent:'space-around'}}>
                             <Text style={{
                                 fontSize: 15,
-                            }}>이름</Text>
+                            }}>replyAuthor</Text>
                             <Text style={{
                                 textAlign:'right'
-                            }}>날짜 및 시간</Text>
+                            }}>replyTime</Text>
                         </View>
 
-                        <Text>댓글 내용</Text>
+                        <Text>replyContents</Text>
                     </View>
 
 
@@ -96,14 +97,14 @@ const Screen = () => {
         return (
             <SafeAreaView>
                 <ScrollView>
-                    <Text style={{ marginTop: 10, marginLeft: 10 }} >게시판 종류</Text>
+                    <Text style={{ marginTop: 10, marginLeft: 10 }} >boardType</Text>
                     <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
 
                         <Text style={{
                             fontWeight: 'bold',
                             fontSize: 25,
 
-                        }}>게시글 제목</Text>
+                        }}>postTitle</Text>
                         <TouchableOpacity
                             accessibilityLabel='owner' // {haveAccess}
                             onPress={clickOptionHandler}
@@ -136,14 +137,14 @@ const Screen = () => {
                         <Text style={{
                             margin: 15,
                             fontSize: 15,
-                        }}>글쓴이</Text>
+                        }}>{props.author}</Text>
 
                     </View>
                     <Text style={{
                         textAlign: 'right',
                         marginBottom: 10,
                         marginRight: 10,
-                    }}>날짜 및 시간</Text>
+                    }}>postTime</Text>
                     <View
                         style={{
                             borderBottomColor: '#D9D9D9',
@@ -164,11 +165,7 @@ const Screen = () => {
                     <Reply />
                     <Reply />
                     <Reply />
-                    <Reply />
-                    <Reply />
-                    <Reply />
-                    <Reply />
-                    <Reply />
+
                 </ScrollView>
 
 

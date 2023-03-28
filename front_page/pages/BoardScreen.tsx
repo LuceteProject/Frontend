@@ -53,10 +53,18 @@ const Screen = () => {
     Alert.alert("pressed!");
   }
 
-  const BoardItem = () => {
+  const BoardItem = (props : any) => {
+
     return (
       // 각 게시글 항목
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          /* 1. Navigate to the Details route with params */
+          //console.log(props);
+          props.nav.push('ViewPost', {title:'test', author:'lee'});
+
+        }}
+      >
         <View
           style={{
             flexDirection: 'row',
@@ -66,14 +74,14 @@ const Screen = () => {
             paddingTop: 10
           }}>
           <View>
-            <Text> 게시글 제목 </Text>
-            <Text> 작성자 / 작성 시간 </Text>
+            <Text> {props.title} </Text>
+            <Text> {props.author} / 작성 시간 </Text>
           </View>
           <View>
             <Text
               style={{
                 padding: 10
-              }}>댓글 수</Text>
+              }}>{props.reply}</Text>
           </View>
         </View>
         <View
@@ -145,7 +153,7 @@ const Screen = () => {
             }}
           />
           */}
-          
+
           {/* Search bar in here */}
           <View
             id='SearchBar'
@@ -167,9 +175,9 @@ const Screen = () => {
           </View>
 
           {/*for sample item*/}
-          <BoardItem />
-          <BoardItem />
-          <BoardItem />
+          <BoardItem nav={navigation} title="test" author="lee" reply='1'/>
+          <BoardItem nav={navigation} title="test2" author="kim" reply='2'/>
+          <BoardItem nav={navigation} title="test3" author="park" reply='3'/>
 
 
           <View
@@ -193,7 +201,7 @@ const Screen = () => {
             title="Go to View"
             onPress={() => {
               /* 1. Navigate to the Details route with params */
-              navigation.push('ViewPost');
+              navigation.push('ViewPost', {title:'test', author:'lee', reply:3});
             }}
           />
         </ScrollView>
@@ -202,7 +210,7 @@ const Screen = () => {
           // 글쓰기 버튼
           activeOpacity={0.7}
           onPress={() => {
-            navigation.navigate('Write');
+            navigation.navigate('WritePost');
           }}
           style={styles.touchableOpacityStyle}>
           <Icon name="pencil" size={40} color="#000"
@@ -256,8 +264,8 @@ const Screen = () => {
           component={Main}
           options={{
             title: '게시판',
-        }
-        }
+          }
+          }
         />
         <Stack.Screen
           name="WritePost"
@@ -274,10 +282,11 @@ const Screen = () => {
         />
         <Stack.Screen
           name="ViewPost"
+          
           component={BoardContent}
           options={
             {
-              headerRight: ()=> {
+              headerRight: () => {
                 return <></>;
               }
               //headerShown: false
