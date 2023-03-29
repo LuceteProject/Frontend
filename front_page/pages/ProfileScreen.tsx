@@ -12,8 +12,11 @@ import PersonalSetting from './PersonalSetting';
 
 const Stack = createNativeStackNavigator();
 
+
 /* functional execution */
 const Screen = () => {
+
+  const [userImage, setUserImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
   // Profile Information update
   const ProfilePart = () => {
     return (
@@ -28,9 +31,11 @@ const Screen = () => {
             borderBottomColor: 'black',
             borderBottomWidth: StyleSheet.hairlineWidth,
           }}>
+          
           <Image
             //for test, use logo imgs
-            source={require('../img/logo.jpg')}
+            //source={require('../img/logo.jpg')}
+            source={{uri:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}}
             style={{
               //{size}
               width: 80,
@@ -168,7 +173,7 @@ const Screen = () => {
           options={
             {
               headerShown: true,
-              title:'프로필'
+              title: '프로필'
             }
           }
         />
@@ -177,12 +182,12 @@ const Screen = () => {
           component={AttendancePage}
           options={
             {
-              
-              headerRight: ()=> {
+
+              headerRight: () => {
                 return <></>;
               },
-              title:'부원 목록',
-              
+              title: '부원 목록',
+
             }
           }
 
@@ -193,11 +198,11 @@ const Screen = () => {
           options={
             {
               //headerShown: true,
-              headerRight: ()=> {
+              headerRight: () => {
                 return <></>;
               },
-              title:'부원 목록',
-              
+              title: '부원 목록',
+
             }
           }
 
