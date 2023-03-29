@@ -8,6 +8,7 @@ import { Tab } from '@rneui/themed';
 import { NoticeBar } from '@ant-design/react-native'
 
 import BoardContent from './BoardContents';
+import BoardWriteContent from './BoardWrite';
 
 const Stack = createNativeStackNavigator();
 
@@ -189,21 +190,6 @@ const Screen = () => {
             {/* 게시판 목록 index*/}
 
           </View>
-
-          <Button
-            title="Go to Write"
-            onPress={() => {
-              /* 1. Navigate to the Details route with params */
-              navigation.navigate('Write');
-            }}
-          />
-          <Button
-            title="Go to View"
-            onPress={() => {
-              /* 1. Navigate to the Details route with params */
-              navigation.push('ViewPost', {title:'test', author:'lee', reply:3});
-            }}
-          />
         </ScrollView>
 
         <TouchableOpacity
@@ -269,7 +255,7 @@ const Screen = () => {
         />
         <Stack.Screen
           name="WritePost"
-          component={WritePost}
+          component={BoardWriteContent}
           // 얘를 BoardContent.jsx 파일로 연결해야 하는데 왜 안되ㅑㄴ잉,,
           // configure the style for rendering and transitions (card / modal / transparentModal)
           options={
