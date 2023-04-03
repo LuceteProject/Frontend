@@ -9,6 +9,7 @@ import { NoticeBar } from '@ant-design/react-native'
 
 import BoardContent from './BoardContents';
 import BoardWriteContent from './BoardWrite';
+import {NotificationHandler} from '../components/Handler';
 
 const Stack = createNativeStackNavigator();
 
@@ -227,9 +228,7 @@ const Screen = () => {
             <>
               <TouchableOpacity
                 // Notification icon - components 분리할 수 있으면 뺴기
-                onPress={() => {
-                  Alert.alert("pressed!");
-                }}>
+                onPress={NotificationHandler}>
                 <Icon name="notifications" size={30} color="#000"
                   style={{
                     // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
@@ -245,6 +244,7 @@ const Screen = () => {
           // only in iOS - headerBackTitleVisible='false'
         }}
       >
+        
         <Stack.Screen
           name="PostListTab"
           component={Main}
