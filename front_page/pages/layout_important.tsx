@@ -5,6 +5,8 @@ import {StyleSheet, View} from 'react-native';
 // Ex: import { NavigationContainer } from '@react-navigation/native';
 
 /* functional execution */
+// Screen for main Tab
+// Page for each Tab screen
 const App = () => {
 	return 
         <>
