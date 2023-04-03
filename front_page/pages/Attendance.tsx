@@ -6,12 +6,11 @@ import QRCode from 'react-native-qrcode-svg';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-
 import ManagePage from './ManageAttendance';
 
 const Stack = createNativeStackNavigator();
 
-const Page = () => {
+const Screen = () => {
 
     /* 
     Values from API 
@@ -41,7 +40,7 @@ const Page = () => {
     const clickHandler = () => {
         Alert.alert("pressed!");
     }
-
+    
     // 게시판
     const Main = ({ navigation }: any) => {
         return (
@@ -199,9 +198,10 @@ const Page = () => {
         </>
     );
 }
-export default Page;
+export default Screen;
 
 const styles = StyleSheet.create({
+
     background: {
         flex: 1,
         backgroundColor: '#f5f5f9',

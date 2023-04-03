@@ -15,8 +15,8 @@ const Brief = Item.Brief
 const Stack = createNativeStackNavigator();
 
 
-/* Page */
-const Page = () => {
+/* Screen */
+const Screen = () => {
   /* values from API 
   유저 정보에서 받아올 내용 : 기수/이름/팀/역할/상메/번호/메일 
   */
@@ -93,17 +93,21 @@ const Page = () => {
           <Item
             thumb="https://os.alipayobjects.com/rmsportal/mOoPurdIfmcuqtr.png"
             extra={<View>
-              <Brief style={{ textAlign: 'right' }}>01012345678</Brief>
-              <Brief style={{ textAlign: 'right' }}>mail@gmail.com</Brief>
+              <Brief style={styles.telmail}>01012345678</Brief>
+              <Brief style={styles.telmail}>mail@gmail.com</Brief>
             </View>}
             multipleLine>
-            기수 이름
-            <Brief>무슨 팀</Brief>
-            <Brief style={{ color: 'blue' }}>"길이 제한 20자?"</Brief>
+            <Text style={styles.name}>20 김지원</Text>
+            <Brief>극본</Brief>
+            <Text style={styles.message} numberOfLines={1}>"길이 제한 20자?"</Text>
           </Item>
 
         </List>
-
+        <List renderHeader={'기획팀'}></List>
+        <List renderHeader={'디자인팀'}></List>
+        <List renderHeader={'배우팀'}></List>
+        <List renderHeader={'연출팀'}></List>
+        <List renderHeader={'음악팀'}></List>
       </ScrollView>
       <View
         style={{ paddingBottom: 20 }}>
@@ -115,6 +119,7 @@ const Page = () => {
     <>
       <Stack.Navigator
         screenOptions={{
+          headerShown: false,
           headerRight: () => (
             <>
               <TouchableOpacity
@@ -148,12 +153,36 @@ const Page = () => {
 }
 
 
-export default Page;
+export default Screen;
 
 const styles = StyleSheet.create({
   background: {
     flex: 1,
     backgroundColor: '#f5f5f9',
+  },
+
+  telmail: {
+    color: '#999999',
+    fontSize: 16,
+    textAlign: 'right',
+  },
+
+  name: {
+    color: '#000',
+    fontSize: 20,
+  },
+
+  teamname: {
+    fontSize: 28,
+    color: '#fff',
+    backgroundColor: '#999999',
+    verticalAlign: 'middle',
+  },
+
+  message: {
+    color: '#D070fB',
+    fontSize: 16,
+    width: 180,
   },
 
   container: {

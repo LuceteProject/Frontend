@@ -21,51 +21,29 @@ const Screen = () => {
   const ProfilePart = () => {
     return (
       <>
-        <View
-          style={{
-            flexDirection: "row", //content 정렬
-            padding: 10,
-            backgroundColor: "white",
-            alignItems: "center",
-
-            borderBottomColor: 'black',
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          }}>
-          
+        <View style ={styles.viewstyle}>
           <Image
             //for test, use logo imgs
             //source={require('../img/logo.jpg')}
             source={{uri:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}}
-            style={{
-              //{size}
-              width: 80,
-              height: 80,
-              borderRadius: 50,
-              margin: 5
-            }}
+            style={styles.imgstyle}
           />
           <View>
             <Text
               /* 받아오는 값은 ${user_num} 이런식으로? */
-              style={{
-                color: '#000',
-                fontSize: 16,
-              }}>
+              style={styles.profiletext}>
               기수</Text>
             <Text
-              style={{ color: '#000', fontSize: 16 }}>
+              style={styles.profiletext}>
               어떤 팀 이땡땡</Text>
             <Text
-              style={{
-                color: '#000',
-                fontSize: 14,
-                paddingTop: 10
-              }}>
+              style={styles.sangme}>
               Message</Text>
           </View>
 
         </View>
         <View
+        /*이거 뭔지 모르겠어요*/
           style={{
             borderBottomColor: 'black',
             borderBottomWidth: StyleSheet.hairlineWidth,
@@ -113,27 +91,20 @@ const Screen = () => {
         {/*
         <ListPart />
         왜 저기 들어가면 실행이 안되냐잉... */}
-        <Button
-          title="Go to Attendance"
-          onPress={() => {
-            /* 1. Navigate to the Details route with params */
-            navigation.push('Attendance');
-          }}
-        />
-        <Button
-          title="Go to MemberList"
-          onPress={() => {
-            /* 1. Navigate to the Details route with params */
-            navigation.navigate('MemberList');
-          }}
-        />
-        <Button
-          title="Go to Personal setting"
-          onPress={() => {
-            /* 1. Navigate to the Details route with params */
-            navigation.push('Personal Setting');
-          }}
-        />
+        <TouchableOpacity style={styles.button}
+        onPress={()=>{navigation.navigate('Attendance')}}>
+        <Text style={styles.buttontext}>출석확인</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.button}
+        onPress={()=>{navigation.navigate('MemberList')}}>
+        <Text style={styles.buttontext}>부원목록</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.button}
+        onPress={()=>{navigation.navigate('Personal Setting')}}>
+        <Text style={styles.buttontext}>설정</Text>
+        </TouchableOpacity>
       </>
     );
   }
@@ -153,6 +124,7 @@ const Screen = () => {
                 <Icon name="notifications" size={30} color="#000"
                   style={{
                     // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
+                    //없는게 나아보이긴해요
                     width: 40,
                     height: 40,
                     borderRadius: 100,
@@ -186,7 +158,7 @@ const Screen = () => {
               headerRight: () => {
                 return <></>;
               },
-              title: '부원 목록',
+              title: '출석확인',
 
             }
           }
@@ -201,7 +173,7 @@ const Screen = () => {
               headerRight: () => {
                 return <></>;
               },
-              title: '부원 목록',
+              title: '부원목록',
 
             }
           }
@@ -210,9 +182,17 @@ const Screen = () => {
         <Stack.Screen
           name="Personal Setting"
           component={PersonalSetting}
+          options={
+            {
+              //headerShown: true,
+              headerRight: () => {
+                return <></>;
+              },
+              title: '설정',
+
+            }
+          }
         />
-
-
       </Stack.Navigator>
     </>
   )
@@ -237,6 +217,47 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 22,
   },
+
+  viewstyle: {
+    flexDirection: "row", //content 정렬
+    padding: 10,
+    backgroundColor: "white",
+    alignItems: "center",
+
+    borderBottomColor: 'black',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+
+  imgstyle: {
+    width: 80,
+    height: 80,
+    borderRadius: 50,
+    margin: 5,
+  },
+
+  profiletext:{
+    fontSize: 19,
+    color: '#000'
+  },
+
+  sangme: {
+    fontSize: 16,
+    paddingTop: 7,
+    color: '#999999',
+  },
+
+  button:{
+    backgroundColor: "#ffffff",
+    pading: 10,
+  },
+
+  buttontext:{
+    fontSize: 24,
+    margin: 11,
+    textAlign: 'left',
+    color: '#000'
+  },
+
   /* 
   Profile item 
   프로필 사진, 이름, 전화번호, 이메일 스타일 지정필요

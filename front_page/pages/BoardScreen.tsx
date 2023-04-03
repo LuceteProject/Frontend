@@ -5,8 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Tab } from '@rneui/themed';
-import { NoticeBar } from '@ant-design/react-native'
-
+import {NoticeBar} from '@ant-design/react-native'
 import BoardContent from './BoardContents';
 import BoardWriteContent from './BoardWrite';
 import {NotificationHandler} from '../components/Handler';
