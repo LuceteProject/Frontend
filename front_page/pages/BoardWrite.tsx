@@ -217,8 +217,29 @@ const Screen = (props: any) => {
                         //value={value} 
                         />
                     </View>
-                    <Button title="확인" />
-                    <Button title="취소" />
+                    <Button title="확인" onPress={
+                        () => {
+                            /* Api upload in here */
+                            Alert.alert("게시글이 작성되었습니다.");
+                            navigation.pop(); 
+                        }} />
+                    <Button title="취소" onPress={
+                        () => {
+                            Alert.alert("작성 취소", "글 작성을 취소할까요?",
+                                [
+                                    {
+                                        text: "예",
+                                        onPress: () => { navigation.pop() }
+                                    },
+                                    {
+                                        text: "아니요",
+                                        style: 'cancel',
+                                    }
+                                    
+                                ],
+                                {cancelable : false}
+                            );
+                        }} />
 
 
 
