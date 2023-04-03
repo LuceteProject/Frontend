@@ -22,9 +22,11 @@ import CalendarScreen from './pages/CalendarScreen';
 // import DriveScreen from './pages/DriveScreen';
 /* 나중에 지워야 할 것 */
 import MemberScreen from './pages/MemberList';
+import Notification from './pages/Notification';
 
 //import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { notification } from 'antd';
 
 // Navigator
 const Drawer = createDrawerNavigator();
@@ -88,7 +90,7 @@ const Tabs = () => {
       <Tab.Screen name="Board" component={BoardScreen} />
       <Tab.Screen name="Todo" component={TodoScreen} />
       <Tab.Screen name="Calender" component={CalendarScreen} />
-      <Tab.Screen name="Drive" component={MemberScreen} />
+      <Tab.Screen name="Drive" component={Notification} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
 
 
