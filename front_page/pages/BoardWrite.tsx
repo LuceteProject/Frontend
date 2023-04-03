@@ -10,7 +10,7 @@ import { Chip, Dialog } from '@rneui/themed';
 import { TextInput } from 'react-native-gesture-handler';
 const Stack = createNativeStackNavigator();
 
-const Screen = (props: any) => {
+const Page = (props: any) => {
     //props
 
     /* 
@@ -304,7 +304,7 @@ const Screen = (props: any) => {
         </>
     );
 }
-export default Screen;
+export default Page;
 
 const styles = StyleSheet.create({
     background: {

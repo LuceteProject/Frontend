@@ -15,8 +15,8 @@ const Brief = Item.Brief
 const Stack = createNativeStackNavigator();
 
 
-/* Screen */
-const Screen = () => {
+/* Page */
+const Page = () => {
   /* values from API 
   유저 정보에서 받아올 내용 : 기수/이름/팀/역할/상메/번호/메일 
   */
@@ -148,7 +148,7 @@ const Screen = () => {
 }
 
 
-export default Screen;
+export default Page;
 
 const styles = StyleSheet.create({
   background: {
