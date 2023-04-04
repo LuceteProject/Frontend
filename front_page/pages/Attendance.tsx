@@ -10,7 +10,7 @@ import ManagePage from './ManageAttendance';
 
 const Stack = createNativeStackNavigator();
 
-const Screen = () => {
+const Page = () => {
 
     /* 
     Values from API 
@@ -198,7 +198,7 @@ const Screen = () => {
         </>
     );
 }
-export default Screen;
+export default Page;
 
 const styles = StyleSheet.create({
 
