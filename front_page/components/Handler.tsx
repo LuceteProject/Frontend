@@ -7,7 +7,7 @@ import Notification from '../pages/Notification';
 // error !
 const NotificationHandler = ({ navigation }: any) => {
     console.log("pressed!!!");
-    //navigation.navigate('Notifications');
+    navigation.navigate('Notification');
 }
 
 export { NotificationHandler };

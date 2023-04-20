@@ -9,7 +9,7 @@ import { CheckBox, Dialog } from '@rneui/themed';
 
 const Stack = createNativeStackNavigator();
 
-const Screen = () => {
+const Screen = ({ navigation }: any) => {
 
     const [text, onChangeText] = useState('');
 
@@ -46,7 +46,8 @@ const Screen = () => {
 
     }
 
-    const Main = ({ navigation }: any) => {
+    const Main = () => {
+        const [selected, setSelected] = useState('');
         // 일정 추가 Modal 창
         const [modalVisible, setModalVisible] = useState(false);
         const [modalVisibleButton, setModalVisibleButton] = useState(false);
@@ -69,13 +70,13 @@ const Screen = () => {
         const [checked, setChecked] = useState(1);
         const [btnName, setBtnName] = useState('캘린더 선택');
         const afterButtonSelected = (index: string) => {
-           setBtnName(index);
+            setBtnName(index);
         }
         //2) 알림 설정
         const [btnAlarmName, setBtnAlarmName] = useState('알림 설정');
         const afterButtonAlarmSelected = (index: string) => {
             setBtnAlarmName(index);
-         }
+        }
         const [visibleAlarmType, setVisibleAlarmType] = useState(false);
         const toggleDialogAlarmType = () => {
             setVisibleAlarmType(!visibleAlarmType);
@@ -94,30 +95,26 @@ const Screen = () => {
                 <Modal
                     animationType="slide"
                     visible={modalVisible}
-                    //transparent={true}
                     onRequestClose={() => {
                         Alert.alert('Modal has been closed.');
                         setModalVisible(!modalVisible);
                     }}
                     style={{
-                        //backgroundColor:'#000',
-                        //height:'60%',
+                        backgroundColor: '#F0EEEE',
+                        height:'60%',
                         //width:'100%'
                     }}>
-                    <View>
-                        <Icon name="calendar" size={30} color="#000" />
-                        <TextInput
-                            style={styles.input}
-                            onChangeText={onChangeTitle}
-                            placeholder={'제목'}
-                            value={title}
-                        />
-                    </View>
+
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={onChangeTitle}
+                        placeholder={'제목'}
+                        value={title}
+                    />
 
                     <View
                         id='inputDates'
                         style={{
-                            height: 150,
                             padding: 10,
                             backgroundColor: '#F0EEEE',
                             flexDirection: 'row',
@@ -132,17 +129,8 @@ const Screen = () => {
 
                             }}
                             onPress={() => setOpenStart(true)}>
-                            <Text
-                                style={{
-                                    fontSize: 23,
-                                    fontWeight: 'bold',
-                                }}>시작일</Text>
-                            <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: 'normal',
-                                    marginTop: 15,
-                                }}>
+                            <Text style={styles.fontTitle}>시작일</Text>
+                            <Text style={styles.fontNormal}>
                                 {/*근데 어차피 이거 api로 넘겨줘야하는거라 포맷팅 하는 부분 따로 빼는게 나을지도 */}
                                 {(dateStart.getMonth() + 1).toString()}월&nbsp;
                                 {dateStart.getDate().toString()}일{'\n'}
@@ -157,16 +145,9 @@ const Screen = () => {
                                 setOpenEnd(true);
                             }}>
                             <Text
-                                style={{
-                                    fontSize: 23,
-                                    fontWeight: 'bold',
-                                }}>종료일</Text>
+                                style={styles.fontTitle}>종료일</Text>
                             <Text
-                                style={{
-                                    fontSize: 20,
-                                    fontWeight: 'normal',
-                                    marginTop: 15,
-                                }}>
+                                style={styles.fontNormal}>
                                 {(dateEnd.getMonth() + 1).toString()}월&nbsp;
                                 {dateEnd.getDate().toString()}일{'\n'}
                                 {dateEnd.getHours().toString()} : {dateEnd.getMinutes().toString()}
@@ -210,6 +191,7 @@ const Screen = () => {
                         }}>
                         <Button
                             title={btnName}
+                            color='#D070fB' // color need
                             onPress={() => {
                                 toggleDialogCalType();
                                 console.log("pressed");
@@ -228,7 +210,7 @@ const Screen = () => {
                                     checkedIcon="dot-circle-o"
                                     uncheckedIcon="circle-o"
                                     checked={checked === i + 1}
-                                    onPress={() => {setChecked(i + 1); afterButtonSelected(l);}}
+                                    onPress={() => { setChecked(i + 1); afterButtonSelected(l); }}
                                 />
                             ))}
 
@@ -238,7 +220,7 @@ const Screen = () => {
                                     onPress={() => {
                                         //console.log(`Option ${checked} was selected!`);
                                         toggleDialogCalType();
-                                        
+
                                     }}
                                 />
                                 <Dialog.Button title="취소" onPress={() => {
@@ -249,6 +231,7 @@ const Screen = () => {
                         </Dialog>
                         <Button
                             title={btnAlarmName}
+                            color='#B77DE4' // color need
                             onPress={() => {
                                 toggleDialogAlarmType();
                             }}
@@ -335,13 +318,19 @@ const Screen = () => {
                             value={memo}
                         />
                     </View>
-                    <Button title='확인' onPress={ 
-                        ()=> {
-                            Alert.alert('Success');
-                            setModalVisible(!modalVisible);}
-                        /* submit DATA to API */}/>
-                    <Button title='취소'  onPress={ 
-                        ()=> {setModalVisible(!modalVisible);}}/>
+                    <View style={{ flexDirection: 'row', margin: 10, justifyContent: 'flex-end'}}>
+                        <Button title='확인' color='#B77DE4' // color need 
+                            onPress={
+                                () => {
+                                    Alert.alert('Success');
+                                    setModalVisible(!modalVisible);
+                                }
+                        /* submit DATA to API */} />
+                        <Button title='취소' color='#B77DE4' // color need
+                            onPress={
+                                () => { setModalVisible(!modalVisible); }} />
+                    </View>
+
                 </Modal>
                 <TouchableOpacity
                     // FBA (일정 추가)
@@ -372,18 +361,17 @@ const Screen = () => {
                     markingType={'period'}
                     markedDates={{
                         // {} API에서 받아오기
-                        ['2023-03-15']: { selected: true, disableTouchEvent: true, selectedColor: 'skyblue' }
+                        '2023-04-15': { selected: true, disableTouchEvent: true, selectedColor: 'skyblue' },
+                        [selected]: { selected: true, disableTouchEvent: true, selectedColor: 'orange' }
                     }}
                     onDayPress={day => {
                         console.log('selected day', day);
-                        () => {
-                            // 아래 리스트에 일정 받아오기
-                        };
+                        setSelected(day.dateString);
                     }
                     }
                     onDayLongPress={day => {
                         console.log('long selected day', day);
-                        // 일정 추가?
+                        setModalVisible(true);
                     }}
 
 
@@ -483,7 +471,7 @@ const Screen = () => {
                             <TouchableOpacity
                                 // Notification icon - components 분리할 수 있으면 뺴기
                                 onPress={() => {
-                                    Alert.alert("pressed!");
+                                    navigation.navigate('Notification');
                                 }}>
                                 <Icon name="notifications" size={30} color="#000"
                                     style={{
@@ -561,15 +549,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#D9D9D9',
         //padding: 10,
     },
-    searchbtn: {
-        height: 40,
-        width: '10%',
-        margin: 12,
-        marginLeft: 0,
-        borderRadius: 50,
-        backgroundColor: '#D9D9D9',
-        padding: 10,
+    fontTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
     },
+    fontNormal: {
+        fontSize: 18,
+        fontWeight: 'normal',
+    },
+
     /* 밑에 두개 floating button style
 이거 왜 가운데에 안오냐 ....? ㅁㄹ...*/
     touchableOpacityStyle: {

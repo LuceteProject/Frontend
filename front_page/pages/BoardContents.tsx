@@ -8,7 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator();
 
-const Page = (props : any) => {
+const Page = ({ props, navigation, route }: any) => {
     //props
 
     /* 
@@ -31,11 +31,15 @@ const Page = (props : any) => {
       fetchContentData();
       }, []);
       */
+     useEffect(()=>{
+        console.log({props});
+        console.log({route});
+     }, [props]);
 
     const clickOptionHandler = () => {
         Alert.alert("pressed!");
     }
-
+    /* 댓글부분 */
     const Reply = () => {
         // 댓글 리스트 API에서 가져오기
         return (
@@ -90,12 +94,13 @@ const Page = (props : any) => {
             </>
         );
     }
-    // 게시판
-    const Main = ({ navigation }: any) => {
+    /* 게시글 부분 */
+    const Main = () => {
         const [haveAccess, setHaveAccess] = useState(false);
 
         return (
             <SafeAreaView>
+                <Text>as</Text>
                 <ScrollView>
                     <Text style={{ marginTop: 10, marginLeft: 10 }} >boardType</Text>
                     <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -104,7 +109,7 @@ const Page = (props : any) => {
                             fontWeight: 'bold',
                             fontSize: 25,
 
-                        }}>postTitle</Text>
+                        }}>props.title</Text>
                         <TouchableOpacity
                             accessibilityLabel='owner' // {haveAccess}
                             onPress={clickOptionHandler}
@@ -137,7 +142,7 @@ const Page = (props : any) => {
                         <Text style={{
                             margin: 15,
                             fontSize: 15,
-                        }}>{props.author}</Text>
+                        }}>props.author</Text>
 
                     </View>
                     <Text style={{

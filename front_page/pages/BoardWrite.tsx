@@ -68,6 +68,7 @@ const Page = (props: any) => {
                     {/* 게시판 종류 선택 부분 */}
                     <TouchableOpacity
                         onPress={toggleSetVisible}
+                        style={styles.optionBackground}
                     >
                         {/* 
                         <Modal
@@ -124,7 +125,7 @@ const Page = (props: any) => {
                             />
 
                         </Dialog>
-                        <Text>{type}</Text>
+                        <Text style={styles.option}>{type}</Text>
                     </TouchableOpacity>
                     {/* 제목 입력 */}
                     <KeyboardAvoidingView>
@@ -158,9 +159,7 @@ const Page = (props: any) => {
                     />
                     */}
                     <TouchableOpacity
-                        style={{
-                            marginTop: 5
-                        }}
+                        style={ styles.optionBackground }
                         onPress={toggleSetVisible2}
                     >
                         <Dialog
@@ -176,7 +175,7 @@ const Page = (props: any) => {
                                 }}
                             />
                         </Dialog>
-                        <Text>{context}</Text>
+                        <Text style={styles.option}>{context}</Text>
                     </TouchableOpacity>
                     <View
                         style={{
@@ -193,7 +192,7 @@ const Page = (props: any) => {
                             console.log('첨부파일 pressed');
                         }}
                     >
-                        <Text>첨부파일</Text>
+                        <Text style={styles.option}>첨부파일</Text>
                     </TouchableOpacity>
                     <View
                         style={{
@@ -221,7 +220,7 @@ const Page = (props: any) => {
                         () => {
                             /* Api upload in here */
                             Alert.alert("게시글이 작성되었습니다.");
-                            navigation.pop(); 
+                            navigation.pop();
                         }} />
                     <Button title="취소" onPress={
                         () => {
@@ -235,9 +234,9 @@ const Page = (props: any) => {
                                         text: "아니요",
                                         style: 'cancel',
                                     }
-                                    
+
                                 ],
-                                {cancelable : false}
+                                { cancelable: false }
                             );
                         }} />
 
@@ -307,29 +306,16 @@ const Page = (props: any) => {
 export default Page;
 
 const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        backgroundColor: '#f5f5f9',
+    option: {
+        fontSize: 15,
+        fontWeight: 'normal',
+        textAlign: 'left'
     },
-    container: {
-        // for empty space in iOS
-        height: 5
-    },
-    title: {
-        fontSize: 24,
-    },
-    /* 밑에 두개 floating button style
-    이거 왜 가운데에 안오냐 ....? ㅁㄹ...*/
-    touchableOpacityStyle: {
-        position: 'absolute',
-        width: 80,
-        height: 80,
-        alignItems: 'center',
-        justifyContent: 'center',
-        right: 30,
-        bottom: 30,
-    },
-    floatingButtonStyle: {
+
+    optionBackground: {
+        
+        padding: 5,
+        borderRadius: 5,
         backgroundColor: '#fff'
-    },
+    }
 });

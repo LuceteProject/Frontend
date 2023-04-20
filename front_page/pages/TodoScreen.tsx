@@ -10,7 +10,7 @@ import Task from '../components/Task';
 const Stack = createNativeStackNavigator();
 
 /* Screen */
-const Screen = () => {
+const Screen = ({ navigation }: any) => {
   /* values from API 
   유저 정보에서 받아올 내용 : 기수/이름/팀/역할/상메/번호/메일 
   */
@@ -52,7 +52,7 @@ const Screen = () => {
   fetchContentData();
   }, []);
   */
-  const Main = ({ navigation }: any) => {
+  const Main = () => {
     return (
       <View style={styles.container}>
         {/* Added this scroll view to enable scrolling when list gets longer than the page */}

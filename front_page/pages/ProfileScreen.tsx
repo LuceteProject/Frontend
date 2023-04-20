@@ -14,7 +14,7 @@ const Stack = createNativeStackNavigator();
 
 
 /* functional execution */
-const Screen = () => {
+const Screen = ({ navigation }: any) => {
 
   const [userImage, setUserImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
   // Profile Information update
@@ -53,7 +53,7 @@ const Screen = () => {
   }
 
   /* Error 해결 필요 */
-  const ListPart = ({ navigation }: any) => {
+  const ListPart = () => {
     return (
       <>
         <Button
@@ -82,7 +82,7 @@ const Screen = () => {
   }
 
   //Profile 첫 화면
-  const Main = ({ navigation }: any) => {
+  const Main = () => {
     return (
       <>
         <ProfilePart />
@@ -119,7 +119,7 @@ const Screen = () => {
               <TouchableOpacity
                 // Notification icon - components 분리할 수 있으면 뺴기
                 onPress={() => {
-                  Alert.alert("pressed!");
+                  navigation.navigate('Notification');
                 }}>
                 <Icon name="notifications" size={30} color="#000"
                   style={{

@@ -1,14 +1,16 @@
 // tslint:disable:no-empty
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, TextInput, SectionList, FlatList } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Tab } from '@rneui/themed';
-import {NoticeBar} from '@ant-design/react-native'
+import { Tab, TabView } from '@rneui/themed';
 import BoardContent from './BoardContents';
 import BoardWriteContent from './BoardWrite';
-import {NotificationHandler} from '../components/Handler';
+import Notification from './Notification';
+
+import { NotificationHandler } from '../components/Handler';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +23,7 @@ const SwitchComponent = () => {
     setSearch(search);
   };
 }
-const Screen = () => {
+const Screen = ({ navigation }: any) => {
 
   /* 
   Values from API 
@@ -50,112 +52,99 @@ const Screen = () => {
     */
   // on searching text changed
 
-  const clickHandler = () => {
-    Alert.alert("pressed!");
+  const clickHandler = ({ name }: any) => {
+    Alert.alert(name, "pressed!");
   }
+  const BoardItem = (props: any) => (
+    // 각 게시글 항목
 
-  const BoardItem = (props : any) => {
+    <TouchableOpacity
+      onPress={() => {
+        /* onPress 호출되지 않음 */
+        //console.log(props);
+        props.nav.push('ViewPost', { title: 'test', author: 'lee' });
 
-    return (
-      // 각 게시글 항목
-      <TouchableOpacity
-        onPress={() => {
-          /* 1. Navigate to the Details route with params */
-          //console.log(props);
-          props.nav.push('ViewPost', {title:'test', author:'lee'});
-
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'stretch',
-            justifyContent: 'space-between',
-            paddingBottom: 10,
-            paddingTop: 10
-          }}>
-          <View>
-            <Text> {props.title} </Text>
-            <Text> {props.author} / 작성 시간 </Text>
-          </View>
-          <View>
-            <Text
-              style={{
-                padding: 10
-              }}>{props.reply}</Text>
-          </View>
+      }}
+    >
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'stretch',
+          justifyContent: 'space-between',
+          paddingBottom: 10,
+          paddingTop: 10
+        }}>
+        <View>
+          <Text> {props.title} </Text>
+          <Text> {props.author} / {props.wtime} </Text>
         </View>
-        <View
-          // 구분선
-          style={{
-            borderBottomColor: 'gray',
-            borderBottomWidth: StyleSheet.hairlineWidth,
-          }}
-        />
-      </TouchableOpacity>
-    )
-  }
+        <View>
+          <Text
+            style={{
+              padding: 10
+            }}>{props.reply}</Text>
+        </View>
+      </View>
+      <View
+        // 구분선
+        style={{
+          borderBottomColor: 'gray',
+          borderBottomWidth: StyleSheet.hairlineWidth,
+        }}
+      />
+    </TouchableOpacity>
+  );
 
   // 게시판
-  const Main = ({ navigation }: any) => {
+  const Main = () => {
     const [index, setIndex] = React.useState(0);
     const [number, onChangeNumber] = useState('');
+    const [data, setData] = useState([]);
+    // sample for data 
+    const DATA = [
+      {
+        title: 'Main dishes',
+        author: 'lee',
+        reply: 1,
+        timestamp: '2023-04-06'
+      },
+      {
+        title: 'Sides',
+        author: 'kang',
+        reply: 2,
+        timestamp: '2023-04-04'
+      },
+      {
+        title: 'Drinks',
+        author: 'kim',
+        reply: 3,
+        timestamp: '2023-03-31'
+      },
+      {
+        title: 'Desserts',
+        author: 'park',
+        reply: 4,
+        timestamp: '2023-03-20'
+      },
+    ];
 
     return (
       <>
-        <ScrollView
+        <View
           style={styles.background}
-          // 이게 뭔지 나도 찾아봐야함
-          automaticallyAdjustContentInsets={false}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}>
-          <NoticeBar
-            /** 중요 공지사항 가장 위쪽에 올리는 용도로 사용
-             * mode='link' 다른 게시글에 연결 가능
-             * marqueeProps 속성 설정
-             * 
-             * from 'ant-design'
-             */
-            mode='link'
-            marqueeProps={{ loop: true, style: { fontSize: 15, color: 'black' } }}>
-            여러분 공지 좀 읽으세요~~
-          </NoticeBar>
+        // 이게 뭔지 나도 찾아봐야함
+        //automaticallyAdjustContentInsets={false}
+        //showsHorizontalScrollIndicator={false}
+        //</>showsVerticalScrollIndicator={false}
+        >
+
+          <Text>여러분 공지 좀 읽으세요 란</Text>
+
           <Tab value={index} onChange={setIndex} dense>
             <Tab.Item>자유게시판</Tab.Item>
             <Tab.Item>익명게시판</Tab.Item>
             <Tab.Item>임원진게시판</Tab.Item>
           </Tab>
-          {/*
-          
-          <View
-            style={
-              {
-                margin: 10,
-                flexDirection: 'row', //정렬 방향
-                justifyContent: 'space-around'
-              }
-            }>
-            <TouchableOpacity onPress={clickHandler}>
-              <Text>자유게시판</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={clickHandler}>
-              <Text>익명게시판</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={clickHandler}>
-              <Text style={{ color: 'red' }}>임원게시판</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View
-            // 구분선
-            style={{
-              borderBottomColor: 'black',
-              borderBottomWidth: StyleSheet.hairlineWidth,
-            }}
-          />
-          */}
-
-          {/* Search bar in here */}
           <View
             id='SearchBar'
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}
@@ -167,30 +156,62 @@ const Screen = () => {
               value={text}
             />
             <TouchableOpacity
-              style={styles.searchbtn
-              }
+              style={styles.searchbtn}
               onPress={clickHandler}>
               <Icon name="search" size={20} color="#000"
               />
             </TouchableOpacity>
           </View>
 
-          {/*for sample item*/}
-          <BoardItem nav={navigation} title="test" author="lee" reply='1'/>
-          <BoardItem nav={navigation} title="test2" author="kim" reply='2'/>
-          <BoardItem nav={navigation} title="test3" author="park" reply='3'/>
+          <TabView value={index} onChange={setIndex} animationType="spring">
+            { /*onPress 호출안되는 문제 계속되면, map 으로 개수만큼 boardItem 컴포넌트 생성해서 넣는 방법 사용하기*/}
+            <TabView.Item style={{ width: '100%', height: 600 }}>
+              <>
+              <Button title="press" />
+              <FlatList
+                data={DATA} // 여기에 서버에서 가져온 값 data 넣어주기
+                renderItem={({ item }) => <BoardItem
+                  title={item.title}
+                  author={item.author}
+                  wtime={item.timestamp}
+                  reply={item.reply} />
+                }
+              //keyExtractor={(item) => String(item.id)}
+              />
+              </>
+              
+
+            </TabView.Item>
+            <TabView.Item style={{ width: '100%', height: 600 }}>
+              <>
+                <Text>익명게시판입니다.</Text>
+                <TouchableOpacity onPress={()=>{
+                  console.log('pressed');
+                }}><Text>클릭</Text></TouchableOpacity>
+                <BoardItem nav={navigation} title="test" author="lee" reply='1' />
+                <BoardItem nav={navigation} title="test2" author="kim" reply='2' />
+                <BoardItem nav={navigation} title="test3" author="park" reply='3' />
+              </>
+
+            </TabView.Item>
+            <TabView.Item style={{ width: '100%', height: 600 }}>
+              <>
+                <Text>임원진게시판입니다.</Text>
+                <BoardItem nav={navigation} title="test" author="lee" reply='1' />
+                <BoardItem nav={navigation} title="test2" author="kim" reply='2' />
+                <BoardItem nav={navigation} title="test3" author="park" reply='3' />
+              </>
 
 
-          <View
-            style={{
-              margin: 10
-            }}>
-          </View>
-          <View>
+            </TabView.Item>
+          </TabView>
+          
+          <View style={{
+            height: 800
+          }}>
             {/* 게시판 목록 index*/}
-
           </View>
-        </ScrollView>
+        </View>
 
         <TouchableOpacity
           // 글쓰기 버튼
@@ -208,17 +229,6 @@ const Screen = () => {
     );
   }
 
-  // 게시글 작성
-  const WritePost = ({ navigation }: any) => {
-    return (
-      <View>
-        <Text>Write a new post.</Text>
-        <Button title="Go back" onPress={() => navigation.goBack()} />
-
-      </View>
-    );
-  }
-
   return (
     <>
       <Stack.Navigator
@@ -227,7 +237,9 @@ const Screen = () => {
             <>
               <TouchableOpacity
                 // Notification icon - components 분리할 수 있으면 뺴기
-                onPress={NotificationHandler}>
+                onPress={() => {
+                  navigation.navigate('Notification');
+                }}>
                 <Icon name="notifications" size={30} color="#000"
                   style={{
                     // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
@@ -243,7 +255,7 @@ const Screen = () => {
           // only in iOS - headerBackTitleVisible='false'
         }}
       >
-        
+
         <Stack.Screen
           name="PostListTab"
           component={Main}
@@ -267,7 +279,7 @@ const Screen = () => {
         />
         <Stack.Screen
           name="ViewPost"
-          
+
           component={BoardContent}
           options={
             {
@@ -275,6 +287,16 @@ const Screen = () => {
                 return <></>;
               }
               //headerShown: false
+            }
+          }
+        />
+         <Stack.Screen
+          name="Notification"
+          component={Notification}
+          options={
+            {
+              headerShown: false,
+              presentation: 'modal',
             }
           }
         />
@@ -287,7 +309,7 @@ export default Screen;
 
 const styles = StyleSheet.create({
   background: {
-    flex: 1,
+    //flex: 1,
     backgroundColor: '#f5f5f9',
   },
   container: {
