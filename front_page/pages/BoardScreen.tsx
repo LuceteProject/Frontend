@@ -1,30 +1,28 @@
 // tslint:disable:no-empty
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, TextInput, SectionList, FlatList } from 'react-native';
+import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, TextInput } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { TabView, SceneMap } from 'react-native-tab-view';
+
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Tab, TabView } from '@rneui/themed';
+import { Tab, } from '@rneui/themed';
 import BoardContent from './BoardContents';
 import BoardWriteContent from './BoardWrite';
 import Notification from './Notification';
-
-import { NotificationHandler } from '../components/Handler';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 
 type SearchBarComponentProps = {};
 
 const SwitchComponent = () => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
 
   const updateSearch = (search: React.SetStateAction<string>) => {
     setSearch(search);
   };
-}
+};
 const Screen = ({ navigation }: any) => {
-
   /* 
   Values from API 
   */
@@ -53,36 +51,39 @@ const Screen = ({ navigation }: any) => {
   // on searching text changed
 
   const clickHandler = ({ name }: any) => {
-    Alert.alert(name, "pressed!");
-  }
+    Alert.alert(name, 'pressed!');
+  };
   const BoardItem = (props: any) => (
     // 각 게시글 항목
 
     <TouchableOpacity
       onPress={() => {
         /* onPress 호출되지 않음 */
-        //console.log(props);
-        props.nav.push('ViewPost', { title: 'test', author: 'lee' });
-
-      }}
-    >
+        console.log(props);
+        props.nav.navigate('ViewPost', { title: 'test', author: 'kim' });
+      }}>
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'stretch',
           justifyContent: 'space-between',
           paddingBottom: 10,
-          paddingTop: 10
+          paddingTop: 10,
         }}>
         <View>
           <Text> {props.title} </Text>
-          <Text> {props.author} / {props.wtime} </Text>
+          <Text>
+            {' '}
+            {props.author} / {props.wtime}{' '}
+          </Text>
         </View>
         <View>
           <Text
             style={{
-              padding: 10
-            }}>{props.reply}</Text>
+              padding: 10,
+            }}>
+            {props.reply}
+          </Text>
         </View>
       </View>
       <View
@@ -94,39 +95,48 @@ const Screen = ({ navigation }: any) => {
       />
     </TouchableOpacity>
   );
+  const FirstRoute = (props: any) => (
+    <View style={{ height: 500 }}>
+      {/* nav에 navigation 넣어줘야 하고.. 이걸 props로 받아야 하고... 이건 가장먼저 SceneMap에서 넣어줘야하고... api에서 불러오면 값하나로 통일될듯?*/}
+      <BoardItem nav={navigation} title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
+      <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
+    </View>
+  );
+
+  const SecondRoute = (props: any) => (
+    <View>
+      <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
+      <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
+
+    </View>
+  );
+
+  const ThirdRoute = (props: any) => (
+    <View style={{ height: 500 }}>
+      <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
+      <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
+
+    </View>
+  );
+  //Tab View 항목 지정
+  const renderScene = SceneMap({
+    first: () => <FirstRoute nav={navigation} title="sample" author="lee" wtime="2023/01/05" reply='3' />,
+    second: () => <SecondRoute nav={navigation} title="sample" author="lee" wtime="2023/01/05" reply='3' />,
+    third: () => <ThirdRoute nav={navigation} title="sample" author="lee" wtime="2023/01/05" reply='3' />,
+  });
 
   // 게시판
   const Main = () => {
     const [index, setIndex] = React.useState(0);
+    const [routes] = React.useState([
+      { key: 'first', title: 'First' },
+      { key: 'second', title: 'Second' },
+      { key: 'third', title: 'Third' },
+    ]);
+
+    /* 게시판 페이지 번호 */
     const [number, onChangeNumber] = useState('');
     const [data, setData] = useState([]);
-    // sample for data 
-    const DATA = [
-      {
-        title: 'Main dishes',
-        author: 'lee',
-        reply: 1,
-        timestamp: '2023-04-06'
-      },
-      {
-        title: 'Sides',
-        author: 'kang',
-        reply: 2,
-        timestamp: '2023-04-04'
-      },
-      {
-        title: 'Drinks',
-        author: 'kim',
-        reply: 3,
-        timestamp: '2023-03-31'
-      },
-      {
-        title: 'Desserts',
-        author: 'park',
-        reply: 4,
-        timestamp: '2023-03-20'
-      },
-    ];
 
     return (
       <>
@@ -137,82 +147,37 @@ const Screen = ({ navigation }: any) => {
         //showsHorizontalScrollIndicator={false}
         //</>showsVerticalScrollIndicator={false}
         >
-
           <Text>여러분 공지 좀 읽으세요 란</Text>
 
-          <Tab value={index} onChange={setIndex} dense>
-            <Tab.Item>자유게시판</Tab.Item>
-            <Tab.Item>익명게시판</Tab.Item>
-            <Tab.Item>임원진게시판</Tab.Item>
-          </Tab>
           <View
-            id='SearchBar'
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
-          >
+            id="SearchBar"
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
             <TextInput
               style={styles.input}
               onChangeText={onChangeText}
               placeholder={'검색어를 입력하세요.'}
               value={text}
             />
-            <TouchableOpacity
-              style={styles.searchbtn}
-              onPress={clickHandler}>
-              <Icon name="search" size={20} color="#000"
-              />
+            <TouchableOpacity style={styles.searchbtn} onPress={clickHandler}>
+              <Icon name="search" size={20} color="#000" />
             </TouchableOpacity>
           </View>
 
-          <TabView value={index} onChange={setIndex} animationType="spring">
-            { /*onPress 호출안되는 문제 계속되면, map 으로 개수만큼 boardItem 컴포넌트 생성해서 넣는 방법 사용하기*/}
-            <TabView.Item style={{ width: '100%', height: 600 }}>
-              <>
-              <Button title="press" />
-              <FlatList
-                data={DATA} // 여기에 서버에서 가져온 값 data 넣어주기
-                renderItem={({ item }) => <BoardItem
-                  title={item.title}
-                  author={item.author}
-                  wtime={item.timestamp}
-                  reply={item.reply} />
-                }
-              //keyExtractor={(item) => String(item.id)}
-              />
-              </>
-              
+        </View >
+        {/* TabBar style https://reactnavigation.org/docs/tab-view#tabview - TabBar 항목에서 style 지정 설명 있음 */}
+        <TabView
+          //renderTabBar
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+        />
 
-            </TabView.Item>
-            <TabView.Item style={{ width: '100%', height: 600 }}>
-              <>
-                <Text>익명게시판입니다.</Text>
-                <TouchableOpacity onPress={()=>{
-                  console.log('pressed');
-                }}><Text>클릭</Text></TouchableOpacity>
-                <BoardItem nav={navigation} title="test" author="lee" reply='1' />
-                <BoardItem nav={navigation} title="test2" author="kim" reply='2' />
-                <BoardItem nav={navigation} title="test3" author="park" reply='3' />
-              </>
-
-            </TabView.Item>
-            <TabView.Item style={{ width: '100%', height: 600 }}>
-              <>
-                <Text>임원진게시판입니다.</Text>
-                <BoardItem nav={navigation} title="test" author="lee" reply='1' />
-                <BoardItem nav={navigation} title="test2" author="kim" reply='2' />
-                <BoardItem nav={navigation} title="test3" author="park" reply='3' />
-              </>
-
-
-            </TabView.Item>
-          </TabView>
-          
-          <View style={{
-            height: 800
+        <View
+          style={{
+            height: 80,
           }}>
-            {/* 게시판 목록 index*/}
-          </View>
+          {/* 게시판 목록 index*/}
         </View>
-
         <TouchableOpacity
           // 글쓰기 버튼
           activeOpacity={0.7}
@@ -220,14 +185,16 @@ const Screen = ({ navigation }: any) => {
             navigation.navigate('WritePost');
           }}
           style={styles.touchableOpacityStyle}>
-          <Icon name="pencil" size={40} color="#000"
+          <Icon
+            name="pencil"
+            size={40}
+            color="#000"
             style={styles.floatingButtonStyle}
           />
         </TouchableOpacity>
       </>
-
     );
-  }
+  };
 
   return (
     <>
@@ -240,7 +207,10 @@ const Screen = ({ navigation }: any) => {
                 onPress={() => {
                   navigation.navigate('Notification');
                 }}>
-                <Icon name="notifications" size={30} color="#000"
+                <Icon
+                  name="notifications"
+                  size={30}
+                  color="#000"
                   style={{
                     // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
                     width: 40,
@@ -250,61 +220,48 @@ const Screen = ({ navigation }: any) => {
                 />
               </TouchableOpacity>
             </>
-
-          )
+          ),
           // only in iOS - headerBackTitleVisible='false'
-        }}
-      >
-
+        }}>
         <Stack.Screen
           name="PostListTab"
           component={Main}
           options={{
             title: '게시판',
-          }
-          }
+          }}
         />
         <Stack.Screen
           name="WritePost"
           component={BoardWriteContent}
           // 얘를 BoardContent.jsx 파일로 연결해야 하는데 왜 안되ㅑㄴ잉,,
           // configure the style for rendering and transitions (card / modal / transparentModal)
-          options={
-            {
-              presentation: 'modal',
-              headerShown: false
-            }
-          }
-
+          options={{
+            presentation: 'modal',
+            headerShown: false,
+          }}
         />
         <Stack.Screen
           name="ViewPost"
-
           component={BoardContent}
-          options={
-            {
-              headerRight: () => {
-                return <></>;
-              }
-              //headerShown: false
-            }
-          }
+          options={{
+            headerRight: () => {
+              return <></>;
+            },
+            //headerShown: false
+          }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="Notification"
           component={Notification}
-          options={
-            {
-              headerShown: false,
-              presentation: 'modal',
-            }
-          }
+          options={{
+            headerShown: false,
+            presentation: 'modal',
+          }}
         />
-
       </Stack.Navigator>
     </>
   );
-}
+};
 export default Screen;
 
 const styles = StyleSheet.create({
@@ -314,7 +271,7 @@ const styles = StyleSheet.create({
   },
   container: {
     // for empty space in iOS
-    height: 5
+    height: 5,
   },
   title: {
     fontSize: 24,
@@ -351,6 +308,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 50,
     height: 50,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
 });
