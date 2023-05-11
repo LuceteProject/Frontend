@@ -6,6 +6,7 @@ import DatePicker from 'react-native-date-picker';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { CheckBox, Dialog } from '@rneui/themed';
+import { Pressable } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,8 +47,11 @@ const Screen = ({ navigation }: any) => {
 
     }
 
+
+
     const Main = () => {
-        const [selected, setSelected] = useState('');
+        const today = new Date();
+        const [selected, setSelected] = useState(today.toISOString().split('T')[0]);
         // 일정 추가 Modal 창
         const [modalVisible, setModalVisible] = useState(false);
         const [modalVisibleButton, setModalVisibleButton] = useState(false);
@@ -90,6 +94,16 @@ const Screen = ({ navigation }: any) => {
         const [place, setPlace] = useState('');
         const [memo, setMemo] = useState('');
 
+
+        useEffect(() => {
+            // 일정 추가 버튼 눌렀을때, 일정 시각이 선택한 날짜로 바뀌게 변경
+            // 2023-05-11T14:09:12.825Z 형식의 new Date() 문자열 concat해서 2023-05-11만 남게 하면 될듯?
+            setDateStart(new Date(selected));
+            setDateEnd(new Date(selected));
+
+        }, [selected]);
+
+
         return (
             <>
                 <Modal
@@ -101,7 +115,7 @@ const Screen = ({ navigation }: any) => {
                     }}
                     style={{
                         backgroundColor: '#F0EEEE',
-                        height:'60%',
+                        height: '60%',
                         //width:'100%'
                     }}>
 
@@ -191,7 +205,7 @@ const Screen = ({ navigation }: any) => {
                         }}>
                         <Button
                             title={btnName}
-                            color='#D070fB' // color need
+                            color='#B77DE4' // color need
                             onPress={() => {
                                 toggleDialogCalType();
                                 console.log("pressed");
@@ -318,17 +332,32 @@ const Screen = ({ navigation }: any) => {
                             value={memo}
                         />
                     </View>
-                    <View style={{ flexDirection: 'row', margin: 10, justifyContent: 'flex-end'}}>
-                        <Button title='확인' color='#B77DE4' // color need 
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+
+                        <Pressable
+                            onPress={
+                                () => { setModalVisible(!modalVisible); }}
+                            style={({ pressed }) => [
+                                {
+                                    backgroundColor: pressed ? '#B77DE4' : 'white',
+                                }, styles.btn]}>
+                            <Text style={{ color: '#ffffff', fontSize: 14 }}>취소</Text>
+                        </Pressable>
+                        <Pressable
                             onPress={
                                 () => {
                                     Alert.alert('Success');
                                     setModalVisible(!modalVisible);
-                                }
-                        /* submit DATA to API */} />
-                        <Button title='취소' color='#B77DE4' // color need
-                            onPress={
-                                () => { setModalVisible(!modalVisible); }} />
+                                    /* submit DATA to API */
+                                }}
+                            style={({ pressed }) => [
+                                {
+                                    backgroundColor: pressed ? '#B77DE4' : 'white',
+                                }, styles.btn]}>
+                            <Text style={{ color: '#ffffff', fontSize: 14 }}>확인</Text>
+                        </Pressable>
+
+
                     </View>
 
                 </Modal>
@@ -346,100 +375,58 @@ const Screen = ({ navigation }: any) => {
                 </TouchableOpacity>
                 <Calendar
                     style={{
-                        height: 300,
+                        height: 350,
 
                     }}
                     enableSwipeMonths={true}
+                    /* 
                     dayComponent={({ date, state }: any) => {
                         return (
-                            <View>
+                            <TouchableOpacity>
                                 <Text style={{ textAlign: 'center', color: state === 'disabled' ? 'gray' : 'black' }}>{date.day}</Text>
-                            </View>
+                            </TouchableOpacity>
                         );
                     }}
+                    */
+
                     monthFormat={'yyyy년 MM월'}
-                    markingType={'period'}
+                    markingType={'multi-period'} //marking 종류 여러개
                     markedDates={{
                         // {} API에서 받아오기
-                        '2023-04-15': { selected: true, disableTouchEvent: true, selectedColor: 'skyblue' },
-                        [selected]: { selected: true, disableTouchEvent: true, selectedColor: 'orange' }
+                        [selected]: {
+                            selected: true,
+                        },
+                        // 아래는 sample 예시들
+                        '2023-05-15': {
+                            periods: [
+                                { startingDay: true, endingDay: false, color: '#5f9ea0' },
+
+                            ]
+                        },
+                        '2023-05-16': {
+                            periods: [
+                                { startingDay: false, endingDay: true, color: '#123456' },
+
+                            ]
+                        },
+                        ['2023-05-20']: {
+                            periods: [
+                                { startingDay: true, endingDay: true, color: 'orange' },
+                            ]
+                        }
                     }}
                     onDayPress={day => {
-                        console.log('selected day', day);
+                        //console.log('selected day', day);
                         setSelected(day.dateString);
+                        
                     }
                     }
                     onDayLongPress={day => {
-                        console.log('long selected day', day);
+                        //console.log('long selected day', day);
+                        setSelected(day.dateString);
                         setModalVisible(true);
                     }}
-
-
                 />
-
-                {/* Agenda 오브젝트 쓰고 싶은데 어떻게 쓰는건지 공부해야함
-                <Agenda
-                    // The list of items that have to be displayed in agenda. If you want to render item as empty date
-                    // the value of date key has to be an empty array []. If there exists no value for date key it is
-                    // considered that the date in question is not yet loaded
-
-                    // Callback that gets called when items for a certain month should be loaded (month became visible)
-                    loadItemsForMonth={month => {
-                        console.log('trigger items loading');
-                    }}
-                    // Callback that fires when the calendar is opened or closed
-                    onCalendarToggled={calendarOpened => {
-                        console.log(calendarOpened);
-                    }}
-                    // Callback that gets called on day press
-                    onDayPress={day => {
-                        console.log('day pressed');
-                    }}
-                    // Callback that gets called when day changes while scrolling agenda list
-                    onDayChange={day => {
-                        console.log('day changed');
-                    }}
-                    // Initially selected day
-
-
-                    // Max amount of months allowed to scroll to the past. Default = 50
-                    pastScrollRange={50}
-                    // Max amount of months allowed to scroll to the future. Default = 50
-                    futureScrollRange={50}
-                    // Specify how each item should be rendered in agenda
-                    renderItem={(item, firstItemInDay) => {
-                        return <View />;
-                    }}
-                    // Specify how each date should be rendered. day can be undefined if the item is not first in that day
-                    renderDay={(day, item) => {
-                        return <View />;
-                    }}
-                    // Specify how empty date content with no items should be rendered
-                    renderEmptyDate={() => {
-                        return <View />;
-                    }}
-                    // Specify how agenda knob should look like
-                    renderKnob={() => {
-                        return <View />;
-                    }}
-                    // Override inner list with a custom implemented component
-
-                    hideKnob={true}
-                    // When `true` and `hideKnob` prop is `false`, the knob will always be visible and the user will be able to drag the knob up and close the calendar. Default = false
-                    showClosingKnob={false}
-                    // By default, agenda dates are marked if they have at least one item, but you can override this if needed
-                    markedDates={{
-
-                    }}
-                    // If disabledByDefault={true} dates flagged as not disabled will be enabled. Default = false
-                    disabledByDefault={true}
-                    // If provided, a standard RefreshControl will be added for "Pull to Refresh" functionality. Make sure to also set the refreshing prop correctly
-                    onRefresh={() => console.log('refreshing...')}
-                    // Set this true while waiting for new data from a refresh
-                    refreshing={false}
-                // Add a custom RefreshControl component, used to provide pull-to-refresh functionality for the ScrollView
-
-                /> */}
 
                 <View
                     style={styles.modeButton}>
@@ -540,6 +527,13 @@ const styles = StyleSheet.create({
         //justifyContent: 'space-around', //공백이 있는 양쪽정렬
         backgroundColor: '#fff',
 
+    },
+    btn: {
+        width: 200,
+        height: 30,
+        backgroundColor: '#B77DE4',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     input: {
         height: 40,
