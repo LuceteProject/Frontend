@@ -97,6 +97,19 @@ const Screen = ({ navigation }: any) => {
   );
   const FirstRoute = (props: any) => (
     <View style={{ height: 500 }}>
+      <View
+        id="SearchBar"
+        style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeText}
+          placeholder={'검색어를 입력하세요.'}
+          value={text}
+        />
+        <TouchableOpacity style={styles.searchbtn} onPress={clickHandler}>
+          <Icon name="search" size={20} color="#000" />
+        </TouchableOpacity>
+      </View>
       {/* nav에 navigation 넣어줘야 하고.. 이걸 props로 받아야 하고... 이건 가장먼저 SceneMap에서 넣어줘야하고... api에서 불러오면 값하나로 통일될듯?*/}
       <BoardItem nav={navigation} title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
       <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
@@ -105,6 +118,19 @@ const Screen = ({ navigation }: any) => {
 
   const SecondRoute = (props: any) => (
     <View>
+      <View
+        id="SearchBar"
+        style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeText}
+          placeholder={'검색어를 입력하세요.'}
+          value={text}
+        />
+        <TouchableOpacity style={styles.searchbtn} onPress={clickHandler}>
+          <Icon name="search" size={20} color="#000" />
+        </TouchableOpacity>
+      </View>
       <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
       <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
 
@@ -113,6 +139,20 @@ const Screen = ({ navigation }: any) => {
 
   const ThirdRoute = (props: any) => (
     <View style={{ height: 500 }}>
+      {/* 검색창 위치 어느게 나은지 물어보기 */}
+      <View
+        id="SearchBar"
+        style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <TextInput
+          style={styles.input}
+          onChangeText={onChangeText}
+          placeholder={'검색어를 입력하세요.'}
+          value={text}
+        />
+        <TouchableOpacity style={styles.searchbtn} onPress={clickHandler}>
+          <Icon name="search" size={20} color="#000" />
+        </TouchableOpacity>
+      </View>
       <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
       <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
 
@@ -148,7 +188,7 @@ const Screen = ({ navigation }: any) => {
         //</>showsVerticalScrollIndicator={false}
         >
           <Text>여러분 공지 좀 읽으세요 란</Text>
-
+          {/*
           <View
             id="SearchBar"
             style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -162,6 +202,8 @@ const Screen = ({ navigation }: any) => {
               <Icon name="search" size={20} color="#000" />
             </TouchableOpacity>
           </View>
+*/}
+
 
         </View >
         {/* TabBar style https://reactnavigation.org/docs/tab-view#tabview - TabBar 항목에서 style 지정 설명 있음 */}
