@@ -167,11 +167,12 @@ const Screen = ({ navigation }: any) => {
 
   // 게시판
   const Main = () => {
+    /* 게시판 탭 설정 위한 변수들 */
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
-      { key: 'first', title: 'First' },
-      { key: 'second', title: 'Second' },
-      { key: 'third', title: 'Third' },
+      { key: 'first', title: '자유게시판' },
+      { key: 'second', title: '익명게시판' },
+      { key: 'third', title: '임원진게시판' },
     ]);
 
     /* 게시판 페이지 번호 */
