@@ -56,8 +56,18 @@ const Tabs = () => {
 
         ),
         headerShown: false,
-        tabBarActiveTintColor: '#900',
-
+        tabBarActiveTintColor: '#D070FB', //point color?
+        // https://reactnavigation.org/docs/bottom-tab-navigator/#example
+        // tabBarStyle 항목 보면 됨 (아마 default 값이 50인듯?)
+        tabBarStyle: { height: 80, justifyContent: 'center' },
+        tabBarLabelStyle: {
+          position: 'absolute',
+          top: 0,
+          bottom: 10,
+          left: 0,
+          right: 0,
+          textAlignVertical: 'bottom',
+        },
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
           // icon URL : https://ionic.io/ionicons/
