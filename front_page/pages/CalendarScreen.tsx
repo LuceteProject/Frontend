@@ -10,8 +10,14 @@ import { Pressable } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
-const Screen = ({ navigation }: any) => {
 
+
+const Screen = ({ navigation }: any) => {
+    const cal_type = {
+        'Full': { key: 'full', color: '#8F00FF', selectedDotColor: 'red' },
+        'Team': { key: 'team', color: '#00C2FF', selectedDotColor: 'blue' },
+        'Each': { key: 'each', color: '#FFA800', selectedDotColor: 'blue' },
+    }
     const [text, onChangeText] = useState('');
 
     /* mode 변경 어떻게 해야할지 아직 모르겠음 
@@ -390,35 +396,20 @@ const Screen = ({ navigation }: any) => {
                     */
 
                     monthFormat={'yyyy년 MM월'}
-                    markingType={'multi-period'} //marking 종류 여러개
+                    markingType={'multi-dot'} //multi-period 표현문제 직면 뚜둥탁
                     markedDates={{
                         // {} API에서 받아오기
                         [selected]: {
                             selected: true,
                         },
                         // 아래는 sample 예시들
-                        '2023-05-15': {
-                            periods: [
-                                { startingDay: true, endingDay: false, color: '#5f9ea0' },
-
-                            ]
-                        },
-                        '2023-05-16': {
-                            periods: [
-                                { startingDay: false, endingDay: true, color: '#123456' },
-
-                            ]
-                        },
-                        ['2023-05-20']: {
-                            periods: [
-                                { startingDay: true, endingDay: true, color: 'orange' },
-                            ]
-                        }
+                        '2023-05-25': { dots: [cal_type.Full],},
+                        '2023-05-26': { dots: [cal_type.Team, cal_type.Each]}
                     }}
                     onDayPress={day => {
                         //console.log('selected day', day);
                         setSelected(day.dateString);
-                        
+
                     }
                     }
                     onDayLongPress={day => {
@@ -427,7 +418,7 @@ const Screen = ({ navigation }: any) => {
                         setModalVisible(true);
                     }}
                 />
-
+                {/* 추후 구현하기 - 모드 별로 보이는 일정 다르게
                 <View
                     style={styles.modeButton}>
                     <Button
@@ -439,6 +430,9 @@ const Screen = ({ navigation }: any) => {
                     />
 
                 </View>
+                
+                */}
+                
 
                 <View>
                     <ListSample time='08:00' text='세부내용 1' />
