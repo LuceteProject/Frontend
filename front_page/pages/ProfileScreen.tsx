@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, Alert, Button } from 'react-native';
-
+import axios from 'axios';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -15,35 +15,76 @@ const Stack = createNativeStackNavigator();
 
 /* functional execution */
 const Screen = ({ navigation }: any) => {
-
+  /* User 정보 받아오기 */
+  const [semester, setSemester] = useState('');
+  const [team, setTeam] = useState('');
+  const [name, setName] = useState('');
+  const [message, setMessage] = useState('상태메시지를 입력하세요.');
   const [userImage, setUserImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+
+  const [loading, setLoading] = useState(false);
+  const fetchData = async () => {
+    try {
+      // 요청이 시작 할 때에는 error 와 users 를 초기화하고
+
+      // loading 상태를 true 로 바꿉니다.
+      setLoading(true);
+
+      const response = await axios.get('http://210.96.102.143:8080/user/2', {
+        headers: {
+          'Content-Type': 'application/json',
+          // 필요하다면 인증 헤더를 추가합니다.
+        }
+      })
+      .then(response =>  {
+        setSemester(response.data.semester);
+        setTeam(response.data.team);
+        setName(response.data.name);
+        //setMessage(response.data.message);
+      });
+      
+     
+
+      // 데이터는 response.data.data 안에 들어있다.
+    } catch (e) {
+      console.log(e);
+    }
+    // loading 끄기
+    setLoading(false);
+  };
+
+  // 첫 렌더링 때 fetchNews() 한 번 실행
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   // Profile Information update
   const ProfilePart = () => {
     return (
       <>
-        <View style ={styles.viewstyle}>
+        <View style={styles.viewstyle}>
           <Image
             //for test, use logo imgs
             //source={require('../img/logo.jpg')}
-            source={{uri:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}}
+            source={{ uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
             style={styles.imgstyle}
           />
           <View>
             <Text
               /* 받아오는 값은 ${user_num} 이런식으로? */
               style={styles.profiletext}>
-              기수</Text>
+              {semester} 기</Text>
             <Text
               style={styles.profiletext}>
-              어떤 팀 이땡땡</Text>
+              {team} {name}</Text>
             <Text
               style={styles.sangme}>
-              Message</Text>
+              {message}</Text>
           </View>
 
         </View>
         <View
-        /*이거 뭔지 모르겠어요*/
+          /*이거 뭔지 모르겠어요*/
           style={{
             borderBottomColor: 'black',
             borderBottomWidth: StyleSheet.hairlineWidth,
@@ -92,18 +133,18 @@ const Screen = ({ navigation }: any) => {
         <ListPart />
         왜 저기 들어가면 실행이 안되냐잉... */}
         <TouchableOpacity style={styles.button}
-        onPress={()=>{navigation.navigate('Attendance')}}>
-        <Text style={styles.buttontext}>출석확인</Text>
+          onPress={() => { navigation.navigate('Attendance') }}>
+          <Text style={styles.buttontext}>출석확인</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={styles.button}
-        onPress={()=>{navigation.navigate('MemberList')}}>
-        <Text style={styles.buttontext}>부원목록</Text>
+          onPress={() => { navigation.navigate('MemberList') }}>
+          <Text style={styles.buttontext}>부원목록</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={styles.button}
-        onPress={()=>{navigation.navigate('Personal Setting')}}>
-        <Text style={styles.buttontext}>설정</Text>
+          onPress={() => { navigation.navigate('Personal Setting') }}>
+          <Text style={styles.buttontext}>설정</Text>
         </TouchableOpacity>
       </>
     );
@@ -235,7 +276,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
 
-  profiletext:{
+  profiletext: {
     fontSize: 19,
     color: '#000'
   },
@@ -246,12 +287,12 @@ const styles = StyleSheet.create({
     color: '#999999',
   },
 
-  button:{
+  button: {
     backgroundColor: "#ffffff",
     pading: 10,
   },
 
-  buttontext:{
+  buttontext: {
     fontSize: 24,
     margin: 11,
     textAlign: 'left',
