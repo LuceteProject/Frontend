@@ -27,6 +27,8 @@ import Notification from './pages/Notification';
 //import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { notification } from 'antd';
+import SizeContext from 'antd/es/config-provider/SizeContext';
+import { fonts } from '@rneui/base';
 
 // Navigator
 const Drawer = createDrawerNavigator();
@@ -63,9 +65,10 @@ const Tabs = () => {
         tabBarLabelStyle: {
           position: 'absolute',
           top: 0,
-          bottom: 10,
+          bottom: 4,
           left: 0,
           right: 0,
+          fontSize: 14,
           textAlignVertical: 'bottom',
         },
         tabBarIcon: ({ focused, color, size }) => {
@@ -91,7 +94,7 @@ const Tabs = () => {
 
           // You can return any component that you like here!
           //@ts-ignore
-          return <Icon name={iconName} size={size} color={color} />;
+          return <Icon name={iconName} size={40} color={color} />;
         },
         // 각 스크린 안에 Stack navigator 추가하기
 
@@ -102,7 +105,6 @@ const Tabs = () => {
       <Tab.Screen name="Calender" component={CalendarScreen} />
       <Tab.Screen name="Drive" component={Notification} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
-
 
     </Tab.Navigator>
   );

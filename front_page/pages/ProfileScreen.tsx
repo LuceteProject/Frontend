@@ -73,10 +73,10 @@ const Screen = ({ navigation }: any) => {
             <Text
               /* 받아오는 값은 ${user_num} 이런식으로? */
               style={styles.profiletext}>
-              {semester} 기</Text>
+              {semester} n기</Text>
             <Text
               style={styles.profiletext}>
-              {team} {name}</Text>
+              {team} 아무개 {name}</Text>
             <Text
               style={styles.sangme}>
               {message}</Text>
@@ -145,6 +145,15 @@ const Screen = ({ navigation }: any) => {
         <TouchableOpacity style={styles.button}
           onPress={() => { navigation.navigate('Personal Setting') }}>
           <Text style={styles.buttontext}>설정</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button}
+          onPress={() => { navigation.navigate('Personal Setting') }}>
+          <Text style={styles.buttontext}>앱버전</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity style={styles.button}
+          onPress={() => { navigation.navigate('Personal Setting') }}>
+          <Text style={styles.buttontext}>로그아웃</Text>
         </TouchableOpacity>
       </>
     );
@@ -234,6 +243,7 @@ const Screen = ({ navigation }: any) => {
             }
           }
         />
+        
       </Stack.Navigator>
     </>
   )
