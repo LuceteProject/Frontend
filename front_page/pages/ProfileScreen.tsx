@@ -22,6 +22,7 @@ const Screen = ({ navigation }: any) => {
   const [message, setMessage] = useState('상태메시지를 입력하세요.');
   const [userImage, setUserImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
 
+  /* API variables */
   const [loading, setLoading] = useState(false);
   const fetchData = async () => {
     try {
