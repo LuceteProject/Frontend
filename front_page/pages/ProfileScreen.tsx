@@ -16,10 +16,10 @@ const Stack = createNativeStackNavigator();
 /* functional execution */
 const Screen = ({ navigation }: any) => {
   /* User 정보 받아오기 */
-  const [semester, setSemester] = useState('');
-  const [team, setTeam] = useState('');
-  const [name, setName] = useState('');
-  const [message, setMessage] = useState('상태메시지를 입력하세요.');
+  const [semester, setSemester] = useState(''); //기수
+  const [team, setTeam] = useState(''); //팀 이름
+  const [name, setName] = useState(''); //이름
+  const [message, setMessage] = useState('상태메시지를 입력하세요.'); //상태메시지
   const [userImage, setUserImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
 
   /* API variables */
@@ -31,17 +31,18 @@ const Screen = ({ navigation }: any) => {
       // loading 상태를 true 로 바꿉니다.
       setLoading(true);
 
-      const response = await axios.get('http://210.96.102.143:8080/user/2', {
+      const response = await axios.get('http://210.96.102.143:8080/api/v1/users/1', {
         headers: {
           'Content-Type': 'application/json',
           // 필요하다면 인증 헤더를 추가합니다.
         }
       })
       .then(response =>  {
+        //console.log(response);
         setSemester(response.data.semester);
         setTeam(response.data.team);
         setName(response.data.name);
-        //setMessage(response.data.message);
+        setMessage(response.data.profile_message);
       });
       
      
@@ -74,10 +75,10 @@ const Screen = ({ navigation }: any) => {
             <Text
               /* 받아오는 값은 ${user_num} 이런식으로? */
               style={styles.profiletext}>
-              {semester} n기</Text>
+              {semester} 기</Text>
             <Text
               style={styles.profiletext}>
-              {team} 아무개 {name}</Text>
+              {team} 팀 {name}</Text>
             <Text
               style={styles.sangme}>
               {message}</Text>
@@ -85,7 +86,7 @@ const Screen = ({ navigation }: any) => {
 
         </View>
         <View
-          /*이거 뭔지 모르겠어요*/
+          /*이거 뭔지 모르겠어요 --> 검은색 선 한줄!! */
           style={{
             borderBottomColor: 'black',
             borderBottomWidth: StyleSheet.hairlineWidth,
