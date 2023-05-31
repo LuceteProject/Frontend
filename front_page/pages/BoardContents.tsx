@@ -1,40 +1,70 @@
 // tslint:disable:no-empty
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, ActivityIndicator } from 'react-native'
-
+import axios from 'axios';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Stack = createNativeStackNavigator();
 
-const Page = ({ props, navigation, route }: any) => {
-    //props
+type Post = {
+    id: number;
+    header: number;
+    title: string;
+    content: string;
+    permission: number;
+    is_notice: boolean;
+    created: string;
+    updated: string;
+    author_id: number;
+    author_name: string;
+    board_id: number;
+};
 
+
+const Page = ({ route }: any) => {
     /* 
     Values from API 
     */
+    const postId = route.params.postId;
+    const [post, setPost] = useState<Post[]>([]);
 
-    /* For Data fetch from server
-      useEffect(() => {
-        const fetchContentData = async () => {
-          try {
-              setLoading(true);
-              const response = await axios.get();
-              setPosts(response.data);
-              setLoading(false);
-          } catch (err) {
-              
-          }
-      };
-      
-      fetchContentData();
-      }, []);
-      */
-     useEffect(()=>{
-        console.log({props});
-        console.log({route});
-     }, [props]);
+    /* API variables */
+    const [loading, setLoading] = useState(false);
+    const fetchData = async () => {
+        try {
+            // 요청이 시작 할 때에는 error 와 users 를 초기화하고
+
+            // loading 상태를 true 로 바꿉니다.
+            setLoading(true);
+
+            // click한 게시글 id로 변경해야함
+            const response = await axios.get('http://210.96.102.143:8080/api/v1/posts/' + postId, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 필요하다면 인증 헤더를 추가합니다.
+                }
+            })
+                .then(response => {
+                    console.log("test", response.data);
+                    setPost(response.data);
+                });
+
+
+
+            // 데이터는 response.data.data 안에 들어있다.
+        } catch (e) {
+            console.log(e);
+        }
+        // loading 끄기
+        setLoading(false);
+    };
+
+    // 첫 렌더링 때 fetchData() 한 번 실행
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     const clickOptionHandler = () => {
         Alert.alert("pressed!");
@@ -54,7 +84,7 @@ const Page = ({ props, navigation, route }: any) => {
                     <Image
                         //for test, use logo imgs
                         //src
-                        source={{uri:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'}}
+                        source={{ uri: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }}
                         style={{
                             //{size}
                             width: 50,
@@ -64,24 +94,22 @@ const Page = ({ props, navigation, route }: any) => {
                         }}
                     />
                     <View style={{
-                        marginLeft:10,
+                        marginLeft: 10,
                     }}>
                         <View style={{
                             //flexDirection:'row', 
-                            justifyContent:'space-around'}}>
+                            justifyContent: 'space-around'
+                        }}>
                             <Text style={{
                                 fontSize: 15,
                             }}>replyAuthor</Text>
                             <Text style={{
-                                textAlign:'right'
+                                textAlign: 'right'
                             }}>replyTime</Text>
                         </View>
 
                         <Text>replyContents</Text>
                     </View>
-
-
-
                 </View>
 
 
@@ -100,23 +128,22 @@ const Page = ({ props, navigation, route }: any) => {
 
         return (
             <SafeAreaView>
-                <Text>as</Text>
                 <ScrollView>
-                    <Text style={{ marginTop: 10, marginLeft: 10 }} >boardType</Text>
+                    <Text style={{ marginTop: 10, marginLeft: 10 }} >{post.board_id}</Text>
                     <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
 
                         <Text style={{
                             fontWeight: 'bold',
                             fontSize: 25,
 
-                        }}>props.title</Text>
+                        }}>{post.title}</Text>
                         <TouchableOpacity
                             accessibilityLabel='owner' // {haveAccess}
                             onPress={clickOptionHandler}
                         //disabled
                         >
                             <Icon name="ellipsis-vertical" size={20} color="#000" />
-                           
+
                         </TouchableOpacity>
 
                     </View>
@@ -142,14 +169,14 @@ const Page = ({ props, navigation, route }: any) => {
                         <Text style={{
                             margin: 15,
                             fontSize: 15,
-                        }}>props.author</Text>
+                        }}>{post.author_name}</Text>
 
                     </View>
                     <Text style={{
                         textAlign: 'right',
                         marginBottom: 10,
                         marginRight: 10,
-                    }}>postTime</Text>
+                    }}> {new Date(post.updated).toLocaleString('ko-KR')}</Text>
                     <View
                         style={{
                             borderBottomColor: '#D9D9D9',
@@ -157,7 +184,7 @@ const Page = ({ props, navigation, route }: any) => {
                         }}
                     />
                     <View style={{ minHeight: 200, padding: 10 }}>
-                        <Text>in here text</Text>
+                        <Text>{post.content}</Text>
                     </View>
 
 
@@ -177,7 +204,6 @@ const Page = ({ props, navigation, route }: any) => {
             </SafeAreaView>
         );
     }
-
 
 
     return (
@@ -212,9 +238,9 @@ const Page = ({ props, navigation, route }: any) => {
                     name="Post"
                     component={Main}
                     options={{
-                        headerRight: ()=> {
+                        headerRight: () => {
                             return <></>;
-                          }
+                        }
                     }}
                 />
 

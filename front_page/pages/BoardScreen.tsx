@@ -2,11 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, TextInput } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import axios from 'axios';
 import { TabView, SceneMap } from 'react-native-tab-view';
 
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Tab, } from '@rneui/themed';
 import BoardContent from './BoardContents';
 import BoardWriteContent from './BoardWrite';
 import Notification from './Notification';
@@ -23,146 +22,166 @@ const SwitchComponent = () => {
   };
 };
 const Screen = ({ navigation }: any) => {
+  const postPerPage = 10; //페이지 당 게시글 수
   /* 
   Values from API 
   */
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState(''); //게시글 목록
+  const [currentPage, setCurrentPage] = useState(1); //현재 페이지
+  const [text, onChangeText] = useState(''); //검색어
+
+  /* API variables */
   const [loading, setLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(10);
-  const [text, onChangeText] = useState('');
+  const fetchData = async () => {
+    try {
+      // 요청이 시작 할 때에는 error 와 users 를 초기화하고
 
-  /* For Data fetch from server
-    useEffect(() => {
-      const fetchContentData = async () => {
-        try {
-            setLoading(true);
-            const response = await axios.get();
-            setPosts(response.data);
-            setLoading(false);
-        } catch (err) {
-            
+      // loading 상태를 true 로 바꿉니다.
+      setLoading(true);
+
+      const response = await axios.get('http://210.96.102.143:8080/api/v1/posts', {
+        headers: {
+          'Content-Type': 'application/json',
+          // 필요하다면 인증 헤더를 추가합니다.
         }
-    };
-    
-    fetchContentData();
-    }, []);
-    */
-  // on searching text changed
+      })
+        .then(response => {
+          //console.log(response.data.content);
+          setPosts(response.data.content);
 
-  const clickHandler = ({ name }: any) => {
-    Alert.alert(name, 'pressed!');
+        });
+
+
+
+      // 데이터는 response.data.data 안에 들어있다.
+    } catch (e) {
+      console.log(e);
+    }
+    // loading 끄기
+    setLoading(false);
   };
-  const BoardItem = (props: any) => (
-    // 각 게시글 항목
 
-    <TouchableOpacity
-      onPress={() => {
-        /* onPress 호출되지 않음 */
-        console.log(props);
-        props.nav.navigate('ViewPost', { title: 'test', author: 'kim' });
-      }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'stretch',
-          justifyContent: 'space-between',
-          paddingBottom: 10,
-          paddingTop: 10,
+  // 첫 렌더링 때 fetchNews() 한 번 실행
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const BoardItem = (props: any) => {
+    const { id, title, author_name } = props.data;
+    // 날짜 형식화 함수
+    const formatDate = (dateString: string) => {
+      const date = new Date(dateString);
+      const today = new Date();
+  
+      const diffInMilliseconds = today.getTime() - date.getTime();
+      const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
+  
+      if (diffInHours < 24) {
+        return `${diffInHours}시간 전`;
+      } else {
+        const month = date.getMonth() + 1; // 월은 0부터 시작하므로 +1
+        const day = date.getDate();
+        return `${month}월 ${day}일`;
+      }
+    };
+  
+    return (
+      // 각 게시글 항목
+      <TouchableOpacity
+        onPress={() => {
+          /* onPress 호출되지 않음 */
+          //console.log(props.data.id);
+          props.nav.navigate('ViewPost', { postId: id });
         }}>
-        <View>
-          <Text> {props.title} </Text>
-          <Text>
-            {' '}
-            {props.author} / {props.wtime}{' '}
-          </Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'stretch',
+            justifyContent: 'space-between',
+            paddingBottom: 10,
+            paddingTop: 10,
+          }}>
+          <View>
+            <Text> {props.data.title} </Text>
+            <Text>
+              {' '}
+              {props.data.author_name} / {formatDate(props.data.updated)}{' '}
+            </Text>
+          </View>
+          <View>
+            <Text
+              style={{
+                padding: 10,
+              }}>
+              댓글수 {props.data.permission}
+            </Text>
+          </View>
         </View>
-        <View>
-          <Text
-            style={{
-              padding: 10,
-            }}>
-            {props.reply}
-          </Text>
+        <View
+          // 구분선
+          style={{
+            borderBottomColor: 'gray',
+            borderBottomWidth: StyleSheet.hairlineWidth,
+          }}
+        />
+      </TouchableOpacity>
+    );
+  };
+  
+  const FirstRoute = (props: any) => {
+    const { data } = props;
+  
+    // props.data가 존재하고 유효한 데이터를 포함하는지 확인
+    if (data && Array.isArray(data) && data.length > 0) {
+      return (
+        <View style={{ height: 500 }}>
+          {/* ... */}
+          {/* 게시글 목록 렌더링 */}
+          {data.map((item: any, index: number) => (
+            <BoardItem key={index} nav={props.nav} data={item} />
+          ))}
         </View>
+      );
+    }
+  
+    // 데이터가 없을 경우, 혹은 유효한 데이터가 없는 경우 표시할 내용
+    return (
+      <View style={{ height: 500 }}>
+        <Text>게시글이 없습니다.</Text>
       </View>
-      <View
-        // 구분선
-        style={{
-          borderBottomColor: 'gray',
-          borderBottomWidth: StyleSheet.hairlineWidth,
-        }}
-      />
-    </TouchableOpacity>
-  );
-  const FirstRoute = (props: any) => (
-    <View style={{ height: 500 }}>
-      <View
-        id="SearchBar"
-        style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeText}
-          placeholder={'검색어를 입력하세요.'}
-          value={text}
-        />
-        <TouchableOpacity style={styles.searchbtn} onPress={clickHandler}>
-          <Icon name="search" size={20} color="#000" />
-        </TouchableOpacity>
+    );
+  };
+  
+
+  const Route = (props: any) => {
+    const { data } = props;
+  
+    // props.data가 존재하고 유효한 데이터를 포함하는지 확인 -- loading 사용가능한지 확인
+    if (!loading) {
+      return (
+        <View style={{ height: 500 }}>
+          {/* ... */}
+          {/* 게시글 목록 렌더링 */}
+          {data.map((item: any, index: number) => (
+            <BoardItem key={index} nav={props.nav} data={item} />
+          ))}
+        </View>
+      );
+    }
+  
+    // 데이터가 없을 경우, 혹은 유효한 데이터가 없는 경우 표시할 내용
+    return (
+      <View style={{ height: 500 }}>
+        <Text>게시글이 없습니다.</Text>
       </View>
-      {/* nav에 navigation 넣어줘야 하고.. 이걸 props로 받아야 하고... 이건 가장먼저 SceneMap에서 넣어줘야하고... api에서 불러오면 값하나로 통일될듯?*/}
-      <BoardItem nav={navigation} title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
-      <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
-    </View>
-  );
+    );
+  };
 
-  const SecondRoute = (props: any) => (
-    <View>
-      <View
-        id="SearchBar"
-        style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeText}
-          placeholder={'검색어를 입력하세요.'}
-          value={text}
-        />
-        <TouchableOpacity style={styles.searchbtn} onPress={clickHandler}>
-          <Icon name="search" size={20} color="#000" />
-        </TouchableOpacity>
-      </View>
-      <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
-      <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
-
-    </View>
-  );
-
-  const ThirdRoute = (props: any) => (
-    <View style={{ height: 500 }}>
-      {/* 검색창 위치 어느게 나은지 물어보기 */}
-      <View
-        id="SearchBar"
-        style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <TextInput
-          style={styles.input}
-          onChangeText={onChangeText}
-          placeholder={'검색어를 입력하세요.'}
-          value={text}
-        />
-        <TouchableOpacity style={styles.searchbtn} onPress={clickHandler}>
-          <Icon name="search" size={20} color="#000" />
-        </TouchableOpacity>
-      </View>
-      <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
-      <BoardItem title={props.title} author={props.author} wtime={props.wtime} reply={props.reply} />
-
-    </View>
-  );
   //Tab View 항목 지정
   const renderScene = SceneMap({
-    first: () => <FirstRoute nav={navigation} title="sample" author="lee" wtime="2023/01/05" reply='3' />,
-    second: () => <SecondRoute nav={navigation} title="sample" author="lee" wtime="2023/01/05" reply='3' />,
-    third: () => <ThirdRoute nav={navigation} title="sample" author="lee" wtime="2023/01/05" reply='3' />,
+    first: () => <FirstRoute nav={navigation} data={posts} />,
+    second: () => <Route nav={navigation} data={posts} />,
+    third: () => <FirstRoute nav={navigation} data={posts} />,
   });
 
   // 게시판
@@ -189,23 +208,6 @@ const Screen = ({ navigation }: any) => {
         //</>showsVerticalScrollIndicator={false}
         >
           <Text>여러분 공지 좀 읽으세요 란</Text>
-          {/*
-          <View
-            id="SearchBar"
-            style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <TextInput
-              style={styles.input}
-              onChangeText={onChangeText}
-              placeholder={'검색어를 입력하세요.'}
-              value={text}
-            />
-            <TouchableOpacity style={styles.searchbtn} onPress={clickHandler}>
-              <Icon name="search" size={20} color="#000" />
-            </TouchableOpacity>
-          </View>
-*/}
-
-
         </View >
         {/* TabBar style https://reactnavigation.org/docs/tab-view#tabview - TabBar 항목에서 style 지정 설명 있음 */}
         <TabView
