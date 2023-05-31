@@ -67,7 +67,6 @@ const Screen = ({ navigation }: any) => {
   }, []);
 
   const BoardItem = (props: any) => {
-    const { id, title, author_name } = props.data;
     // 날짜 형식화 함수
     const formatDate = (dateString: string) => {
       const date = new Date(dateString);
@@ -91,7 +90,7 @@ const Screen = ({ navigation }: any) => {
         onPress={() => {
           /* onPress 호출되지 않음 */
           //console.log(props.data.id);
-          props.nav.navigate('ViewPost', { postId: id });
+          props.nav.navigate('ViewPost', { postId: props.data.id });
         }}>
         <View
           style={{

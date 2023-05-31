@@ -1,18 +1,13 @@
 // In App.js in a new project
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Button, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-import {
-  createDrawerNavigator,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-  DrawerToggleButton
-} from '@react-navigation/drawer';
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 
 /* Menu 이름은 ~Screen으로 끝나게 */
 import BoardScreen from './pages/BoardScreen';
@@ -26,12 +21,9 @@ import SignIn from './pages/SignIn';
 
 //import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { notification } from 'antd';
-import SizeContext from 'antd/es/config-provider/SizeContext';
-import { fonts } from '@rneui/base';
 
 // Navigator
-const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 
@@ -112,9 +104,33 @@ const Tabs = () => {
 
 /* main part */
 const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  //const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    // 로그인 처리 로직 작성
+    setIsLoggedIn(true);
+  };
+
+
   return (
     <NavigationContainer>
-      <Tabs />
+      <Stack.Navigator>
+        {isLoggedIn ? (
+          // 로그인이 성공한 경우 Tabs 화면으로 이동
+          <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
+        ) : (
+          // 로그인 화면 표시
+          <Stack.Screen
+            name="Login"
+            component={SignIn}
+            options={{
+              title: '로그인',
+              headerTitleStyle: { alignSelf: 'center' },
+            }}
+          />
+        )}
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
