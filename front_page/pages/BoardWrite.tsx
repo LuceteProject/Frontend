@@ -1,263 +1,206 @@
-// tslint:disable:no-empty
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, ActivityIndicator, Modal, KeyboardAvoidingView } from 'react-native'
-
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, Modal, StyleSheet, ScrollView, TextInput, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { Chip, Dialog } from '@rneui/themed';
-import { TextInput } from 'react-native-gesture-handler';
+import axios from 'axios';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
-const Page = (props: any) => {
-    //props
 
-    /* 
-    Values from API 
-    */
+const Page = () => {
 
-    /* For Data fetch from server
-      useEffect(() => {
-        const fetchContentData = async () => {
-          try {
-              setLoading(true);
-              const response = await axios.get();
-              setPosts(response.data);
-              setLoading(false);
-          } catch (err) {
-              
-          }
-      };
-      
-      fetchContentData();
-      }, []);
-      */
+    const sendDataToServer = async () => {
+        const data = {
+            id: 0,
+            header: 0,
+            title: "string",
+            content: "string",
+            permission: 0,
+            is_notice: true,
+            created: "2023-06-03T12:16:19.162Z",
+            updated: "2023-06-03T12:16:19.162Z",
+            user_id: 0,
+            author_name: "string",
+            board_id: 0
+        };
 
-    const clickOptionHandler = () => {
-        Alert.alert("pressed!");
-    }
+        try {
+            const response = await fetch('http://210.96.102.143:8080/api/v1/posts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
 
-    // 게시판
+            if (response.ok) {
+                // 성공적으로 전송되었을 때의 처리
+                console.log('Data sent successfully');
+            } else {
+                // 전송 실패 시의 처리
+                console.log('Failed to send data');
+            }
+        } catch (error) {
+            // 오류 발생 시의 처리
+            console.log('Error occurred:', error);
+        }
+    };
     const Main = ({ navigation }: any) => {
-        const [haveAccess, setHaveAccess] = useState(false);
-        /* 게시판 선택 */
-        const [type, setType] = useState('게시판을 선택하세요.');
-        const types = {
-            'BOARD1': "자유게시판",
-            'BOARD2': "익명게시판",
-            'BOARD3': "임원게시판"
-        }
-        const [visible, setVisible] = useState(false); // 게시판 선택 modal
-        const toggleSetVisible = () => {
-            setVisible(!visible);
-        }
-        /* 게시글 */
-        const [titleValue, setTitleValue] = useState(''); //title
-        const [visible2, setVisible2] = useState(false); //말머리 선택 modal
-        const [context, setContext] = useState('말머리 선택');
-        const toggleSetVisible2 = () => {
-            setVisible2(!visible2);
-        }
 
+        const [isBoardModalVisible, setBoardModalVisible] = useState(false);
+        const [isCategoryModalVisible, setCategoryModalVisible] = useState(false);
+        const [selectedBoard, setSelectedBoard] = useState('');
+        const [selectedCategory, setSelectedCategory] = useState('');
+        const [title, setTitle] = useState('');
+        const [content, setContent] = useState('');
 
+        const handleCancel = () => {
+            Alert.alert("작성 취소", "글 작성을 취소할까요?",
+                [
+                    {
+                        text: "예",
+                        onPress: () => { navigation.pop() }
+                    },
+                    {
+                        text: "아니요",
+                        style: 'cancel',
+                    }
+
+                ],
+                { cancelable: false }
+            );
+
+        };
+
+        const handleConfirm = () => {
+            // 게시글을 서버에 업로드하는 로직 구현
+            /* Api upload in here */
+            //sendDataToServer();
+            Alert.alert("게시글이 작성되었습니다.");
+            navigation.pop();
+        };
+
+        const handleBoardSelect = (board: string) => {
+            setSelectedBoard(board);
+            setBoardModalVisible(false);
+        };
+
+        const handleCategorySelect = (category: string) => {
+            setSelectedCategory(category);
+            setCategoryModalVisible(false);
+        };
         return (
-            <SafeAreaView>
-                <ScrollView
-                    style={{ marginTop: 10, marginLeft: 10, marginRight: 10 }}>
-                    {/* 게시판 종류 선택 부분 */}
-                    <TouchableOpacity
-                        onPress={toggleSetVisible}
-                        style={styles.optionBackground}
-                    >
-                        {/* 
-                        <Modal
-                            animationType="fade"
-                            transparent={true}
-                            visible={visible}
-                            onRequestClose={() => {
-                                toggleSetVisible();
-                            }}
+            <View style={styles.container}>
+                <ScrollView contentContainerStyle={styles.contentContainer} style={styles.scrollView}>
+                    {/* 게시판 선택 모달 */}
+                    <Modal visible={isBoardModalVisible} animationType="slide" transparent={true}>
+                        <View style={styles.modalContainer}>
+                            <View style={styles.modalContent}>
+                                <Text style={styles.modalTitle}>게시판 선택</Text>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleBoardSelect('자유')}>
+                                    <Text style={styles.attachmentButtonText}>자유</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleBoardSelect('익명')}>
+                                    <Text style={styles.attachmentButtonText}>익명</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleBoardSelect('임원진')}>
+                                    <Text style={styles.attachmentButtonText}>임원진</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.modalCloseButton} onPress={() => setBoardModalVisible(false)}>
+                                    <Text style={styles.modalCloseButtonText}>닫기</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
 
-                        >
+                    {/* 말머리 선택 모달 */}
+                    <Modal visible={isCategoryModalVisible} animationType="slide" transparent={true}>
+                        <View style={styles.modalContainer}>
+                            <View style={styles.modalContent}>
+                                <Text style={styles.modalTitle}>말머리 선택</Text>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect('전체')}>
+                                    <Text style={styles.attachmentButtonText}>전체</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect('팀1')}>
+                                    <Text style={styles.attachmentButtonText}>팀1</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect('팀2')}>
+                                    <Text style={styles.attachmentButtonText}>팀2</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect('팀3')}>
+                                    <Text style={styles.attachmentButtonText}>팀3</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect('팀4')}>
+                                    <Text style={styles.attachmentButtonText}>팀4</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.modalCloseButton} onPress={() => setCategoryModalVisible(false)}>
+                                    <Text style={styles.modalCloseButtonText}>닫기</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
 
-                            <Button title="자유게시판" onPress={() => {
-                                setType(types.BOARD1)
-                                toggleSetVisible()
-                            }} />
-                            <Button title="익명게시판" onPress={() => {
-                                setType(types.BOARD2)
-                                toggleSetVisible()
-                            }} />
-                            <Button title="임원게시판" onPress={() => {
-                                setType(types.BOARD3)
-                                toggleSetVisible()
-                            }} />
-                        </Modal>
-                        */}
-                        <Dialog
-                            isVisible={visible}
-                            onBackdropPress={toggleSetVisible}
-                        >
-                            <Dialog.Button
-                                title="자유게시판"
-                                onPress={() => {
-                                    setType(types.BOARD1)
-                                    toggleSetVisible()
 
-                                }}
-                            />
-                            <Dialog.Button
-                                title="익명게시판"
-                                onPress={() => {
-                                    setType(types.BOARD2)
-                                    toggleSetVisible()
-
-                                }}
-                            />
-                            <Dialog.Button
-                                title="임원게시판"
-                                onPress={() => {
-                                    setType(types.BOARD3)
-                                    toggleSetVisible()
-
-                                }}
-                            />
-
-                        </Dialog>
-                        <Text style={styles.option}>{type}</Text>
+                    {/* 게시판 선택 */}
+                    <TouchableOpacity style={styles.inputContainer} onPress={() => setBoardModalVisible(true)}>
+                        <Text style={styles.inputLabel}>게시판 선택</Text>
+                        {selectedBoard ? (
+                            <Text style={styles.selectedText}>{selectedBoard}</Text>
+                        ) : (
+                            <Text style={styles.selectedText}>게시판을 선택하세요</Text>
+                        )}
                     </TouchableOpacity>
+
+                    {/* 말머리 선택 */}
+                    <TouchableOpacity style={styles.inputContainer} onPress={() => setCategoryModalVisible(true)}>
+                        <Text style={styles.inputLabel}>말머리</Text>
+                        {selectedCategory ? (
+                            <Text style={styles.selectedText}>{selectedCategory}</Text>
+                        ) : (
+                            <Text style={styles.selectedText}>말머리를 선택하세요</Text>
+                        )}
+                    </TouchableOpacity>
+
                     {/* 제목 입력 */}
-                    <KeyboardAvoidingView>
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.inputLabel}>제목</Text>
                         <TextInput
-                            editable
-                            maxLength={30}
-                            value={titleValue}
-                            placeholder={'제목을 입력하세요.'}
-                            style={{
-                                fontSize: 20,
-                                borderWidth: 1,
-                                padding: 5
-
-                            }} />
-                    </KeyboardAvoidingView>
-
-
-                    <View
-                        style={{
-                            borderBottomColor: '#D9D9D9',
-                            borderBottomWidth: StyleSheet.hairlineWidth,
-                        }}
-                    />
-                    {/* 말머리 
-                    
-                    <Chip
-                        title="말머리 선택"
-                        type="outline"
-                        containerStyle={{ marginVertical: 5 }}
-                        onPress={() => console.log('Icon chip was pressed!')}
-                    />
-                    */}
-                    <TouchableOpacity
-                        style={ styles.optionBackground }
-                        onPress={toggleSetVisible2}
-                    >
-                        <Dialog
-                            isVisible={visible2}
-                            onBackdropPress={toggleSetVisible2}
-                        >
-                            <Dialog.Button
-                                title="팀"
-                                onPress={() => {
-                                    setContext('선택한 내용')
-                                    toggleSetVisible2()
-
-                                }}
-                            />
-                        </Dialog>
-                        <Text style={styles.option}>{context}</Text>
-                    </TouchableOpacity>
-                    <View
-                        style={{
-                            borderBottomColor: '#D9D9D9',
-                            borderBottomWidth: StyleSheet.hairlineWidth,
-                        }}
-                    />
-                    {/* 첨부파일 */}
-                    <TouchableOpacity
-                        style={{
-                            marginTop: 5
-                        }}
-                        onPress={() => {
-                            console.log('첨부파일 pressed');
-                        }}
-                    >
-                        <Text style={styles.option}>첨부파일</Text>
-                    </TouchableOpacity>
-                    <View
-                        style={{
-                            borderBottomColor: '#D9D9D9',
-                            borderBottomWidth: StyleSheet.hairlineWidth,
-                        }}
-                    />
-
-                    {/* 내용 입력 */}
-                    <View style={{ minHeight: 200, padding: 10 }}>
-                        <TextInput
-                            multiline
-                            editable
-                            placeholder='내용을 입력하세요.'
-                            numberOfLines={20}
-                            maxLength={30}
-                            scrollEnabled
-                            style={{
-                                //borderTopWidth: 1
-                            }}
-                        //value={value} 
+                            style={styles.textInput}
+                            value={title}
+                            onChangeText={setTitle}
+                            placeholder="제목을 입력하세요"
                         />
                     </View>
-                    <Button title="확인" onPress={
-                        () => {
-                            /* Api upload in here */
-                            Alert.alert("게시글이 작성되었습니다.");
-                            navigation.pop();
-                        }} />
-                    <Button title="취소" onPress={
-                        () => {
-                            Alert.alert("작성 취소", "글 작성을 취소할까요?",
-                                [
-                                    {
-                                        text: "예",
-                                        onPress: () => { navigation.pop() }
-                                    },
-                                    {
-                                        text: "아니요",
-                                        style: 'cancel',
-                                    }
 
-                                ],
-                                { cancelable: false }
-                            );
-                        }} />
+                    {/* 본문 입력 */}
+                    <View style={styles.inputContainer}>
+                        <Text style={styles.inputLabel}>본문</Text>
+                        <TextInput
+                            style={[{ height: 300 }, styles.textInput]}
+                            value={content}
+                            onChangeText={setContent}
+                            placeholder="본문을 입력하세요"
+                            multiline
+                        />
+                    </View>
 
-
-
-                    <View
-                        style={{
-                            borderBottomColor: 'black',
-                            borderBottomWidth: StyleSheet.hairlineWidth,
-                        }}
-                    />
-
+                    {/* 첨부파일 */}
+                    <TouchableOpacity style={styles.attachmentButton}>
+                        <Text style={styles.attachmentButtonText}>첨부파일</Text>
+                    </TouchableOpacity>
                 </ScrollView>
 
-
-            </SafeAreaView>
+                {/* 하단 버튼 */}
+                <View style={styles.rowContainer}>
+                    <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+                        <Text style={styles.attachmentButtonText}>취소</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
+                        <Text style={styles.attachmentButtonText}>확인</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         );
     }
-
-
-
     return (
         <>
             <Stack.Navigator
@@ -302,20 +245,90 @@ const Page = (props: any) => {
 
         </>
     );
-}
+};
+
 export default Page;
-
+// 스타일 변경을 위한 코드
 const styles = StyleSheet.create({
-    option: {
-        fontSize: 15,
-        fontWeight: 'normal',
-        textAlign: 'left'
+    container: {
+        flex: 1,
+        padding: 20,
     },
-
-    optionBackground: {
-        
-        padding: 5,
+    rowContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    cancelButton: {
+        flex: 1,
+        marginRight: 5,
+        backgroundColor: '#ccc',
+        padding: 10,
         borderRadius: 5,
-        backgroundColor: '#fff'
-    }
+    },
+    confirmButton: {
+        flex: 1,
+        marginLeft: 5,
+        backgroundColor: '#ccc',
+        padding: 10,
+        borderRadius: 5,
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+        backgroundColor: '#fff',
+        padding: 20,
+        borderRadius: 10,
+        width: '80%',
+    },
+    modalCloseButton: {
+        marginTop: 20,
+        alignSelf: 'flex-end',
+    },
+    modalCloseButtonText: {
+        fontSize: 16,
+        color: '#007AFF',
+    },
+    scrollView: {
+        flex: 1,
+    },
+    contentContainer: {
+        paddingBottom: 20,
+    },
+    inputContainer: {
+        marginBottom: 10,
+    },
+    inputLabel: {
+        marginBottom: 5,
+        fontWeight: 'bold',
+    },
+    textInput: {
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: 10,
+        borderRadius: 5,
+    },
+    attachmentButton: {
+        marginTop: 10,
+        backgroundColor: '#ccc',
+        padding: 10,
+        borderRadius: 5,
+    },
+    attachmentButtonText: {
+        textAlign: 'center',
+    },
+    selectedText: {
+        marginTop: 10,
+        fontWeight: 'bold',
+    },
 });
