@@ -111,8 +111,8 @@ const App = () => {
     // 로그인 처리 로직 작성
     setIsLoggedIn(true);
   };
-
-
+  /* 자동 로그인 구현 예정 */
+  
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -125,7 +125,7 @@ const App = () => {
             name="Login"
             component={SignIn}
             options={{
-              title: '로그인',
+              title: 'LUCETE Official App',
               headerTitleStyle: { alignSelf: 'center' },
             }}
           />

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -13,11 +13,12 @@ interface LoginFormData {
 
 const Stack = createStackNavigator();
 
-const Screen: React.FC = ({ navigation } : any) => {
+const Screen: React.FC = ({ navigation }: any) => {
   const [formData, setFormData] = useState<LoginFormData>({
     username: '',
     password: '',
   });
+  const [autoLogin, setAutoLogin] = useState(false);
 
   const handleChange = (name: string, value: string) => {
     setFormData((prevFormData) => ({
@@ -44,6 +45,10 @@ const Screen: React.FC = ({ navigation } : any) => {
     //navigation.navigate('FindPassword');
   };
 
+  const handleAutoLoginToggle = () => {
+    setAutoLogin((prevAutoLogin) => !prevAutoLogin);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
@@ -64,7 +69,13 @@ const Screen: React.FC = ({ navigation } : any) => {
         onChangeText={(text) => handleChange('password', text)}
         secureTextEntry
       />
-
+      <TouchableOpacity
+        style={styles.checkboxContainer}
+        onPress={handleAutoLoginToggle}
+      >
+        <View style={[styles.checkbox, autoLogin && styles.checkedCheckbox]} />
+        <Text style={styles.checkboxLabel}>자동 로그인</Text>
+      </TouchableOpacity>
       <Button title="로그인" onPress={handleSubmit} />
 
       <View style={styles.forgotContainer}>
@@ -139,6 +150,26 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: '#007AFF',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginRight: 8,
+  },
+  checkedCheckbox: {
+    backgroundColor: '#007AFF',
+    borderColor: '#007AFF',
+  },
+  checkboxLabel: {
+    fontSize: 16,
   },
 });
 
