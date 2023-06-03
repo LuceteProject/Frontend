@@ -21,12 +21,32 @@ const SwitchComponent = () => {
     setSearch(search);
   };
 };
+interface Post {
+  id: number;
+  title: string;
+  author_name: string;
+  updated: string;
+  content: string;
+  permission: number;
+}
+
+// ...
+
+const dummyPost: Post = {
+  id: 0,
+  title: "게시글이 없습니다.",
+  author_name: "",
+  updated: "",
+  content: "",
+  permission: 0
+};
 const Screen = ({ navigation }: any) => {
+
   const postPerPage = 10; //페이지 당 게시글 수
   /* 
   Values from API 
   */
-  const [posts, setPosts] = useState(''); //게시글 목록
+  const [posts, setPosts] = useState<Post[]>([]); //게시글 목록
   const [currentPage, setCurrentPage] = useState(1); //현재 페이지
   const [text, onChangeText] = useState(''); //검색어
 
@@ -56,6 +76,7 @@ const Screen = ({ navigation }: any) => {
       // 데이터는 response.data.data 안에 들어있다.
     } catch (e) {
       console.log(e);
+      setPosts([dummyPost]);
     }
     // loading 끄기
     setLoading(false);
@@ -71,10 +92,10 @@ const Screen = ({ navigation }: any) => {
     const formatDate = (dateString: string) => {
       const date = new Date(dateString);
       const today = new Date();
-  
+
       const diffInMilliseconds = today.getTime() - date.getTime();
       const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
-  
+
       if (diffInHours < 24) {
         return `${diffInHours}시간 전`;
       } else {
@@ -83,15 +104,15 @@ const Screen = ({ navigation }: any) => {
         return `${month}월 ${day}일`;
       }
     };
-  
+
+    const handleClick = () => {
+      if (props.data.id !== 0) {
+        props.nav.navigate('ViewPost', { postId: props.data.id });
+      }
+    };
     return (
       // 각 게시글 항목
-      <TouchableOpacity
-        onPress={() => {
-          /* onPress 호출되지 않음 */
-          //console.log(props.data.id);
-          props.nav.navigate('ViewPost', { postId: props.data.id });
-        }}>
+      <TouchableOpacity onPress={handleClick} disabled={props.data.id === 0}>
         <View
           style={{
             flexDirection: 'row',
@@ -100,21 +121,36 @@ const Screen = ({ navigation }: any) => {
             paddingBottom: 10,
             paddingTop: 10,
           }}>
-          <View>
-            <Text> {props.data.title} </Text>
-            <Text>
-              {' '}
-              {props.data.author_name} / {formatDate(props.data.updated)}{' '}
-            </Text>
-          </View>
-          <View>
-            <Text
+          {props.data.id !== 0 ? (
+            <View>
+              <Text> {props.data.title} </Text>
+              <Text>
+                {' '}
+                {props.data.author_name} / {formatDate(props.data.updated)}{' '}
+              </Text>
+            </View>
+          ) : (
+            <View
               style={{
-                padding: 10,
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-              댓글수 {props.data.permission}
-            </Text>
-          </View>
+              <Text>
+                서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.
+              </Text>
+            </View>
+          )}
+          {props.data.id !== 0 && (
+            <View>
+              <Text
+                style={{
+                  padding: 10,
+                }}>
+                댓글수 {props.data.permission}
+              </Text>
+            </View>
+          )}
         </View>
         <View
           // 구분선
@@ -126,10 +162,10 @@ const Screen = ({ navigation }: any) => {
       </TouchableOpacity>
     );
   };
-  
+
   const FirstRoute = (props: any) => {
     const { data } = props;
-  
+
     // props.data가 존재하고 유효한 데이터를 포함하는지 확인
     if (data && Array.isArray(data) && data.length > 0) {
       return (
@@ -142,7 +178,7 @@ const Screen = ({ navigation }: any) => {
         </View>
       );
     }
-  
+
     // 데이터가 없을 경우, 혹은 유효한 데이터가 없는 경우 표시할 내용
     return (
       <View style={{ height: 500 }}>
@@ -150,11 +186,11 @@ const Screen = ({ navigation }: any) => {
       </View>
     );
   };
-  
+
 
   const Route = (props: any) => {
     const { data } = props;
-  
+
     // props.data가 존재하고 유효한 데이터를 포함하는지 확인 -- loading 사용가능한지 확인
     if (!loading) {
       return (
@@ -167,7 +203,7 @@ const Screen = ({ navigation }: any) => {
         </View>
       );
     }
-  
+
     // 데이터가 없을 경우, 혹은 유효한 데이터가 없는 경우 표시할 내용
     return (
       <View style={{ height: 500 }}>

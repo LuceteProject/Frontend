@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -19,13 +19,7 @@ const Screen: React.FC = ({ navigation }: any) => {
     password: '',
   });
   const [autoLogin, setAutoLogin] = useState(false);
-
-  const handleChange = (name: string, value: string) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  };
+  
 
   const handleSubmit = () => {
     // 로그인 데이터 처리 로직 작성
@@ -49,6 +43,13 @@ const Screen: React.FC = ({ navigation }: any) => {
     setAutoLogin((prevAutoLogin) => !prevAutoLogin);
   };
 
+  const handleChange = (name: string, value: string) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>

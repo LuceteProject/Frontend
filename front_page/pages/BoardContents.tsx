@@ -28,7 +28,7 @@ const Page = ({ route }: any) => {
     Values from API 
     */
     const postId = route.params.postId;
-    const [post, setPost] = useState<Post[]>([]);
+    const [post, setPost] = useState<Post | null>(null);
 
     /* API variables */
     const [loading, setLoading] = useState(false);
@@ -125,7 +125,11 @@ const Page = ({ route }: any) => {
     /* 게시글 부분 */
     const Main = () => {
         const [haveAccess, setHaveAccess] = useState(false);
-
+        if (!post) {
+            return (
+                <ActivityIndicator />
+            );
+        }
         return (
             <SafeAreaView>
                 <ScrollView>
