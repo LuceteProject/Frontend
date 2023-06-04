@@ -48,7 +48,9 @@ const Screen = ({ navigation }: any) => {
   */
   const [posts, setPosts] = useState<Post[]>([]); //게시글 목록
   const [currentPage, setCurrentPage] = useState(1); //현재 페이지
+  const [currentBoard, setCurrentBoard] = useState('1'); //현재 페이지
   const [text, onChangeText] = useState(''); //검색어
+
 
   /* API variables */
   const [loading, setLoading] = useState(false);
@@ -58,16 +60,15 @@ const Screen = ({ navigation }: any) => {
 
       // loading 상태를 true 로 바꿉니다.
       setLoading(true);
-
-      const response = await axios.get('http://210.96.102.143:8080/api/v1/posts', {
+      const response = await axios.get('http://210.96.102.143:8080/api/v1/posts/' + currentBoard + '/posts', {
         headers: {
           'Content-Type': 'application/json',
           // 필요하다면 인증 헤더를 추가합니다.
         }
       })
         .then(response => {
-          //console.log(response.data.content);
-          setPosts(response.data.content);
+          //console.log(response.data);
+          setPosts(response.data);
 
         });
 
@@ -86,6 +87,10 @@ const Screen = ({ navigation }: any) => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    //선택한 게시판  setCurrentBoard(index.toString() + 1); console.log(index)
+  }, );
 
   const BoardItem = (props: any) => {
     // 날짜 형식화 함수
@@ -222,7 +227,6 @@ const Screen = ({ navigation }: any) => {
   // 게시판
   const Main = () => {
     /* 게시판 탭 설정 위한 변수들 */
-    const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
       { key: 'first', title: '자유게시판' },
       { key: 'second', title: '익명게시판' },
@@ -232,7 +236,7 @@ const Screen = ({ navigation }: any) => {
     /* 게시판 페이지 번호 */
     const [number, onChangeNumber] = useState('');
     const [data, setData] = useState([]);
-
+    const [index, setIndex] = React.useState(0);
     return (
       <>
         <View
