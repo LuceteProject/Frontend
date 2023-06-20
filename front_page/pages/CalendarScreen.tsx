@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, Button, TextInput, Modal, FlatList } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, Button, TextInput, Modal, FlatList, Image } from 'react-native';
 
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import DatePicker from 'react-native-date-picker';
@@ -7,9 +7,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { CheckBox, Dialog } from '@rneui/themed';
 import { Pressable } from 'react-native';
+import { ThemeColors } from 'react-navigation';
+import { Flex, WhiteSpace } from '@ant-design/react-native';
+import SizeContext from 'antd/es/avatar/SizeContext';
+import { screenHeight } from 'react-native-calendars/src/expandableCalendar/commons';
+//import { Image } from 'antd-mobile';
 
 const Stack = createNativeStackNavigator();
-
 
 
 const Screen = ({ navigation }: any) => {
@@ -44,15 +48,20 @@ const Screen = ({ navigation }: any) => {
             <View
                 style={{
                     flexDirection: 'row',
-                    justifyContent: 'space-around'
+                    backgroundColor: "#ffffff",
                 }}>
-                <Text>{props.time}</Text>
-                <Text>{props.text}</Text>
+                <Text
+                    style={{
+                        padding: 14,
+                        fontSize: 20,
+                        textAlign: 'left'
+                    }}>
+                    <Text style={{padding: 2}}>{props.text}{"\n"}</Text>
+                    <Text style={{padding: 2}}>{props.time}</Text>
+                </Text>
             </View>
         );
-
     }
-
 
 
     const Main = () => {
@@ -381,8 +390,13 @@ const Screen = ({ navigation }: any) => {
                 </TouchableOpacity>
                 <Calendar
                     style={{
-                        height: 350,
-
+                        height: 360,
+                    }}
+                    theme={{
+                        dotColor: '#B77DE4',
+                        selectedDayBackgroundColor: '#B77DE4',
+                        arrowColor: '#B77DE4',
+                        
                     }}
                     enableSwipeMonths={true}
                     /* 
@@ -394,7 +408,6 @@ const Screen = ({ navigation }: any) => {
                         );
                     }}
                     */
-
                     monthFormat={'yyyy년 MM월'}
                     markingType={'multi-dot'} //multi-period 표현문제 직면 뚜둥탁
                     markedDates={{
@@ -432,12 +445,19 @@ const Screen = ({ navigation }: any) => {
                 </View>
                 
                 */}
+                <View
+                style={{
+                      borderBottomColor: 'black',
+                      borderBottomWidth: StyleSheet.hairlineWidth,
+                    }}/>
                 
-
-                <View>
-                    <ListSample time='08:00' text='세부내용 1' />
-                    <ListSample time='09:00' text='세부내용 2' />
-                    <ListSample time='10:00' text='세부내용 3' />
+                <View style={styles.viewstyle}>
+                <Image source={require('../img/calendar.png')} style={styles.img} />
+                    <View style={{backgroundColor: '#fff'}}>
+                        <Text><ListSample time='08:00' text='세부내용 1' /></Text>
+                        <Text><ListSample time='09:00' text='세부내용 2' /></Text>
+                        <Text><ListSample time='10:00' text='세부내용 3' /></Text>
+                    </View>
                 </View>
             </>
         );
@@ -509,6 +529,11 @@ const styles = StyleSheet.create({
 
     컴포넌트 별 구분 가능
     */
+    img:{
+        width: 35,
+        height: 35,
+        top: 20,
+    },
     centeredView: {
         flex: 1,
         justifyContent: 'center',
@@ -521,6 +546,12 @@ const styles = StyleSheet.create({
         //justifyContent: 'space-around', //공백이 있는 양쪽정렬
         backgroundColor: '#fff',
 
+    },
+    viewstyle: {
+        flexDirection: "row", //content 정렬
+        padding: 10,
+        backgroundColor: "white",
+        alignItems: "flex-start",
     },
     btn: {
         width: 200,
