@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Alert, ScrollView, Button, TextInput, Modal, FlatList, Image } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
-import DatePicker from 'react-native-date-picker';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { CheckBox, Dialog } from '@rneui/themed';
-import { Pressable } from 'react-native';
-
 import CalModal from '../components/CalendarModal';
 
 const Stack = createNativeStackNavigator();
-
 
 const Screen = ({ navigation }: any) => {
     const cal_type = {
@@ -63,48 +58,9 @@ const Screen = ({ navigation }: any) => {
     const Main = () => {
         const today = new Date();
         const [selected, setSelected] = useState(today.toISOString().split('T')[0]);
-        // 일정 추가 Modal 창
+        /* 일정 추가 Modal 창 */
         const [modalVisible, setModalVisible] = useState(false);
         const [modalKey, setModalKey] = useState(0);
-
-        /* 일정 추가 -> 캘린더 선택 */
-        //1) 캘린더 선택
-        const [visibleCalType, setVisibleCalType] = useState(false);
-        const toggleDialogCalType = () => {
-            setVisibleCalType(!visibleCalType);
-        };
-        const [checked, setChecked] = useState(1);
-        const [btnName, setBtnName] = useState('캘린더 선택');
-        const afterButtonSelected = (index: string) => {
-            setBtnName(index);
-        }
-        //2) 알림 설정
-        const [btnAlarmName, setBtnAlarmName] = useState('알림 설정');
-        const afterButtonAlarmSelected = (index: string) => {
-            setBtnAlarmName(index);
-        }
-        const [visibleAlarmType, setVisibleAlarmType] = useState(false);
-        const toggleDialogAlarmType = () => {
-            setVisibleAlarmType(!visibleAlarmType);
-        };
-
-        const [title, onChangeTitle] = useState('');
-        const [openStart, setOpenStart] = useState(false);
-        const [openEnd, setOpenEnd] = useState(false);
-        const [dateStart, setDateStart] = useState(new Date());
-        const [dateEnd, setDateEnd] = useState(new Date());
-        const [place, setPlace] = useState('');
-        const [memo, setMemo] = useState('');
-
-
-        useEffect(() => {
-            // 일정 추가 버튼 눌렀을때, 일정 시각이 선택한 날짜로 바뀌게 변경
-            // 2023-05-11T14:09:12.825Z 형식의 new Date() 문자열 concat해서 2023-05-11만 남게 하면 될듯?
-            setDateStart(new Date(selected));
-            setDateEnd(new Date(selected));
-
-        }, [selected]);
-
         // 모달 닫힐 때 modalVisible 값을 false로 업데이트
         const handleCloseModal = () => {
             setModalVisible(false);
@@ -237,20 +193,6 @@ const Screen = ({ navigation }: any) => {
                     }
                     }
                 />
-                {/*
-                <Stack.Screen
-                    name="AddPlan"
-                    component={AddPlan}
-                    options={{
-                        title: 'Calendar',
-                    }
-                    }
-                />
-
-            
-                 */}
-
-
             </Stack.Navigator>
 
         </>
@@ -316,9 +258,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'normal',
     },
-
-    /* 밑에 두개 floating button style
-이거 왜 가운데에 안오냐 ....? ㅁㄹ...*/
     touchableOpacityStyle: {
         position: 'absolute',
         width: 60,
@@ -327,6 +266,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         right: 30,
         bottom: 30,
+        zIndex: 100, // 다른 컴포넌트보다 위로
     },
     floatingButtonStyle: {
         borderRadius: 50,
