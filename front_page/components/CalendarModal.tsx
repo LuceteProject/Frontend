@@ -58,7 +58,12 @@ const CalModal = ({ visible, callback }: any) => {
                 height: '60%',
                 //width:'100%'
             }}>
-
+            <TextInput
+                style={{
+                    padding: 7
+                }}
+            />
+            <View style={{marginTop: 35}}></View>
             <TextInput
                 style={styles.input}
                 onChangeText={onChangeTitle}
@@ -67,43 +72,49 @@ const CalModal = ({ visible, callback }: any) => {
             />
 
             <View
+                style={{
+                    borderBottomColor: 'black',
+                    borderBottomWidth: StyleSheet.hairlineWidth,
+            }}/>
+            <View
                 id='inputDates'
                 style={{
-                    padding: 10,
-                    backgroundColor: '#F0EEEE',
+                    backgroundColor: '#ffffff',
                     flexDirection: 'row',
-                    alignItems: 'stretch',
+                    
+                    alignItems: 'center',
                     justifyContent: 'space-around',
 
                 }}>
                 <TouchableOpacity
                     // time 모듈 따로 빼서 정리 필요할듯
                     id='startTime'
-                    style={{
-
-                    }}
+                    style={{height: 140, justifyContent: 'center', alignItems: 'center'}}
                     onPress={() => setOpenStart(true)}>
                     <Text style={styles.fontTitle}>시작일</Text>
                     <Text style={styles.fontNormal}>
                         {/*근데 어차피 이거 api로 넘겨줘야하는거라 포맷팅 하는 부분 따로 빼는게 나을지도 */}
                         {(dateStart.getMonth() + 1).toString()}월&nbsp;
-                        {dateStart.getDate().toString()}일{'\n'}
+                        {dateStart.getDate().toString()}일
+                    </Text>
+                    <Text style={styles.fontNormal}>
                         {dateStart.getHours().toString()} : {dateStart.getMinutes().toString()}
                     </Text>
                 </TouchableOpacity>
 
-                <Icon name="arrow-forward" size={40} color="#000" style={{ paddingTop: 30, paddingBottom: 30 }} />
+                <Icon name="arrow-forward" size={40} color="#000" style={{ paddingTop: 30, paddingBottom: 30, right: 2}} />
                 <TouchableOpacity
                     id='endTime'
+                    style={{height: 140, justifyContent: 'center', alignItems: 'center'}}
                     onPress={() => {
                         setOpenEnd(true);
                     }}>
-                    <Text
-                        style={styles.fontTitle}>종료일</Text>
-                    <Text
-                        style={styles.fontNormal}>
+                    <Text style={styles.fontTitle}>종료일</Text>
+                    <Text style={styles.fontNormal}>
                         {(dateEnd.getMonth() + 1).toString()}월&nbsp;
-                        {dateEnd.getDate().toString()}일{'\n'}
+                        {dateEnd.getDate().toString()}일
+                    </Text>
+                    <Text style={styles.fontNormal}>
                         {dateEnd.getHours().toString()} : {dateEnd.getMinutes().toString()}
                     </Text>
                 </TouchableOpacity>
@@ -138,7 +149,10 @@ const CalModal = ({ visible, callback }: any) => {
             <View
                 id='notification'
                 style={{
-                    margin: 10,
+                    marginLeft: 35,
+                    marginRight: 35,
+                    marginBottom: 10,
+                    paddingBottom: 10,
                     //backgroundColor: '#F0EEEE',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -146,6 +160,7 @@ const CalModal = ({ visible, callback }: any) => {
                 <Button
                     title={btnName}
                     color='#B77DE4' // color need
+                    
                     onPress={() => {
                         toggleDialogCalType();
                         console.log("pressed");
@@ -236,11 +251,16 @@ const CalModal = ({ visible, callback }: any) => {
                 style={{
                     alignItems: 'stretch',
                     justifyContent: 'space-around',
-                    padding: 10,
+                    
                 }}>
-                <View style={{ flexDirection: 'row' }}>
-                    <Icon name="location" size={20} color="#000" />
-                    <Text style={{ fontSize: 15 }}>장소</Text>
+                <View style={{ flexDirection: 'row',
+                    paddingTop: 20,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    paddingBottom: 20,
+                    }}>
+                    <Icon name="location" size={25} color="#000" />
+                    <Text style={{ fontSize: 20 }}>장소</Text>
                 </View>
 
                 <TextInput
@@ -249,9 +269,15 @@ const CalModal = ({ visible, callback }: any) => {
                     placeholder={'장소'}
                     value={place}
                 />
-                <View style={{ flexDirection: 'row' }}>
-                    <Icon name="reader" size={20} color="#000" />
-                    <Text style={{ fontSize: 15 }}>메모</Text>
+                <View style={{ 
+                    flexDirection: 'row',
+                    paddingTop: 20,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    paddingBottom: 20,
+                    }}>
+                    <Icon name="reader" size={25} color="#000" />
+                    <Text style={{ fontSize: 20 }}>메모</Text>
                 </View>
                 <TextInput
                     editable
@@ -272,7 +298,12 @@ const CalModal = ({ visible, callback }: any) => {
                     value={memo}
                 />
             </View>
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+            <View style={{padding: 20}}></View>
+            <View style={{ 
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                flex: 1,
+                alignItems: 'flex-end'}}>
 
                 <Pressable
                     onPress={callback}
@@ -280,7 +311,7 @@ const CalModal = ({ visible, callback }: any) => {
                         {
                             backgroundColor: pressed ? '#B77DE4' : 'white',
                         }, styles.btn]}>
-                    <Text style={{ color: '#ffffff', fontSize: 14 }}>취소</Text>
+                    <Text style={{ color: '#ffffff', fontSize: 20, fontWeight: 'bold' }}>취소</Text>
                 </Pressable>
                 <Pressable
                     onPress={
@@ -293,7 +324,7 @@ const CalModal = ({ visible, callback }: any) => {
                         {
                             backgroundColor: pressed ? '#B77DE4' : 'white',
                         }, styles.btn]}>
-                    <Text style={{ color: '#ffffff', fontSize: 14 }}>확인</Text>
+                    <Text style={{ color: '#ffffff', fontSize: 20, fontWeight: 'bold' }}>확인</Text>
                 </Pressable>
 
 
@@ -341,7 +372,7 @@ const styles = StyleSheet.create({
     },
     btn: {
         width: 200,
-        height: 30,
+        height: 44,
         backgroundColor: '#B77DE4',
         alignItems: 'center',
         justifyContent: 'center'
@@ -357,10 +388,14 @@ const styles = StyleSheet.create({
     fontTitle: {
         fontSize: 20,
         fontWeight: 'bold',
+        paddingTop: 4,
+        paddingBottom: 4
     },
     fontNormal: {
         fontSize: 18,
         fontWeight: 'normal',
+        paddingTop: 4,
+        paddingBottom: 4
     },
 
     /* 밑에 두개 floating button style

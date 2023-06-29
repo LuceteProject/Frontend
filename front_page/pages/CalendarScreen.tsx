@@ -78,7 +78,7 @@ const Screen = ({ navigation }: any) => {
                     }}
                     style={styles.touchableOpacityStyle}
                 >
-                    <Icon name="add-circle" size={60} color="#000"
+                    <Icon name="add-circle" size={60} color="#B77DE4"
                     //style={styles.floatingButtonStyle}
                     />
                 </TouchableOpacity>
