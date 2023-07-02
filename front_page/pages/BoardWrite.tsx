@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Modal, StyleSheet, ScrollView, TextInput,
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { LeftOutline } from 'antd-mobile-icons';
 const Stack = createNativeStackNavigator();
 
 
@@ -139,32 +140,37 @@ const Page = () => {
                         </View>
                     </Modal>
 
-
                     {/* 게시판 선택 */}
+                    <View>
+                    <Text style={styles.inputLabel}>게시판 선택</Text>
+                    <View
+                    style={{
+                        borderColor: 'gray',
+                        borderWidth: 1
+                    }}
+                    />
+                    
+
                     <TouchableOpacity style={styles.inputContainer} onPress={() => setBoardModalVisible(true)}>
-                        <Text style={styles.inputLabel}>게시판 선택</Text>
+                        
                         {selectedBoard ? (
                             <Text style={styles.selectedText}>{selectedBoard}</Text>
                         ) : (
                             <Text style={styles.selectedText}>게시판을 선택하세요</Text>
                         )}
                     </TouchableOpacity>
-
-                    {/* 말머리 선택 */}
-                    <TouchableOpacity style={styles.inputContainer} onPress={() => setCategoryModalVisible(true)}>
-                        <Text style={styles.inputLabel}>말머리</Text>
-                        {selectedCategory ? (
-                            <Text style={styles.selectedText}>{selectedCategory}</Text>
-                        ) : (
-                            <Text style={styles.selectedText}>말머리를 선택하세요</Text>
-                        )}
-                    </TouchableOpacity>
-
+                    <View
+                    style={{
+                        borderColor: 'gray',
+                        borderWidth: 1
+                    }}
+                    />
+                    </View>
                     {/* 제목 입력 */}
+                    <Text style={styles.inputLabel}>제목</Text>
                     <View style={styles.inputContainer}>
-                        <Text style={styles.inputLabel}>제목</Text>
                         <TextInput
-                            style={styles.textInput}
+                            style={styles.textInputtitle}
                             value={title}
                             onChangeText={setTitle}
                             placeholder="제목을 입력하세요"
@@ -172,16 +178,42 @@ const Page = () => {
                     </View>
 
                     {/* 본문 입력 */}
+                    <Text style={styles.inputLabel}>본문</Text>
+
                     <View style={styles.inputContainer}>
-                        <Text style={styles.inputLabel}>본문</Text>
                         <TextInput
-                            style={[{ height: 300 }, styles.textInput]}
+                            style={[{ height: 300 }, styles.textInputbody]}
                             value={content}
                             onChangeText={setContent}
                             placeholder="본문을 입력하세요"
                             multiline
                         />
                     </View>
+                    {/* 말머리 선택 */}
+                    <Text style={styles.inputLabel}>말머리</Text>
+                    <View>
+                    <View
+                    style={{
+                        borderColor: 'gray',
+                        borderWidth: 1
+                    }}
+                    />
+                    <TouchableOpacity style={styles.inputContainer} onPress={() => setCategoryModalVisible(true)}>
+                        {selectedCategory ? (
+                            <Text style={styles.selectedText}>{selectedCategory}</Text>
+                        ) : (
+                            <Text style={styles.selectedText}>말머리를 선택하세요</Text>
+                        )}
+                    </TouchableOpacity>
+                    <View
+                    style={{
+                        borderColor: 'gray',
+                        borderWidth: 0.95
+                    }}
+                    />
+                    </View>
+
+                    <View style={{height: 10}}></View>
 
                     {/* 첨부파일 */}
                     <TouchableOpacity style={styles.attachmentButton}>
@@ -195,7 +227,7 @@ const Page = () => {
                         <Text style={styles.attachmentButtonText}>취소</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
-                        <Text style={styles.attachmentButtonText}>확인</Text>
+                        <Text style={styles.attachmentButtonTextokay}>확인</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -253,24 +285,25 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        backgroundColor: '#fff'
     },
     rowContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 10,
+        marginBottom: 5,
     },
     cancelButton: {
         flex: 1,
         marginRight: 5,
-        backgroundColor: '#ccc',
+        backgroundColor: '#EEEEEE',
         padding: 10,
         borderRadius: 5,
     },
     confirmButton: {
         flex: 1,
         marginLeft: 5,
-        backgroundColor: '#ccc',
+        backgroundColor: '#FFCCFF',
         padding: 10,
         borderRadius: 5,
     },
@@ -306,29 +339,56 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     inputContainer: {
-        marginBottom: 10,
+        marginTop: 4,
+        marginBottom: 4
     },
     inputLabel: {
-        marginBottom: 5,
+        marginTop: 4.3,
+        marginBottom: 4,
+        color: '#000',
         fontWeight: 'bold',
+        fontSize: 20
     },
-    textInput: {
+    textInputtitle: {
         borderWidth: 1,
         borderColor: 'gray',
         padding: 10,
         borderRadius: 5,
+        fontSize: 16
+    },
+    textInputbody:{
+        justifyContent: 'flex-start',
+        borderWidth: 1,
+        borderColor: 'gray',
+        padding: 10,
+        borderRadius: 5,
+        fontSize: 16,
+
     },
     attachmentButton: {
         marginTop: 10,
-        backgroundColor: '#ccc',
+        backgroundColor: '#EEEEEE',
         padding: 10,
         borderRadius: 5,
     },
+    
     attachmentButtonText: {
         textAlign: 'center',
+        color: '#666666',
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    attachmentButtonTextokay: {
+        textAlign: 'center',
+        color: '#B77DE4',
+        fontSize: 18,
+        fontWeight: 'bold'
     },
     selectedText: {
-        marginTop: 10,
-        fontWeight: 'bold',
+        marginTop: 8,
+        marginBottom: 8,
+        marginLeft: 5,
+        color: '#000',
+        fontSize: 18
     },
 });
