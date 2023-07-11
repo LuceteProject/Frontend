@@ -3,6 +3,8 @@ import { StyleSheet, ScrollView, Text, View, KeyboardAvoidingView, TouchableOpac
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Task from '../components/Task';
+import { color } from '@rneui/base';
+import { Circle } from 'react-native-svg';
 
 const Stack = createNativeStackNavigator();
 
@@ -11,6 +13,7 @@ interface Todo {
   text: string;
   completed: boolean;
   category: string;
+  check: boolean;
 }
 
 const Screen = ({ navigation }: any) => {
@@ -19,6 +22,7 @@ const Screen = ({ navigation }: any) => {
   const [newTodoTeam, setNewTodoTeam] = useState('');
   const [newTodoPersonal, setNewTodoPersonal] = useState('');
   const [category, setCategory] = useState('전체');
+  const [checked, setChecked] = useState(false);
 
   const handleAddTodo = () => {
     let newTodo = '';
@@ -39,9 +43,16 @@ const Screen = ({ navigation }: any) => {
         text: newTodo,
         completed: false,
         category: category,
+        check: false,
       };
       setTodos([...todos, newTodoItem]);
     }
+  };
+
+  const Checked = (check: boolean) => {
+    const updatedTodos = todos.map(todo =>
+      todo.check === check ? {...todo, check: !todo.check} : todo);
+    setTodos(updatedTodos);
   };
 
   const handleToggleTodo = (id: string) => {
@@ -56,8 +67,9 @@ const Screen = ({ navigation }: any) => {
     setTodos(updatedTodos);
   };
 
-  const renderItem = ({ item }: { item: Todo }) => (
-    <View style={styles.itemContainer}>
+  const AllItem = ({ item }: { item: Todo }) => (
+    <View>
+      <View style={styles.itemContainer}>
       <Text
         style={[
           styles.itemText,
@@ -66,17 +78,93 @@ const Screen = ({ navigation }: any) => {
       >
         {item.text}
       </Text>
-      <Switch value={item.completed} onValueChange={() => handleToggleTodo(item.id)} />
-      <TouchableOpacity onPress={() => handleDeleteTodo(item.id)}>
-        <Icon name="close" size={15} color="red" />
+      
+      <TouchableOpacity onPress={() => Checked(item.check)}>
+        <View style={[styles.checkbox, item.check && styles.checkedCheckbox_1]} />
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => handleDeleteTodo(item.id)}>
+        <Icon name="close" size={25} color="red" />
+      </TouchableOpacity>
+      
+      </View>
+      <View
+                style={{
+                    borderBottomColor: '#B77DE4',
+                    borderBottomWidth: 1,
+                }}
+            />
     </View>
+    
+  );
+  const TeamItem = ({ item }: { item: Todo }) => (
+    <View>
+      <View style={styles.itemContainer}>
+      <Text
+        style={[
+          styles.itemText,
+          item.completed && styles.completedText,
+        ]}
+      >
+        {item.text}
+      </Text>
+      
+      <TouchableOpacity onPress={() => Checked(item.check)}>
+        <View style={[styles.checkbox, item.check && styles.checkedCheckbox_2]} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleDeleteTodo(item.id)}>
+          <Icon name="close" size={25} color="red" />
+        </TouchableOpacity>
+      
+      </View>
+      <View
+                style={{
+                    borderBottomColor: '#CBD773',
+                    borderBottomWidth: 1,
+                }}
+            />
+    </View>
+    
+  );
+  const PersonalItem = ({ item }: { item: Todo }) => (
+    <View>
+      <View style={styles.itemContainer}>
+      <Text
+        style={[
+          styles.itemText,
+          item.completed && styles.completedText,
+        ]}
+      >
+        {item.text}
+      </Text>
+      
+      <TouchableOpacity onPress={() => Checked(item.check)}>
+        <View style={[styles.checkbox, item.check && styles.checkedCheckbox_3]} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => handleDeleteTodo(item.id)}>
+          <Icon name="close" size={25} color="red" />
+        </TouchableOpacity>
+      
+      </View>
+      <View
+                style={{
+                    borderBottomColor: '#CA6D68',
+                    borderBottomWidth: 1,
+                }}
+            />
+    </View>
+    
   );
 
   const Main = () => {
     return (
-      <View style={{margin: 5}}>
-        <Text>전체</Text>
+      <View style={{flex: 1, backgroundColor: '#fff'}}>
+      <View style={{marginLeft: 10}}>
+      <View style={{margin: 10}}>
+        <View style={{height: 15}}></View>
+        {/* 전체 투두리스트 */}
+        <View style={{backgroundColor: '#B77DE4', borderRadius: 50, marginRight: 250, alignItems: 'center', marginBottom: 5, marginTop: 15}}>
+          <Text style={{fontSize: 22, color: '#fff'}}>전체</Text>
+        </View>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -85,18 +173,28 @@ const Screen = ({ navigation }: any) => {
             onChangeText={text => setNewTodoAll(text)}
             onSubmitEditing={handleAddTodo}
           />
-          <Button title="추가" onPress={() => { handleAddTodo(); setCategory('전체'); }} />
+          
+          <TouchableOpacity  onPress={() => {handleAddTodo(); setCategory('전체');}}>
+          <Icon name="add-circle" size={45} color="#B77DE4"
+                    //style={styles.floatingButtonStyle}
+                    />
+          </TouchableOpacity>
+
         </View>
         <View>
 
           <FlatList
             data={todos.filter((todo) => todo.category === '전체')}
-            renderItem={renderItem}
+            renderItem={AllItem}
             keyExtractor={(item) => item.id}
           />
         </View>
 
-        <Text>팀</Text>
+        {/* 전체 투두리스트 */}
+        <View style={{backgroundColor: '#CBD773', borderRadius: 50, marginRight: 250, alignItems: 'center', marginBottom: 5, marginTop: 15}}>
+          <Text style={{fontSize: 22, color: '#fff'}}>팀</Text>
+        </View>
+        
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -105,17 +203,25 @@ const Screen = ({ navigation }: any) => {
             onChangeText={text => setNewTodoTeam(text)}
             onSubmitEditing={handleAddTodo}
           />
-          <Button title="추가" onPress={() => { handleAddTodo(); setCategory('팀'); }} />
+          <TouchableOpacity  onPress={() => {handleAddTodo(); setCategory('팀');}}>
+          <Icon name="add-circle" size={45} color="#CBD773"
+                    //style={styles.floatingButtonStyle}
+                    />
+          </TouchableOpacity>
         </View>
         <View>
 
           <FlatList
             data={todos.filter((todo) => todo.category === '팀')}
-            renderItem={renderItem}
+            renderItem={TeamItem}
             keyExtractor={(item) => item.id}
           />
         </View>
-        <Text>개인</Text>
+
+        {/* 전체 투두리스트 */}
+        <View style={{backgroundColor: '#CA6D68', borderRadius: 50, marginRight: 250, alignItems: 'center', marginBottom: 5, marginTop: 15}}>
+          <Text style={{fontSize: 22, color: '#fff'}}>개인</Text>
+        </View>
         <View style={styles.inputContainer}>
           <TextInput
             style={styles.input}
@@ -124,16 +230,22 @@ const Screen = ({ navigation }: any) => {
             onChangeText={text => setNewTodoPersonal(text)}
             onSubmitEditing={handleAddTodo}
           />
-          <Button title="추가" onPress={() => { handleAddTodo(); setCategory('개인'); }} />
+          <TouchableOpacity  onPress={() => {handleAddTodo(); setCategory('개인');}}>
+          <Icon name="add-circle" size={45} color="#CA6D68"
+                    //style={styles.floatingButtonStyle}
+                    />
+          </TouchableOpacity>
         </View>
         <View>
 
           <FlatList
             data={todos.filter((todo) => todo.category === '개인')}
-            renderItem={renderItem}
+            renderItem={PersonalItem}
             keyExtractor={(item) => item.id}
           />
         </View>
+      </View>
+      </View>
       </View>
     );
   };
@@ -166,14 +278,12 @@ export default Screen;
 const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    padding: 5
+    justifyContent: 'center',
   },
   input: {
     flex: 1,
-    paddingVertical: 5,
-    paddingHorizontal: 5,
+    fontSize: 18,
+    marginRight: 10,
     backgroundColor: '#FFF',
     borderRadius: 10,
     borderColor: '#C0C0C0',
@@ -182,17 +292,41 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginLeft: 10,
-    marginRight: 10
+    marginRight: 5,
+    paddingVertical: 8,
+    borderRadius: 5,
+    backgroundColor: '#fff'
   },
   itemText: {
     flex: 1,
     textDecorationLine: 'none',
-    fontSize: 16,
+    marginVertical: 3,
+    fontSize: 22,
     marginHorizontal: 10,
   },
   completedText: {
     textDecorationLine: 'line-through',
     color: 'gray',
   },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: '#000',
+    marginRight: 8,
+  },
+  checkedCheckbox_1: {
+    backgroundColor: '#BB7DE4',
+    borderColor: '#BB7DE4',
+  },
+  checkedCheckbox_2: {
+    backgroundColor: '#CBD773',
+    borderColor: '#CBD773',
+  },
+  checkedCheckbox_3: {
+    backgroundColor: '#CA6D68',
+    borderColor: '#CA6D68',
+  },
+
 });

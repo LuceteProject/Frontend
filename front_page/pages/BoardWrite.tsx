@@ -165,6 +165,7 @@ const Page = () => {
                         borderWidth: 1
                     }}
                     />
+                    <View style={{height: 20}}></View>
                     </View>
                     {/* 제목 입력 */}
                     <Text style={styles.inputLabel}>제목</Text>
@@ -176,19 +177,22 @@ const Page = () => {
                             placeholder="제목을 입력하세요"
                         />
                     </View>
+                    <View style={{height: 20}}></View>
 
                     {/* 본문 입력 */}
                     <Text style={styles.inputLabel}>본문</Text>
 
                     <View style={styles.inputContainer}>
                         <TextInput
-                            style={[{ height: 300 }, styles.textInputbody]}
+                            style={[{ height: 200 }, styles.textInputbody]}
                             value={content}
                             onChangeText={setContent}
                             placeholder="본문을 입력하세요"
                             multiline
                         />
                     </View>
+                    <View style={{height: 20}}></View>
+
                     {/* 말머리 선택 */}
                     <Text style={styles.inputLabel}>말머리</Text>
                     <View>
@@ -214,6 +218,7 @@ const Page = () => {
                     </View>
 
                     <View style={{height: 10}}></View>
+                    <View style={{height: 20}}></View>
 
                     {/* 첨부파일 */}
                     <TouchableOpacity style={styles.attachmentButton}>
@@ -237,7 +242,7 @@ const Page = () => {
         <>
             <Stack.Navigator
                 screenOptions={{
-                    headerShown: false,
+                    headerShown: true,
                     headerRight: () => (
                         <>
                             <TouchableOpacity
@@ -291,7 +296,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: 5,
+        marginBottom: 0,
     },
     cancelButton: {
         flex: 1,
@@ -366,7 +371,7 @@ const styles = StyleSheet.create({
 
     },
     attachmentButton: {
-        marginTop: 10,
+        marginTop: 5,
         backgroundColor: '#EEEEEE',
         padding: 10,
         borderRadius: 5,
