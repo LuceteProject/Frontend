@@ -16,8 +16,8 @@ import ProfileScreen from './pages/ProfileScreen';
 import CalendarScreen from './pages/CalendarScreen';
 // import DriveScreen from './pages/DriveScreen';
 /* 나중에 지워야 할 것 */
-import SignUp from './pages/SignUp';
-import SignIn from './pages/SignIn';
+import SignUp from './pages/user/SignUp';
+import SignIn from './pages/user/SignIn';
 
 //import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/Ionicons';

@@ -3,8 +3,8 @@ import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } fr
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import FindUsernameScreen from './user/FindUsernameScreen';
-import FindPasswordScreen from './user/FindPasswordScreen';
+import FindUsernameScreen from './FindUsernameScreen';
+import FindPasswordScreen from './FindPasswordScreen';
 
 interface LoginFormData {
   username: string;
@@ -53,7 +53,7 @@ const Screen: React.FC = ({ navigation }: any) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={require('../img/logo.jpg')} style={styles.image} />
+        <Image source={require('../../img/logo.jpg')} style={styles.image} />
       </View>
 
       <Text style={styles.label}>아이디:</Text>
