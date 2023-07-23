@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, TextInput } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import axios from 'axios';
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import BoardContent from './BoardContents';
@@ -97,7 +97,6 @@ const Screen = ({ navigation }: any) => {
     const formatDate = (dateString: string) => {
       const date = new Date(dateString);
       const today = new Date();
-
       const diffInMilliseconds = today.getTime() - date.getTime();
       const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
 
@@ -126,10 +125,10 @@ const Screen = ({ navigation }: any) => {
             paddingBottom: 10,
             paddingTop: 10,
           }}>
-          {props.data.id !== 0 ? (
+          {props.data.id === 0 ? (
             <View>
-              <Text> {props.data.title} </Text>
-              <Text>
+              <Text style={styles.titlefont}> {props.data.title} </Text>
+              <Text style={styles.datefont}>
                 {' '}
                 {props.data.author_name} / {formatDate(props.data.updated)}{' '}
               </Text>
@@ -146,13 +145,13 @@ const Screen = ({ navigation }: any) => {
               </Text>
             </View>
           )}
-          {props.data.id !== 0 && (
-            <View>
-              <Text
-                style={{
-                  padding: 10,
-                }}>
-                댓글수 {props.data.permission}
+          {props.data.id === 0 && (
+            <View style={styles.coments}>
+              <Text>
+                {props.data.permission}
+              </Text>
+              <Text style={{paddingVertical: 3}}>
+                댓글
               </Text>
             </View>
           )}
@@ -174,7 +173,7 @@ const Screen = ({ navigation }: any) => {
     // props.data가 존재하고 유효한 데이터를 포함하는지 확인
     if (data && Array.isArray(data) && data.length > 0) {
       return (
-        <View style={{ height: 500 }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
           {/* ... */}
           {/* 게시글 목록 렌더링 */}
           {data.map((item: any, index: number) => (
@@ -186,7 +185,7 @@ const Screen = ({ navigation }: any) => {
 
     // 데이터가 없을 경우, 혹은 유효한 데이터가 없는 경우 표시할 내용
     return (
-      <View style={{ height: 500 }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <Text>게시글이 없습니다.</Text>
       </View>
     );
@@ -199,7 +198,7 @@ const Screen = ({ navigation }: any) => {
     // props.data가 존재하고 유효한 데이터를 포함하는지 확인 -- loading 사용가능한지 확인
     if (!loading) {
       return (
-        <View style={{ height: 500 }}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
           {/* ... */}
           {/* 게시글 목록 렌더링 */}
           {data.map((item: any, index: number) => (
@@ -209,9 +208,10 @@ const Screen = ({ navigation }: any) => {
       );
     }
 
+
     // 데이터가 없을 경우, 혹은 유효한 데이터가 없는 경우 표시할 내용
     return (
-      <View style={{ height: 500 }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <Text>게시글이 없습니다.</Text>
       </View>
     );
@@ -223,6 +223,19 @@ const Screen = ({ navigation }: any) => {
     second: () => <Route nav={navigation} data={posts} />,
     third: () => <FirstRoute nav={navigation} data={posts} />,
   });
+  const renderTabBar = (props:any) => (
+    <TabBar
+    {...props}
+
+    renderLabel={({ route, focused, color }) => (
+      <Text style={{margin: 6, fontSize: 18, color: '#fff' }}>
+        {route.title}
+      </Text>
+    )}
+      indicatorStyle={{ backgroundColor: 'white' }}
+      style={{ backgroundColor: '#B77DE4' }}
+    />
+  );
 
   // 게시판
   const Main = () => {
@@ -246,11 +259,12 @@ const Screen = ({ navigation }: any) => {
         //showsHorizontalScrollIndicator={false}
         //</>showsVerticalScrollIndicator={false}
         >
-          <Text>여러분 공지 좀 읽으세요 란</Text>
+          <Text style={styles.basicfont}>여러분 공지 좀 읽으세요 란</Text>
         </View >
         {/* TabBar style https://reactnavigation.org/docs/tab-view#tabview - TabBar 항목에서 style 지정 설명 있음 */}
         <TabView
           //renderTabBar
+          renderTabBar={renderTabBar}
           navigationState={{ index, routes }}
           renderScene={renderScene}
           onIndexChange={setIndex}
@@ -258,7 +272,7 @@ const Screen = ({ navigation }: any) => {
 
         <View
           style={{
-            height: 80,
+            backgroundColor: 'white'
           }}>
           {/* 게시판 목록 index*/}
         </View>
@@ -351,14 +365,13 @@ export default Screen;
 const styles = StyleSheet.create({
   background: {
     //flex: 1,
-    backgroundColor: '#f5f5f9',
+    backgroundColor: '#fff',
+    paddingHorizontal: 8,
+    paddingVertical: 6
   },
   container: {
     // for empty space in iOS
     height: 5,
-  },
-  title: {
-    fontSize: 24,
   },
   input: {
     height: 40,
@@ -390,8 +403,33 @@ const styles = StyleSheet.create({
   },
   floatingButtonStyle: {
     borderRadius: 50,
+    borderWidth: 1,
+    borderColor: 'black',
     width: 50,
     height: 50,
     backgroundColor: '#fff',
   },
+  basicfont:{
+    fontSize: 16,
+    color: '#000'
+  },
+  coments:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 7,
+    paddingVertical: 5,
+    marginVertical: 5,
+    marginHorizontal: 15,
+    backgroundColor: '#eeeeee'
+  },
+  titlefont: {
+    fontSize: 20,
+    fontweight: 'bold',
+    color: 'black'
+  },
+  datefont: {
+    fontSize: 14,
+    color: 'gray',
+    padding: 3
+  }
 });

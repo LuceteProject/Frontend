@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, ActivityIndicator, Modal, KeyboardAvoidingView } from 'react-native'
-import { TabView, SceneMap } from 'react-native-tab-view';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import axios from 'axios';
 
 const Page = ({ navigation }: any) => {
@@ -14,6 +14,7 @@ const Page = ({ navigation }: any) => {
     const [loading, setLoading] = useState(false);
     const [contents, setContents] = useState('알림 컴포넌트 테스트'); //notification list
     const [messageList, setMessageList] = useState('메시지 컴포넌트 테스트'); //message list
+
 
     /* API 호출 */
     const fetchData = async () => {
@@ -72,6 +73,20 @@ const Page = ({ navigation }: any) => {
         second: () => <SecondRoute nav={navigation} />,
     });
 
+    const renderTabBar = (props:any) => (
+        <TabBar
+        {...props}
+    
+        renderLabel={({ route, focused, color }) => (
+          <Text style={{margin: 4, fontSize: 18, color: '#fff' }}>
+            {route.title}
+          </Text>
+        )}
+          indicatorStyle={{ backgroundColor: 'white' }}
+          style={{ backgroundColor: '#B77DE4' }}
+        />
+      );
+
     return (
         <>
             <TabView
@@ -79,6 +94,7 @@ const Page = ({ navigation }: any) => {
                 navigationState={{ index, routes }}
                 renderScene={renderScene}
                 onIndexChange={setIndex}
+                renderTabBar={renderTabBar}
             />
         </>
     )

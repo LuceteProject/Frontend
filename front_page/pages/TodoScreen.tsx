@@ -49,9 +49,9 @@ const Screen = ({ navigation }: any) => {
     }
   };
 
-  const Checked = (check: boolean) => {
+  const Checked = (id: string) => {
     const updatedTodos = todos.map(todo =>
-      todo.check === check ? {...todo, check: !todo.check} : todo);
+      todo.id === id ? {...todo, check: !todo.check} : todo);
     setTodos(updatedTodos);
   };
 
@@ -79,7 +79,7 @@ const Screen = ({ navigation }: any) => {
         {item.text}
       </Text>
       
-      <TouchableOpacity onPress={() => Checked(item.check)}>
+      <TouchableOpacity onPress={() => Checked(item.id)}>
         <View style={[styles.checkbox, item.check && styles.checkedCheckbox_1]} />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => handleDeleteTodo(item.id)}>
@@ -108,7 +108,7 @@ const Screen = ({ navigation }: any) => {
         {item.text}
       </Text>
       
-      <TouchableOpacity onPress={() => Checked(item.check)}>
+      <TouchableOpacity onPress={() => Checked(item.id)}>
         <View style={[styles.checkbox, item.check && styles.checkedCheckbox_2]} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleDeleteTodo(item.id)}>
@@ -137,7 +137,7 @@ const Screen = ({ navigation }: any) => {
         {item.text}
       </Text>
       
-      <TouchableOpacity onPress={() => Checked(item.check)}>
+      <TouchableOpacity onPress={() => Checked(item.id)}>
         <View style={[styles.checkbox, item.check && styles.checkedCheckbox_3]} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleDeleteTodo(item.id)}>
