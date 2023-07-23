@@ -252,15 +252,6 @@ const Screen = ({ navigation }: any) => {
     const [index, setIndex] = React.useState(0);
     return (
       <>
-        <View
-          style={styles.background}
-        // 이게 뭔지 나도 찾아봐야함
-        //automaticallyAdjustContentInsets={false}
-        //showsHorizontalScrollIndicator={false}
-        //</>showsVerticalScrollIndicator={false}
-        >
-          <Text style={styles.basicfont}>여러분 공지 좀 읽으세요 란</Text>
-        </View >
         {/* TabBar style https://reactnavigation.org/docs/tab-view#tabview - TabBar 항목에서 style 지정 설명 있음 */}
         <TabView
           //renderTabBar
@@ -286,7 +277,7 @@ const Screen = ({ navigation }: any) => {
           <Icon
             name="pencil"
             size={40}
-            color="#000"
+            color="#fff"
             style={styles.floatingButtonStyle}
           />
         </TouchableOpacity>
@@ -403,11 +394,9 @@ const styles = StyleSheet.create({
   },
   floatingButtonStyle: {
     borderRadius: 50,
-    borderWidth: 1,
-    borderColor: 'black',
     width: 50,
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: '#b77de4',
   },
   basicfont:{
     fontSize: 16,
