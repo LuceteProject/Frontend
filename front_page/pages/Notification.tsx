@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, ActivityIndicator, Modal, KeyboardAvoidingView } from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
 
 const Page = ({ navigation }: any) => {
     /* Tab */
@@ -46,47 +45,25 @@ const Page = ({ navigation }: any) => {
     }, []);
 
     const FirstRoute = (props: any) => (
-        <View style={styles.bg}>
         <View style={{ height: 500 }}>
             <View
                 id="section_notification">
-                <View style={styles.notifications}>
-                    <View style={{marginHorizontal: 10, paddingBottom: 30}}>
-                    <Icon name='list-outline' size={40} color="black"/>
-                    </View>
-                    <View style={{width: 300}}>
-                    <Text style={styles.title}>OO게시판</Text>
-                    <Text numberOfLines={2} ellipsizeMode='tail' style={styles.contents}>가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하</Text>
-                    <Text style={{lineHeight: 18}}>알림 날짜</Text>
-                    </View>
-                </View>
+                <Text>알림 위치</Text>
                 {/* contents mapping */}
                 <Text>{contents}</Text>
             </View>
             {/* nav에 navigation 넣어줘야 하고.. 이걸 props로 받아야 하고... 이건 가장먼저 SceneMap에서 넣어줘야하고... api에서 불러오면 값하나로 통일될듯?*/}
         </View>
-        </View>
     );
     const SecondRoute = (props: any) => (
-        <View style={styles.bg}>
         <View style={{ height: 500 }}>
             <View
                 id="section_messanger">
-                <View style={styles.notifications}>
-                    <View style={{marginHorizontal: 10, paddingBottom: 30}}>
-                    <Icon name='chatbubbles-outline' size={40} color="black"/>
-                    </View>
-                    <View style={{width: 300}}>
-                    <Text style={styles.title}>보낸이</Text>
-                    <Text numberOfLines={2} ellipsizeMode='tail' style={styles.contents}>가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하가나다라마바사아자차카타파하</Text>
-                    <Text style={{lineHeight: 18}}>알림 날짜</Text>
-                    </View>
-                </View>
-                {/* contents mapping */}
+                <Text>쪽지함</Text>
+                {/* message mapping */}
                 <Text>{messageList}</Text>
             </View>
-            {/* nav에 navigation 넣어줘야 하고.. 이걸 props로 받아야 하고... 이건 가장먼저 SceneMap에서 넣어줘야하고... api에서 불러오면 값하나로 통일될듯?*/}
-        </View>
+
         </View>
     );
 
@@ -133,31 +110,10 @@ const styles = StyleSheet.create({
 
     컴포넌트 별 구분 가능
     */
-    bg:{
-        flex: 1,
-        backgroundColor: 'white',
-    },
     centeredView: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 22,
     },
-    notifications:{
-        height: 100,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
-    title: {
-        fontSize: 16,
-        color: '#000',
-        fontWeight: 'bold',
-        lineHeight: 18
-    },
-    contents: {
-        fontSize: 16,
-        color: '#000',
-        lineHeight: 18
-    }
 });
