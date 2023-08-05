@@ -8,7 +8,6 @@ import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BoardContent from './BoardContents';
 import BoardWriteContent from './BoardWrite';
-import Notification from './Notification';
 
 const Stack = createNativeStackNavigator();
 
@@ -294,7 +293,7 @@ const Screen = ({ navigation }: any) => {
               <TouchableOpacity
                 // Notification icon - components 분리할 수 있으면 뺴기
                 onPress={() => {
-                  navigation.navigate('Notification');
+                  navigation.push('Notification');
                 }}>
                 <Icon
                   name="notifications"
@@ -339,14 +338,7 @@ const Screen = ({ navigation }: any) => {
             //headerShown: false
           }}
         />
-        <Stack.Screen
-          name="Notification"
-          component={Notification}
-          options={{
-            headerShown: false,
-            presentation: 'modal',
-          }}
-        />
+        
       </Stack.Navigator>
     </>
   );
@@ -413,7 +405,7 @@ const styles = StyleSheet.create({
   },
   titlefont: {
     fontSize: 20,
-    fontweight: 'bold',
+    fontWeight: 'bold',
     color: 'black'
   },
   datefont: {

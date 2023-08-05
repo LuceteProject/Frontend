@@ -255,9 +255,23 @@ const Screen = ({ navigation }: any) => {
       <Stack.Navigator
         screenOptions={{
           headerRight: () => (
-            <TouchableOpacity onPress={() => Alert.alert("pressed!")}>
-              <Icon name="notifications" size={30} color="#000" />
-            </TouchableOpacity>
+            <TouchableOpacity
+                // Notification icon - components 분리할 수 있으면 뺴기
+                onPress={() => {
+                  navigation.push('Notification');
+                }}>
+                <Icon
+                  name="notifications"
+                  size={30}
+                  color="#000"
+                  style={{
+                    // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
+                    width: 40,
+                    height: 40,
+                    borderRadius: 100,
+                  }}
+                />
+              </TouchableOpacity>
           )
         }}
       >

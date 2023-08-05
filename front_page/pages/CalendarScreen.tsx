@@ -168,7 +168,7 @@ const Screen = ({ navigation }: any) => {
                             <TouchableOpacity
                                 // Notification icon - components 분리할 수 있으면 뺴기
                                 onPress={() => {
-                                    navigation.navigate('Notification');
+                                    navigation.push('Notification');
                                 }}>
                                 <Icon name="notifications" size={30} color="#000"
                                     style={{

@@ -14,6 +14,8 @@ import BoardScreen from './pages/BoardScreen';
 import TodoScreen from './pages/TodoScreen';
 import ProfileScreen from './pages/ProfileScreen';
 import CalendarScreen from './pages/CalendarScreen';
+import Notification from './pages/Notification';
+
 // import DriveScreen from './pages/DriveScreen';
 /* 나중에 지워야 할 것 */
 import SignUp from './pages/user/SignUp';
@@ -112,7 +114,7 @@ const App = () => {
     setIsLoggedIn(true);
   };
   /* 자동 로그인 구현 예정 */
-  
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -129,7 +131,17 @@ const App = () => {
               headerTitleStyle: { alignSelf: 'center' },
             }}
           />
+
         )}
+        <Stack.Screen
+          name="Notification"
+          component={Notification}
+          options={{
+            //headerShown: false,
+            //presentation: 'modal',
+            title: '알림'
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
