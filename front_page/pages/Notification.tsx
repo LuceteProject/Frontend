@@ -54,10 +54,10 @@ const Page = ({ navigation }: any) => {
         fetchData();
     }, []);
 
-
+    /* fetchData를 Item mapping해야함 */
     return (
         <>
-            <Item notice={dummyNotice} nav={undefined} />
+            <Item notice={dummyNotice} nav={undefined}/>
         </>
     )
 }

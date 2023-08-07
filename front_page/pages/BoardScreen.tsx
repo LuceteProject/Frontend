@@ -59,15 +59,15 @@ const Screen = ({ navigation }: any) => {
 
       // loading 상태를 true 로 바꿉니다.
       setLoading(true);
-      const response = await axios.get('http://210.96.102.143:8080/api/v1/posts/' + currentBoard + '/posts', {
+      const response = await axios.get('http://54.237.121.196:8080/api/v1/posts/' + currentBoard + '/posts', {
         headers: {
           'Content-Type': 'application/json',
           // 필요하다면 인증 헤더를 추가합니다.
         }
       })
         .then(response => {
-          //console.log(response.data);
-          setPosts(response.data);
+          console.log(response.data);
+          //setPosts(response.data);
 
         });
 
@@ -89,7 +89,7 @@ const Screen = ({ navigation }: any) => {
 
   useEffect(() => {
     //선택한 게시판  setCurrentBoard(index.toString() + 1); console.log(index)
-  }, );
+  },);
 
   const BoardItem = (props: any) => {
     // 날짜 형식화 함수
@@ -149,7 +149,7 @@ const Screen = ({ navigation }: any) => {
               <Text>
                 {props.data.permission}
               </Text>
-              <Text style={{paddingVertical: 3}}>
+              <Text style={{ paddingVertical: 3 }}>
                 댓글
               </Text>
             </View>
@@ -222,15 +222,15 @@ const Screen = ({ navigation }: any) => {
     second: () => <Route nav={navigation} data={posts} />,
     third: () => <FirstRoute nav={navigation} data={posts} />,
   });
-  const renderTabBar = (props:any) => (
+  const renderTabBar = (props: any) => (
     <TabBar
-    {...props}
+      {...props}
 
-    renderLabel={({ route, focused, color }) => (
-      <Text style={{margin: 6, fontSize: 18, color: '#fff' }}>
-        {route.title}
-      </Text>
-    )}
+      renderLabel={({ route, focused, color }) => (
+        <Text style={{ margin: 6, fontSize: 18, color: '#fff' }}>
+          {route.title}
+        </Text>
+      )}
       indicatorStyle={{ backgroundColor: 'white' }}
       style={{ backgroundColor: '#B77DE4' }}
     />
@@ -338,7 +338,7 @@ const Screen = ({ navigation }: any) => {
             //headerShown: false
           }}
         />
-        
+
       </Stack.Navigator>
     </>
   );
@@ -390,11 +390,11 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: '#b77de4',
   },
-  basicfont:{
+  basicfont: {
     fontSize: 16,
     color: '#000'
   },
-  coments:{
+  coments: {
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 7,

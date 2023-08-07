@@ -31,7 +31,7 @@ const Screen = ({ navigation }: any) => {
       // loading 상태를 true 로 바꿉니다.
       setLoading(true);
 
-      const response = await axios.get('http://210.96.102.143:8080/api/v1/users/1', {
+      const response = await axios.get('http://54.237.121.196:8080/api/v1/users/1', {
         headers: {
           'Content-Type': 'application/json',
           // 필요하다면 인증 헤더를 추가합니다.
