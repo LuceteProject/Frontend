@@ -1,3 +1,6 @@
+/* Not used 
+탭 뷰 활용한 알림, 쪽지 구분 기능
+*/
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, ActivityIndicator, Modal, KeyboardAvoidingView } from 'react-native'
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
