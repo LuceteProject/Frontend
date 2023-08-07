@@ -1,7 +1,4 @@
-// In App.js in a new project
-
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
@@ -111,6 +108,7 @@ const App = () => {
 
   const handleLogin = () => {
     // 로그인 처리 로직 작성
+    // http://54.237.121.196:8080/
     setIsLoggedIn(true);
   };
   /* 자동 로그인 구현 예정 */

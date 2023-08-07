@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, Modal, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { createStackNavigator } from '@react-navigation/stack';
+import WebView from 'react-native-webview';
 
 import FindUsernameScreen from './FindUsernameScreen';
 import FindPasswordScreen from './FindPasswordScreen';
@@ -13,19 +14,27 @@ interface LoginFormData {
 
 const Stack = createStackNavigator();
 
-const Screen: React.FC = ({ navigation }: any) => {
+const Screen = ({ navigation }: any) => {
+  const [isWebViewVisible, setWebViewVisible] = useState(false);
   const [formData, setFormData] = useState<LoginFormData>({
     username: '',
     password: '',
   });
   const [autoLogin, setAutoLogin] = useState(false);
-  
+
 
   const handleSubmit = () => {
     // 로그인 데이터 처리 로직 작성
+
     console.log(formData);
   };
+  const handleNaverLogin = () => {
+    setWebViewVisible(true);
+  };
 
+  const handleCloseWebView = () => {
+    setWebViewVisible(false);
+  };
   const handleSignUp = () => {
     // 회원가입 버튼 클릭 시 동작할 로직 작성
     console.log('회원가입 버튼 클릭');
@@ -49,7 +58,9 @@ const Screen: React.FC = ({ navigation }: any) => {
       [name]: value,
     }));
   };
-  
+  const windowWidth = Dimensions.get('window').width;
+
+  //http://54.237.121.196:8080/oauth2/authorization/naver
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
@@ -78,6 +89,19 @@ const Screen: React.FC = ({ navigation }: any) => {
         <Text style={styles.checkboxLabel}>자동 로그인</Text>
       </TouchableOpacity>
       <Button title="로그인" onPress={handleSubmit} />
+      <TouchableOpacity onPress={handleNaverLogin} style={{margin: 30, alignItems: 'center', justifyContent: 'center', height: 30}}>
+        <Image source={require('../../img/login_naver.png')} style={{ width: windowWidth - 40, height: 50 }}/>
+      </TouchableOpacity>
+
+      {/* Modal containing the WebView */}
+      <Modal
+        animationType="slide"
+        transparent={false}
+        visible={isWebViewVisible}
+      >
+        <WebView source={{ uri: 'http://www.naver.com' }}  style={{ flex: 1 }}/>
+        <Button title="닫기" onPress={handleCloseWebView} />
+      </Modal>
 
       <View style={styles.forgotContainer}>
         <Text style={styles.forgotText} onPress={handleFindUsername}>
