@@ -2,13 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, TextInput } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import axios from 'axios';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
-
+import { Post } from "../types";
+import { fetchData } from '../utils/API';
+import { formatDate } from '../utils/DateFormat';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BoardContent from './BoardContents';
 import BoardWriteContent from './BoardWrite';
-
 const Stack = createNativeStackNavigator();
 
 type SearchBarComponentProps = {};
@@ -20,25 +20,7 @@ const SwitchComponent = () => {
     setSearch(search);
   };
 };
-interface Post {
-  id: number;
-  title: string;
-  author_name: string;
-  updated: string;
-  content: string;
-  permission: number;
-}
 
-// ...
-
-const dummyPost: Post = {
-  id: 0,
-  title: "게시글이 없습니다.",
-  author_name: "",
-  updated: "",
-  content: "",
-  permission: 0
-};
 const Screen = ({ navigation }: any) => {
 
   const postPerPage = 10; //페이지 당 게시글 수
@@ -53,61 +35,18 @@ const Screen = ({ navigation }: any) => {
 
   /* API variables */
   const [loading, setLoading] = useState(false);
-  const fetchData = async () => {
-    try {
-      // 요청이 시작 할 때에는 error 와 users 를 초기화하고
-
-      // loading 상태를 true 로 바꿉니다.
-      setLoading(true);
-      const response = await axios.get('http://54.237.121.196:8080/api/v1/posts/' + currentBoard + '/posts', {
-        headers: {
-          'Content-Type': 'application/json',
-          // 필요하다면 인증 헤더를 추가합니다.
-        }
-      })
-        .then(response => {
-          console.log(response.data);
-          //setPosts(response.data);
-
-        });
-
-
-
-      // 데이터는 response.data.data 안에 들어있다.
-    } catch (e) {
-      console.log(e);
-      setPosts([dummyPost]);
-    }
-    // loading 끄기
-    setLoading(false);
-  };
-
-  // 첫 렌더링 때 fetchNews() 한 번 실행
   useEffect(() => {
-    fetchData();
+    setLoading(true);
+    const fetchPostsData = async () => {
+      const postData = await fetchData('api/v1/posts'); //확인 필요
+      setPosts(postData.content);
+    };
+    fetchPostsData();
+    setLoading(false);
   }, []);
 
-  useEffect(() => {
-    //선택한 게시판  setCurrentBoard(index.toString() + 1); console.log(index)
-  },);
-
   const BoardItem = (props: any) => {
-    // 날짜 형식화 함수
-    const formatDate = (dateString: string) => {
-      const date = new Date(dateString);
-      const today = new Date();
-      const diffInMilliseconds = today.getTime() - date.getTime();
-      const diffInHours = Math.floor(diffInMilliseconds / (1000 * 60 * 60));
-
-      if (diffInHours < 24) {
-        return `${diffInHours}시간 전`;
-      } else {
-        const month = date.getMonth() + 1; // 월은 0부터 시작하므로 +1
-        const day = date.getDate();
-        return `${month}월 ${day}일`;
-      }
-    };
-
+    const convertedDate = formatDate(props.data.updated);
     const handleClick = () => {
       if (props.data.id !== 0) {
         props.nav.navigate('ViewPost', { postId: props.data.id });
@@ -124,36 +63,21 @@ const Screen = ({ navigation }: any) => {
             paddingBottom: 10,
             paddingTop: 10,
           }}>
-          {props.data.id === 0 ? (
-            <View>
-              <Text style={styles.titlefont}> {props.data.title} </Text>
-              <Text style={styles.datefont}>
-                {' '}
-                {props.data.author_name} / {formatDate(props.data.updated)}{' '}
-              </Text>
-            </View>
-          ) : (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text>
-                서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.
-              </Text>
-            </View>
-          )}
-          {props.data.id === 0 && (
-            <View style={styles.coments}>
-              <Text>
-                {props.data.permission}
-              </Text>
-              <Text style={{ paddingVertical: 3 }}>
-                댓글
-              </Text>
-            </View>
-          )}
+          <View>
+            <Text style={styles.titlefont}> {props.data.title} </Text>
+            <Text style={styles.datefont}>
+              {' '}
+              {props.data.user_id} / {convertedDate}{' '}
+            </Text>
+          </View>
+          <View style={styles.coments}>
+            <Text>
+              {props.data.permission}
+            </Text>
+            <Text style={{ paddingVertical: 3 }}>
+              댓글
+            </Text>
+          </View>
         </View>
         <View
           // 구분선
@@ -166,41 +90,15 @@ const Screen = ({ navigation }: any) => {
     );
   };
 
-  const FirstRoute = (props: any) => {
-    const { data } = props;
-
-    // props.data가 존재하고 유효한 데이터를 포함하는지 확인
-    if (data && Array.isArray(data) && data.length > 0) {
-      return (
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
-          {/* ... */}
-          {/* 게시글 목록 렌더링 */}
-          {data.map((item: any, index: number) => (
-            <BoardItem key={index} nav={props.nav} data={item} />
-          ))}
-        </View>
-      );
-    }
-
-    // 데이터가 없을 경우, 혹은 유효한 데이터가 없는 경우 표시할 내용
-    return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <Text>게시글이 없습니다.</Text>
-      </View>
-    );
-  };
-
-
   const Route = (props: any) => {
-    const { data } = props;
-
     // props.data가 존재하고 유효한 데이터를 포함하는지 확인 -- loading 사용가능한지 확인
+    // if (props.data && Array.isArray(props.data) && props.data.length > 0) { //아래꺼 대신 사용 가능
     if (!loading) {
       return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
           {/* ... */}
           {/* 게시글 목록 렌더링 */}
-          {data.map((item: any, index: number) => (
+          {props.data.map((item: any, index: number) => (
             <BoardItem key={index} nav={props.nav} data={item} />
           ))}
         </View>
@@ -216,12 +114,14 @@ const Screen = ({ navigation }: any) => {
     );
   };
 
-  //Tab View 항목 지정
+  //Tab View 항목 지정 - 게시글 post의 board_id 값에 따라 filter
   const renderScene = SceneMap({
-    first: () => <FirstRoute nav={navigation} data={posts} />,
-    second: () => <Route nav={navigation} data={posts} />,
-    third: () => <FirstRoute nav={navigation} data={posts} />,
+    first: () => <Route nav={navigation} data={posts.filter(post => post.board_id === 0)} />,
+    second: () => <Route nav={navigation} data={posts.filter(post => post.board_id === 1)} />,
+    third: () => <Route nav={navigation} data={posts.filter(post => post.board_id === 2)} />,
+    fourth: () => <Route nav={navigation} data={posts.filter(post => post.board_id === 3)} />,
   });
+
   const renderTabBar = (props: any) => (
     <TabBar
       {...props}
@@ -240,14 +140,14 @@ const Screen = ({ navigation }: any) => {
   const Main = () => {
     /* 게시판 탭 설정 위한 변수들 */
     const [routes] = React.useState([
-      { key: 'first', title: '자유게시판' },
-      { key: 'second', title: '익명게시판' },
-      { key: 'third', title: '임원진게시판' },
+      { key: 'first', title: '자유' },
+      { key: 'second', title: '익명' },
+      { key: 'third', title: '임원진' },
+      { key: 'fourth', title: '졸업생' }
     ]);
 
     /* 게시판 페이지 번호 */
     const [number, onChangeNumber] = useState('');
-    const [data, setData] = useState([]);
     const [index, setIndex] = React.useState(0);
     return (
       <>

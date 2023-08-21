@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, Alert, Button } from 'react-native';
-import axios from 'axios';
+import { fetchData } from '../utils/API';
+import { User } from "../types";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -16,48 +17,20 @@ const Stack = createNativeStackNavigator();
 /* functional execution */
 const Screen = ({ navigation }: any) => {
   /* User 정보 받아오기 */
-  const [semester, setSemester] = useState(''); //기수
-  const [team, setTeam] = useState(''); //팀 이름
-  const [name, setName] = useState(''); //이름
-  const [message, setMessage] = useState('상태메시지를 입력하세요.'); //상태메시지
-  const [userImage, setUserImage] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-
+  const [user, setUser] = useState<User>(); //게시글 목록
+  
   /* API variables */
   const [loading, setLoading] = useState(false);
-  const fetchData = async () => {
-    try {
-      // 요청이 시작 할 때에는 error 와 users 를 초기화하고
-
-      // loading 상태를 true 로 바꿉니다.
-      setLoading(true);
-
-      const response = await axios.get('http://54.237.121.196:8080/api/v1/users/1', {
-        headers: {
-          'Content-Type': 'application/json',
-          // 필요하다면 인증 헤더를 추가합니다.
-        }
-      })
-      .then(response =>  {
-        //console.log(response);
-        setSemester(response.data.semester);
-        setTeam(response.data.team);
-        setName(response.data.name);
-        setMessage(response.data.profile_message);
-      });
-      
-     
-
-      // 데이터는 response.data.data 안에 들어있다.
-    } catch (e) {
-      console.log(e);
-    }
-    // loading 끄기
-    setLoading(false);
-  };
-
-  // 첫 렌더링 때 fetchNews() 한 번 실행
   useEffect(() => {
-    fetchData();
+    setLoading(true);
+    const fetchPostsData = async () => {
+      const userId = 1; //바꿔야함
+      const response = await fetchData(`api/v1/users/${userId}`); //확인 필요
+      setUser(response);
+      //console.log(response);
+    };
+    fetchPostsData();
+    setLoading(false);
   }, []);
 
   // Profile Information update
@@ -75,13 +48,13 @@ const Screen = ({ navigation }: any) => {
             <Text
               /* 받아오는 값은 ${user_num} 이런식으로? */
               style={styles.profiletext}>
-              {semester} 기</Text>
+              {user?.semester} 기</Text>
             <Text
               style={styles.profiletext}>
-              {team} 팀 {name}</Text>
+              {user?.team_code} 팀 {user?.name}</Text>
             <Text
               style={styles.sangme}>
-              {message}</Text>
+              {user?.profile_message}</Text>
           </View>
 
         </View>
@@ -152,7 +125,7 @@ const Screen = ({ navigation }: any) => {
           onPress={() => { navigation.navigate('Personal Setting') }}>
           <Text style={styles.buttontext}>앱버전</Text>
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={styles.button}
           onPress={() => { navigation.navigate('Personal Setting') }}>
           <Text style={styles.buttontext}>로그아웃</Text>
@@ -245,7 +218,7 @@ const Screen = ({ navigation }: any) => {
             }
           }
         />
-        
+
       </Stack.Navigator>
     </>
   )

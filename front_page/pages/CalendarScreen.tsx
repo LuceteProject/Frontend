@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
 
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { fetchData } from '../utils/API';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CalModal from '../components/CalendarModal';
 
@@ -10,31 +11,31 @@ const Stack = createNativeStackNavigator();
 
 const Screen = ({ navigation }: any) => {
     const cal_type = {
-        'Full': { key: 'full', color: '#8F00FF', selectedDotColor: 'red' },
+        'All': { key: 'full', color: '#8F00FF', selectedDotColor: 'red' },
         'Team': { key: 'team', color: '#00C2FF', selectedDotColor: 'blue' },
-        'Each': { key: 'each', color: '#FFA800', selectedDotColor: 'blue' },
+        'Personal': { key: 'each', color: '#FFA800', selectedDotColor: 'blue' },
     }
-
+    const [schedules, setSchedules] = useState([]);
     /* mode 변경 어떻게 해야할지 아직 모르겠음 
     우선 DB에서 팀 일정만 불러오기
     */
+    /* API variables */
+    const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        setLoading(true);
+        const fetchPostsData = async () => {
+            const userId = 1; //바꿔야함
+            const response = await fetchData(`api/v1/schedules/userID/${userId}`); //확인 필요
+            setSchedules(response);
+        };
+        fetchPostsData();
+        setLoading(false);
+    }, []);
 
-    /* 
-        const [mode, setMode] = useState(true);
-    const changeMode = () => {
-        let [items, setItems] = useState();
-        //setMode(true? false:true);
-        Alert.alert("pressed!");
-
-    }
-        useEffect(() => {
-            changeMode();
-            //list 받아오기
-        }, [mode]);
-    
-    */
 
     const ListSample = (props: any) => {
+        //const start = props.data.start.toISOString().split('T')[0];
+        // date format
         return (
             <View
                 style={{
@@ -44,11 +45,11 @@ const Screen = ({ navigation }: any) => {
                 <Text
                     style={{
                         padding: 14,
-                        fontSize: 20,
+                        fontSize: 15,
                         textAlign: 'left'
                     }}>
-                    <Text style={{ padding: 2 }}>{props.text}{"\n"}</Text>
-                    <Text style={{ padding: 2 }}>{props.time}</Text>
+                    <Text style={{ padding: 2 }}>{props.data.title} : {props.data.content}{"\n"}</Text>
+                    <Text style={{ padding: 2 }}>{props.data.start} ~ {props.data.end}</Text>
                 </Text>
             </View>
         );
@@ -112,8 +113,8 @@ const Screen = ({ navigation }: any) => {
                             selected: true,
                         },
                         // 아래는 sample 예시들
-                        '2023-05-25': { dots: [cal_type.Full], },
-                        '2023-05-26': { dots: [cal_type.Team, cal_type.Each] }
+                        '2023-05-25': { dots: [cal_type.All], },
+                        '2023-05-26': { dots: [cal_type.Team, cal_type.Personal] }
                     }}
                     onDayPress={day => {
                         //console.log('selected day', day);
@@ -150,9 +151,9 @@ const Screen = ({ navigation }: any) => {
                 <View style={styles.viewstyle}>
                     <Image source={require('../img/calendar.png')} style={styles.img} />
                     <View style={{ backgroundColor: '#fff' }}>
-                        <Text><ListSample time='08:00' text='세부내용 1' /></Text>
-                        <Text><ListSample time='09:00' text='세부내용 2' /></Text>
-                        <Text><ListSample time='10:00' text='세부내용 3' /></Text>
+                        {schedules.map((item: any, index: number) => (
+                            <ListSample key={index} data={item} />
+                        ))}
                     </View>
                 </View>
             </>
