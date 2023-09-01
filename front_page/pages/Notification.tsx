@@ -23,36 +23,8 @@ const Page = ({ navigation }: any) => {
     const [loading, setLoading] = useState(false);
     const [contents, setContents] = useState<Notice>(dummyNotice); //notification list
     const [messageList, setMessageList] = useState('메시지 컴포넌트 테스트'); //message list
-
-
-    /* API 호출 */
-    const fetchData = async () => {
-        try {
-            // loading 상태를 true 로 바꿉니다.
-            setLoading(true);
-
-            const response = await axios.get('http://210.96.102.143:8080/user/2', {
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 필요하다면 인증 헤더를 추가합니다.
-                }
-            })
-                .then(response => {
-                    console.log(response.data);
-                    setContents(response.data);
-                });
-            // 데이터는 response.data.data 안에 들어있다.
-        } catch (e) {
-            console.log(e);
-
-        }
-        // loading 끄기
-        setLoading(false);
-    };
-    // 첫 렌더링 때 fetchData() 한 번 실행
-    useEffect(() => {
-        fetchData();
-    }, []);
+    /* fetchData */
+    
 
     /* fetchData를 Item mapping해야함 */
     return (

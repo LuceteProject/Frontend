@@ -1,36 +1,24 @@
 // tslint:disable:no-empty
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity } from 'react-native'
-
+import { fetchData } from '../utils/APIs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 
 const Stack = createNativeStackNavigator();
 
 const Page = () => {
-
-    /* 
-    Values from API 
-    */
-
-    /* For Data fetch from server
-      useEffect(() => {
-        const fetchContentData = async () => {
-          try {
-              setLoading(true);
-              const response = await axios.get();
-              setPosts(response.data);
-              setLoading(false);
-          } catch (err) {
-              
-          }
-      };
-      
-      fetchContentData();
-      }, []);
-      */
-
+    const [user, setUser] = useState();
+    useEffect(()=> {
+        const getUser = async () => {
+            const userInfoJson = JSON.parse(await EncryptedStorage.getItem('user-info') || 'null');
+            setUser(userInfoJson.user_id);
+        }
+        getUser();
+    }, []);
+    
     const clickHandler = () => {
         Alert.alert("pressed!");
     }

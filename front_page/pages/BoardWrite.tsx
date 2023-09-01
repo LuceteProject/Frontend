@@ -1,50 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet, ScrollView, TextInput, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import axios from 'axios';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { LeftOutline } from 'antd-mobile-icons';
+import { fetchData, postData } from '../utils/APIs';
 const Stack = createNativeStackNavigator();
 
-
 const Page = () => {
-
-    const sendDataToServer = async () => {
-        const data = {
-            id: 0,
-            header: 0,
-            title: "string",
-            content: "string",
-            permission: 0,
-            is_notice: true,
-            created: "2023-06-03T12:16:19.162Z",
-            updated: "2023-06-03T12:16:19.162Z",
-            user_id: 0,
-            author_name: "string",
-            board_id: 0
+    const [data, setData] = useState();
+    useEffect(() => {
+        const fetchPostsData = async () => {
+            const response = await postData(`api/v1/post/`, data); //확인 필요
+            console.log(response);
         };
+        fetchPostsData();
+    }, []);
 
-        try {
-            const response = await fetch('http://210.96.102.143:8080/api/v1/posts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
 
-            if (response.ok) {
-                // 성공적으로 전송되었을 때의 처리
-                console.log('Data sent successfully');
-            } else {
-                // 전송 실패 시의 처리
-                console.log('Failed to send data');
-            }
-        } catch (error) {
-            // 오류 발생 시의 처리
-            console.log('Error occurred:', error);
-        }
-    };
     const Main = ({ navigation }: any) => {
 
         const [isBoardModalVisible, setBoardModalVisible] = useState(false);
@@ -142,30 +113,30 @@ const Page = () => {
 
                     {/* 게시판 선택 */}
                     <View>
-                    <Text style={styles.inputLabel}>게시판 선택</Text>
-                    <View
-                    style={{
-                        borderColor: 'gray',
-                        borderWidth: 1
-                    }}
-                    />
-                    
+                        <Text style={styles.inputLabel}>게시판 선택</Text>
+                        <View
+                            style={{
+                                borderColor: 'gray',
+                                borderWidth: 1
+                            }}
+                        />
 
-                    <TouchableOpacity style={styles.inputContainer} onPress={() => setBoardModalVisible(true)}>
-                        
-                        {selectedBoard ? (
-                            <Text style={styles.selectedText}>{selectedBoard}</Text>
-                        ) : (
-                            <Text style={styles.selectedText}>게시판을 선택하세요</Text>
-                        )}
-                    </TouchableOpacity>
-                    <View
-                    style={{
-                        borderColor: 'gray',
-                        borderWidth: 1
-                    }}
-                    />
-                    <View style={{height: 20}}></View>
+
+                        <TouchableOpacity style={styles.inputContainer} onPress={() => setBoardModalVisible(true)}>
+
+                            {selectedBoard ? (
+                                <Text style={styles.selectedText}>{selectedBoard}</Text>
+                            ) : (
+                                <Text style={styles.selectedText}>게시판을 선택하세요</Text>
+                            )}
+                        </TouchableOpacity>
+                        <View
+                            style={{
+                                borderColor: 'gray',
+                                borderWidth: 1
+                            }}
+                        />
+                        <View style={{ height: 20 }}></View>
                     </View>
                     {/* 제목 입력 */}
                     <Text style={styles.inputLabel}>제목</Text>
@@ -177,7 +148,7 @@ const Page = () => {
                             placeholder="제목을 입력하세요"
                         />
                     </View>
-                    <View style={{height: 20}}></View>
+                    <View style={{ height: 20 }}></View>
 
                     {/* 본문 입력 */}
                     <Text style={styles.inputLabel}>본문</Text>
@@ -191,34 +162,34 @@ const Page = () => {
                             multiline
                         />
                     </View>
-                    <View style={{height: 20}}></View>
+                    <View style={{ height: 20 }}></View>
 
                     {/* 말머리 선택 */}
                     <Text style={styles.inputLabel}>말머리</Text>
                     <View>
-                    <View
-                    style={{
-                        borderColor: 'gray',
-                        borderWidth: 1
-                    }}
-                    />
-                    <TouchableOpacity style={styles.inputContainer} onPress={() => setCategoryModalVisible(true)}>
-                        {selectedCategory ? (
-                            <Text style={styles.selectedText}>{selectedCategory}</Text>
-                        ) : (
-                            <Text style={styles.selectedText}>말머리를 선택하세요</Text>
-                        )}
-                    </TouchableOpacity>
-                    <View
-                    style={{
-                        borderColor: 'gray',
-                        borderWidth: 0.95
-                    }}
-                    />
+                        <View
+                            style={{
+                                borderColor: 'gray',
+                                borderWidth: 1
+                            }}
+                        />
+                        <TouchableOpacity style={styles.inputContainer} onPress={() => setCategoryModalVisible(true)}>
+                            {selectedCategory ? (
+                                <Text style={styles.selectedText}>{selectedCategory}</Text>
+                            ) : (
+                                <Text style={styles.selectedText}>말머리를 선택하세요</Text>
+                            )}
+                        </TouchableOpacity>
+                        <View
+                            style={{
+                                borderColor: 'gray',
+                                borderWidth: 0.95
+                            }}
+                        />
                     </View>
 
-                    <View style={{height: 10}}></View>
-                    <View style={{height: 20}}></View>
+                    <View style={{ height: 10 }}></View>
+                    <View style={{ height: 20 }}></View>
 
                     {/* 첨부파일 */}
                     <TouchableOpacity style={styles.attachmentButton}>
@@ -361,7 +332,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         fontSize: 16
     },
-    textInputbody:{
+    textInputbody: {
         justifyContent: 'flex-start',
         borderWidth: 1,
         borderColor: 'gray',
@@ -376,7 +347,7 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
     },
-    
+
     attachmentButtonText: {
         textAlign: 'center',
         color: '#666666',

@@ -1,26 +1,13 @@
 // tslint:disable:no-empty
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity, ActivityIndicator } from 'react-native'
-import axios from 'axios';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { fetchData } from '../utils/APIs';
+import { Post } from "../types";
 const Stack = createNativeStackNavigator();
 
-type Post = {
-    id: number;
-    header: number;
-    title: string;
-    content: string;
-    permission: number;
-    is_notice: boolean;
-    created: string;
-    updated: string;
-    author_id: number;
-    author_name: string;
-    board_id: number;
-};
 
 
 const Page = ({ route }: any) => {
@@ -32,38 +19,14 @@ const Page = ({ route }: any) => {
 
     /* API variables */
     const [loading, setLoading] = useState(false);
-    const fetchData = async () => {
-        try {
-            // 요청이 시작 할 때에는 error 와 users 를 초기화하고
-
-            // loading 상태를 true 로 바꿉니다.
-            setLoading(true);
-
-            // click한 게시글 id로 변경해야함
-            const response = await axios.get('http://210.96.102.143:8080/api/v1/posts/' + postId, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 필요하다면 인증 헤더를 추가합니다.
-                }
-            })
-                .then(response => {
-                    console.log("test", response.data);
-                    setPost(response.data);
-                });
-
-
-
-            // 데이터는 response.data.data 안에 들어있다.
-        } catch (e) {
-            console.log(e);
-        }
-        // loading 끄기
-        setLoading(false);
-    };
-
-    // 첫 렌더링 때 fetchData() 한 번 실행
     useEffect(() => {
-        fetchData();
+        setLoading(true);
+        const fetchPostsData = async () => {
+            const response = await fetchData(`api/v1/posts/${postId}`); //확인 필요
+            setPost(response.content);
+        };
+        fetchPostsData();
+        setLoading(false);
     }, []);
 
     const clickOptionHandler = () => {

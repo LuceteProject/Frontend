@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, ScrollView, Text, View, KeyboardAvoidingView, TouchableOpacity, Alert, Keyboard, TextInput, Button, FlatList, Switch } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import EncryptedStorage from 'react-native-encrypted-storage';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { fetchData } from '../utils/API';
+import { fetchData } from '../utils/APIs';
 import Task from '../components/Task';
 import { Todo, TodoCategory } from "../types";
 const Stack = createNativeStackNavigator();
@@ -19,13 +20,14 @@ const Screen = ({ navigation }: any) => {
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
-    const fetchPostsData = async () => {
-      const userId = 1; //바꿔야함
+    const fetchTodoData = async () => {
+      const userInfoJson = JSON.parse(await EncryptedStorage.getItem('user-info') || 'null');
+      const userId = userInfoJson.user_id; //바꿔야함
       const response = await fetchData(`api/v1/todos/userID/${userId}`); //확인 필요
       setTodos(response);
       //console.log(response);
     };
-    fetchPostsData();
+    fetchTodoData();
     setLoading(false);
   }, []);
   const handleAddTodo = () => {

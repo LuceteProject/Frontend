@@ -4,7 +4,7 @@ import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpac
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { Post } from "../types";
-import { fetchData } from '../utils/API';
+import { fetchData } from '../utils/APIs';
 import { formatDate } from '../utils/DateFormat';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BoardContent from './BoardContents';
@@ -38,8 +38,8 @@ const Screen = ({ navigation }: any) => {
   useEffect(() => {
     setLoading(true);
     const fetchPostsData = async () => {
-      const postData = await fetchData('api/v1/posts'); //확인 필요
-      setPosts(postData.content);
+      const response = await fetchData('api/v1/posts'); //확인 필요
+      setPosts(response.content);
     };
     fetchPostsData();
     setLoading(false);

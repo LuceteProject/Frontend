@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, Alert, Button } from 'react-native';
-import { fetchData } from '../utils/API';
+import EncryptedStorage from 'react-native-encrypted-storage';
+import { fetchData } from '../utils/APIs';
 import { User } from "../types";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -17,20 +18,13 @@ const Stack = createNativeStackNavigator();
 /* functional execution */
 const Screen = ({ navigation }: any) => {
   /* User 정보 받아오기 */
-  const [user, setUser] = useState<User>(); //게시글 목록
-  
-  /* API variables */
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setLoading(true);
-    const fetchPostsData = async () => {
-      const userId = 1; //바꿔야함
-      const response = await fetchData(`api/v1/users/${userId}`); //확인 필요
-      setUser(response);
-      //console.log(response);
-    };
-    fetchPostsData();
-    setLoading(false);
+  const [user, setUser] = useState<User>(); //저장되어 있는 User 정보랑 타입 일치하는지 확인해야 함
+  useEffect(()=> {
+      const getUser = async () => {
+          const userInfoJson = JSON.parse(await EncryptedStorage.getItem('user-info') || 'null');
+          setUser(userInfoJson.user_id);
+      }
+      getUser();
   }, []);
 
   // Profile Information update
