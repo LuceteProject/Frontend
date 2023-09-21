@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
+import {View, StyleSheet, Dimensions} from 'react-native'
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -12,7 +12,7 @@ import TodoScreen from './pages/TodoScreen';
 import ProfileScreen from './pages/ProfileScreen';
 import CalendarScreen from './pages/CalendarScreen';
 import Notification from './pages/Notification';
-
+import DriveScreen from './pages/DriveScreen';
 // import DriveScreen from './pages/DriveScreen';
 /* 나중에 지워야 할 것 */
 import SignUp from './pages/user/SignUp';
@@ -20,15 +20,16 @@ import SignIn from './pages/user/SignIn';
 
 //import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
+import WebView from 'react-native-webview';
 
 // Navigator
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 
-
 // 현재 사용하는 navigator
 const Tabs = () => {
+  
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -94,7 +95,7 @@ const Tabs = () => {
       <Tab.Screen name="Board" component={BoardScreen} />
       <Tab.Screen name="Todo" component={TodoScreen} />
       <Tab.Screen name="Calender" component={CalendarScreen} />
-      <Tab.Screen name="Drive" component={SignIn} />
+      <Tab.Screen name="Drive" component={DriveScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
 
     </Tab.Navigator>

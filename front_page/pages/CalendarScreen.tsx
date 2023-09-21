@@ -57,6 +57,7 @@ const Screen = ({ navigation }: any) => {
     }
 
 
+
     const Main = () => {
         const today = new Date();
         const [selected, setSelected] = useState(today.toISOString().split('T')[0]);
@@ -149,14 +150,12 @@ const Screen = ({ navigation }: any) => {
                         borderBottomWidth: StyleSheet.hairlineWidth,
                     }} />
 
-                <View style={styles.viewstyle}>
-                    <Image source={require('../img/calendar.png')} style={styles.img} />
                     <View style={{ backgroundColor: '#fff' }}>
                         {schedules.map((item: any, index: number) => (
                             <ListSample key={index} data={item} />
                         ))}
+                        {ListSample.length > 1 ? <Image source={require('../img/calendar.png')} style={styles.img} /> : <></>}
                     </View>
-                </View>
             </>
         );
     };
@@ -216,7 +215,7 @@ const styles = StyleSheet.create({
     img: {
         width: 35,
         height: 35,
-        top: 20,
+
     },
     centeredView: {
         flex: 1,
