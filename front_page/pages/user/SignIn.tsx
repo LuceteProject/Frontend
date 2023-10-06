@@ -99,7 +99,7 @@ const Screen = ({ navigation }: any) => {
         transparent={false}
         visible={isWebViewVisible}
       >
-        <WebView source={{ uri: `http://54.237.121.196:8080/oauth2/authorization/naver` }}  style={{ flex: 1 }}/>
+        <WebView source={{ uri: `https://lucetemusical.com/oauth2/authorization/naver` }}  style={{ flex: 1 }}/>
         <Button title="닫기" onPress={handleCloseWebView} />
       </Modal>
 

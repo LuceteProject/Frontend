@@ -53,7 +53,6 @@ const Screen = ({ navigation }: any) => {
 
         </View>
         <View
-          /*이거 뭔지 모르겠어요 --> 검은색 선 한줄!! */
           style={{
             borderBottomColor: 'black',
             borderBottomWidth: StyleSheet.hairlineWidth,
