@@ -4,6 +4,7 @@ import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpac
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { fetchData } from '../utils/APIs';
 import { Post } from "../types";
 const Stack = createNativeStackNavigator();
@@ -11,26 +12,47 @@ const Stack = createNativeStackNavigator();
 
 
 const Page = ({ route }: any) => {
+
+    const navigation = useNavigation();
     /* 
     Values from API 
     */
     const postId = route.params.postId;
     const [post, setPost] = useState<Post | null>(null);
 
+    const exPost: Post = { // 예시 게시물 데이터
+        id: postId,
+        header: 2,
+        title: '예시 게시물',
+        author_id: 3,
+        author_name: '예시 작성자',
+        created: '2023-09-17',
+        updated: '2023-09-17',
+        content: '예시 내용',
+        permission: 1,
+        is_notice: false,
+        board_id: 1, // 게시판 ID에 맞게 설정
+    };
+    
+
     /* API variables */
     const [loading, setLoading] = useState(false);
     useEffect(() => {
-        setLoading(true);
+        /*setLoading(true);
         const fetchPostsData = async () => {
             const response = await fetchData(`api/v1/posts/${postId}`); //확인 필요
             setPost(response.content);
         };
         fetchPostsData();
+        setLoading(false);*/
+        setLoading(true);
+        // fetchData 대신 예시 게시물 데이터 사용
+        setPost(exPost);
         setLoading(false);
     }, []);
 
     const clickOptionHandler = () => {
-        Alert.alert("pressed!");
+        navigation.navigate('WritePost');
     }
     /* 댓글부분 */
     const Reply = () => {

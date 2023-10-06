@@ -11,6 +11,7 @@ const CalModal = ({ visible, callback }: any) => {
     // 일정 추가 Modal 창
     const [modalVisible, setModalVisible] = useState(visible);
 
+
     /* 일정 추가 -> 캘린더 선택 */
     //1) 캘린더 선택
     const [visibleCalType, setVisibleCalType] = useState(false);

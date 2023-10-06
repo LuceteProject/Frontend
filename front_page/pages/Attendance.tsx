@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity } from 'react-native'
 import QRCode from 'react-native-qrcode-svg';
+import axios from 'axios';
+
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -37,6 +39,26 @@ const Page = () => {
       }, []);
       */
 
+    
+    const [attendanceData, setAttendanceData] = useState([]);
+
+    useEffect(() => {
+        const fetchAttendanceData = async () => {
+            try {
+                setLoading(true);
+                const serverUrl = 'https://lucetemusical.com/api/v1/attendances';
+                const response = await axios.get(serverUrl);
+                setAttendanceData(response.data);
+                setLoading(false);
+            } catch (err) {
+                console.error('데이터를 가져오는 데 실패했습니다.', err);
+            }
+        };
+
+        fetchAttendanceData();
+    }, []);
+    
+
     const clickHandler = () => {
         Alert.alert("pressed!");
     }
@@ -57,7 +79,7 @@ const Page = () => {
                     }>
                     <TouchableOpacity onPress={clickHandler}>
                         {/* 비활성화일때 텍스트 효과 바꾸기 */}
-                        <Text>출석 확인</Text>
+                        <Text style = {{color:'#B77DE4'}}>출석 확인</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={() => {
@@ -70,9 +92,8 @@ const Page = () => {
 
                 <View
                     style={{
-                        marginTop: 50,
-                        alignItems: 'center'
-
+                        alignItems: 'center',
+                        marginTop: 50
                     }}>
                     <QRCode
                         //value값을 api에 맞춰서 setting 가능!! -> 출석 방식에 맞추면 될듯
@@ -89,15 +110,6 @@ const Page = () => {
                         출석이 확인되었습니다. (상황에 따라 값 변경)
                         {/* {message} 위 QR코드를 출결 관리자에게 보여주세요. */}
                     </Text>
-                    <Button
-                        // 위에 탭으로 대체 예정
-                        title='내 출석 기록 확인(삭제예정)'
-                        onPress={() => {
-                            /* 1. Navigate to the Details route with params */
-                            navigation.navigate('출석기록확인');
-                        }}
-                    />
-
                 </View>
                 <TouchableOpacity
                     /* 관리자에게만 보이게 권한 설정 */
@@ -106,9 +118,12 @@ const Page = () => {
                         navigation.navigate('출결관리');
                     }}
                     style={styles.touchableOpacityStyle}>
-                    <Icon name="people" size={60} color="#000"
-                        style={styles.floatingButtonStyle}
-                    />
+                    <View 
+                    style={styles.floatingButtonStyle}
+                    >
+                        <Icon name="people" size={40} color="#000"/>
+                    </View>
+                    
                 </TouchableOpacity>
  
 
@@ -120,7 +135,10 @@ const Page = () => {
     // 출결 목록 확인
     const CheckRecord = ({ navigation }: any) => {
         return (
-            <View>
+            <View
+            style = {{
+                flex: 1
+            }}>
                 <View
                     //View for select the sub menu
                     style={
@@ -136,14 +154,57 @@ const Page = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={clickHandler}>
-                        <Text>출석 기록</Text>
+                        <Text style = {{color: '#B77DE4',}}>출석 기록</Text>
                     </TouchableOpacity>
                 </View>
-                <Text>출석 기록 확인</Text>
-                <Button title="Go back" onPress={() => navigation.goBack()} />
+                <ScrollView 
+                style = {{
+                    flex: 1
+                }}>
+                    <View style = {{
+                        flexDirection: 'column-reverse',
+                        alignItems: 'center',
+                        marginTop: 10
+                    }}>
+                        {attendanceData.map((item, key) => (
+                            <AttendanceRecord state = {item.state} time = {item.time}/>
+                        ))}
+                        
+                    </View>
+                    
+                </ScrollView>
+                <Button title="Go back" color={'#B77DE4'} onPress={() => navigation.goBack()} />
 
             </View>
         );
+    }
+
+    const AttendanceRecord = (props) => {
+        
+        var text = '';
+        var color = '';
+
+        switch (props.state){
+            case '0' : //결석
+                text = '결석';
+                color = '#d0d0d0';
+                break;
+            case '1' : //출석
+                text = '출석';
+                color = '#B77DE4';
+                break;
+        }
+
+        return (
+            <>
+                <View style = {styles.AttendanceRecordStyle}>
+                    <Text>{props.time}</Text>
+                    <View style = {[styles.AttendanceCheckStyle, {backgroundColor: color}]}>
+                        <Text style = {{color: '#ffffff', fontWeight: 'bold'}}>{text}</Text>
+                    </View>
+                </View>
+            </>
+        )
     }
 
     return (
@@ -184,6 +245,7 @@ const Page = () => {
                     options={
                         {
                             presentation: 'containedModal',
+                            animation: 'none'
                         }
                     }
                 />
@@ -199,6 +261,7 @@ const Page = () => {
     );
 }
 export default Page;
+
 
 const styles = StyleSheet.create({
 
@@ -217,14 +280,47 @@ const styles = StyleSheet.create({
     이거 왜 가운데에 안오냐 ....? ㅁㄹ...*/
     touchableOpacityStyle: {
         position: 'absolute',
-        width: 80,
-        height: 80,
+        width: 50,
+        height: 50,
         alignItems: 'center',
         justifyContent: 'center',
         right: 30,
         bottom: 30,
     },
     floatingButtonStyle: {
-       backgroundColor: '#fff'
+       backgroundColor: '#fff',
+       borderRadius: 100,
+       width: 50,
+       height: 50,
+       alignItems: 'center',
+       justifyContent: 'center',
+       elevation: 5,
     },
+    AttendanceRecordStyle: {
+        backgroundColor: "#ffffff",
+        height: 50,
+        marginBottom: 8,
+        width: '80%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        elevation: 5,
+    },
+    AttendanceCheckStyle: {
+        width: 50,
+        height: 25,
+        backgroundColor: '#B77DE4',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 });
+
+/*
+const attendanceData = [
+        {id: 1, state: '1', time: '2023-09-23'},
+        {id: 2, state: '0', time: '2023-09-23'},
+        {id: 3, state: '1', time: '2023-09-23'},
+        {id: 4, state: '1', time: '2023-09-23'},
+        {id: 5, state: '0', time: '2023-09-23'},
+    ];
+*/

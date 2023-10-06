@@ -8,8 +8,7 @@ import {StyleSheet, View} from 'react-native';
 // Screen for main Tab
 // Page for each Tab screen
 const App = () => {
-	return 
-        <>
+	return <>
         <View style={styles.centeredView}>{
         
                 /*화면 내용 여기에 */

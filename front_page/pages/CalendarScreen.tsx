@@ -80,9 +80,7 @@ const Screen = ({ navigation }: any) => {
                     }}
                     style={styles.touchableOpacityStyle}
                 >
-                    <Icon name="add-circle" size={60} color="#B77DE4"
-                    //style={styles.floatingButtonStyle}
-                    />
+                    <Icon name="add-circle" size={60} color="#B77DE4"/>
                 </TouchableOpacity>
                 <CalModal visible={modalVisible} key={modalKey} callback={handleCloseModal} />
 
@@ -242,7 +240,7 @@ const styles = StyleSheet.create({
         height: 30,
         backgroundColor: '#B77DE4',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
     input: {
         height: 40,
@@ -274,6 +272,6 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         width: 50,
         height: 50,
-        backgroundColor: '#fff'
+        backgroundColor: '#fff',
     },
 });

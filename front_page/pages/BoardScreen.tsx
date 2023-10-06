@@ -21,6 +21,20 @@ const SwitchComponent = () => {
   };
 };
 
+const exPost = {
+  id: 1,
+  header: 2,
+  title: '예시 게시물',
+  author_id: 3,
+  author_name: '예시 작성자',
+  created: '2023-09-17',
+  updated: '2023-09-17',
+  content: '예시 내용',
+  permission: 1,
+  is_notice: false,
+  board_id: 1, // 게시판 ID에 맞게 설정
+};
+
 const Screen = ({ navigation }: any) => {
 
   const postPerPage = 10; //페이지 당 게시글 수
@@ -36,13 +50,14 @@ const Screen = ({ navigation }: any) => {
   /* API variables */
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    setLoading(true);
+    /*setLoading(true);
     const fetchPostsData = async () => {
       const response = await fetchData('api/v1/posts'); //확인 필요
       setPosts(response.content);
     };
     fetchPostsData();
-    setLoading(false);
+    setLoading(false);*/
+    setPosts([exPost]);
   }, []);
 
   const BoardItem = (props: any) => {
@@ -173,12 +188,13 @@ const Screen = ({ navigation }: any) => {
             navigation.navigate('WritePost');
           }}
           style={styles.touchableOpacityStyle}>
-          <Icon
-            name="pencil"
-            size={40}
-            color="#fff"
-            style={styles.floatingButtonStyle}
-          />
+            <View style = {styles.floatingButtonStyle}>
+              <Icon
+              name="pencil"
+              size={35}
+              color="#fff"
+              />
+            </View>
         </TouchableOpacity>
       </>
     );
@@ -194,18 +210,25 @@ const Screen = ({ navigation }: any) => {
                 // Notification icon - components 분리할 수 있으면 뺴기
                 onPress={() => {
                   navigation.push('Notification');
-                }}>
-                <Icon
-                  name="notifications"
-                  size={30}
-                  color="#000"
-                  style={{
-                    // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
-                    width: 40,
-                    height: 40,
-                    borderRadius: 100,
-                  }}
-                />
+                }}
+                >
+                  <View
+                    style={{
+                      // 둥근 원 테두리, 근데 배경 없으면 필요없을듯?
+                      width: 40,
+                      height: 40,
+                      borderRadius: 100,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Icon
+                      name="notifications"
+                      size={30}
+                      color="#000"
+                    />
+                  </View>
+                
               </TouchableOpacity>
             </>
           ),
@@ -288,7 +311,10 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 50,
     height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#b77de4',
+    elevation: 5,
   },
   basicfont: {
     fontSize: 16,

@@ -11,6 +11,8 @@ const Stack = createNativeStackNavigator();
 
 const Page = () => {
     const [user, setUser] = useState();
+    const [attendanceData, setAttendanceData] = useState([]);
+
     useEffect(()=> {
         const getUser = async () => {
             const userInfoJson = JSON.parse(await EncryptedStorage.getItem('user-info') || 'null');
@@ -18,6 +20,33 @@ const Page = () => {
         }
         getUser();
     }, []);
+
+    
+    
+    const fetchAttendanceData = async () => {
+        try {
+            const serverUrl = 'https://lucetemusical.com/api/v1/attendances';
+
+            //Get 요청 보내기
+            const response = await fetch(serverUrl);
+
+            // HTTP 응답 코드를 확인, 데이터 가져오기
+            if (response.ok) {
+                const data = await response.json();
+                setAttendanceData(data); // 데이터를 상태에 저장
+            } else {
+                // 에러 처리
+                console.error('데이터를 가져오는 데 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('데이터를 가져오는 데 오류가 발생했습니다.', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchAttendanceData(); // 페이지가 로드될 때 한 번 호출
+    }, []);
+    
     
     const clickHandler = () => {
         Alert.alert("pressed!");
@@ -29,18 +58,61 @@ const Page = () => {
             <>
                 <View
                     style={{
-                        marginTop: 50,
-                        alignItems: 'center'
-
+                        flex: 1,
+                        backgroundColor: '#ffffff'
                     }}>
-
-                    <Text
-                        style={{
-                            marginTop: 30,
-                            marginBottom: 30,
+                    <View
+                    style = {{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-end',
+                        padding:10,
+                    }}>
+                        <Text style = {{fontWeight: 'bold'}}>출결기록 관리</Text>
+                        <View 
+                        style = {{
+                            flexDirection: 'row',
                         }}>
-                        출결 기록 페이지
-                    </Text>
+                            <PageBtn title = "일일출결관리"/>
+                            <PageBtn title = "누적출결관리"
+                            navigation = {()=> {navigation.navigate('stackedAttend')}}
+                            />
+                        </View>
+                        
+                    </View>
+                    <View 
+                    style = {{
+                        height: 55,
+                        backgroundColor: '#B77DE4',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexDirection: 'row'
+                    }}>
+                        <TouchableOpacity 
+                        style={{
+                            marginRight: 15
+                        }}>
+                            <Icon name="caret-back-circle" size={30} color="#ffffff" />
+                        </TouchableOpacity>
+                        
+                        <Text style = {{color: '#ffffff', fontSize: 25, fontWeight: 'bold'}}>2023-09-23</Text>
+                        <TouchableOpacity
+                        style={{
+                            marginLeft: 15
+                        }}>
+                            <Icon name="caret-forward-circle" size={30} color="#ffffff" />
+                        </TouchableOpacity>
+                        
+                    </View>
+                    <ScrollView
+                    style = {{
+                        paddingHorizontal: 10
+                    }}>
+                        {attendanceData.map((item, key) => (
+                            <Record team = {item.team} generation = {item.generation} name = {item.name} state = {item.state}/>
+                        ))}
+                    </ScrollView>
+                    
 
                 </View>
                 <TouchableOpacity
@@ -54,14 +126,143 @@ const Page = () => {
                         style={styles.floatingButtonStyle}
                     />
                 </TouchableOpacity>
- 
+
 
             </>
 
         );
     }
 
+    const stackedAttend = ({ navigation }: any) => {
+        return(
+            <>
+                <ScrollView>
+                    <View
+                    style = {{
+                        flex: 1,
+                        backgroundColor: '#ffffff'
+                    }}>
+                        <View
+                        style = {{
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                            alignItems: 'flex-end',
+                            padding:10,
+                            borderBottomWidth: 1
+                        }}>
+                            <Text style = {{fontWeight: 'bold'}}>출결기록 관리</Text>
+                            <View 
+                            style = {{
+                                flexDirection: 'row',
+                            }}>
+                                <PageBtn 
+                                title = "일일출결관리"
+                                navigation = {() => navigation.pop()}/>
+                                <PageBtn title = "누적출결관리"/>
+                            </View>
+                            
+                            
+                        </View>
+                        <View
+                        style = {[styles.positionStyle]}>
+                            <Text style = {{fontWeight:"bold", fontSize: 18, color: '#000000'}}>회장</Text>
+                        </View>
+                        
+                        {attendanceData.map((item, key)=>(
+                        <StackRecord position = {item.position} generation = {item.generation} name = {item.name} point = {item.point}/>
+                        ))}
+                        
+                        <View
+                        style = {[styles.positionStyle]}>
+                            <Text style = {{fontWeight:"bold", fontSize: 18, color: '#000000'}}>극본팀</Text>
+                        </View>
+                        <View
+                        style = {[styles.positionStyle]}>
+                            <Text style = {{fontWeight:"bold", fontSize: 18, color: '#000000'}}>무대팀</Text>
+                        </View>
+                    </View>
+                </ScrollView>
+            </>
+        )
+    }
 
+    const PageBtn = (props) => {
+        return (
+            <>
+                <TouchableOpacity 
+                style = {{
+                    borderWidth: 2,
+                    borderColor: '#B77DE4',
+                    padding: 3,
+                    paddingHorizontal: 10,
+                    borderRadius: 100, 
+                    marginRight: 5, 
+                }}
+                onPress={props.navigation}>
+                    <Text style = {{color: '#B77DE4', fontWeight: 'bold'}}>{props.title}</Text>
+                </TouchableOpacity>
+            </>
+        )
+    }
+
+    const Record = (props) =>{
+        return(
+            <>
+                <View
+                style = {{
+                    height: 60,
+                    borderBottomColor: '#d0d0d0',
+                    borderBottomWidth: 1,
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-around'
+                }}>
+                    <Text>{props.team}</Text>
+                    <Text>{props.generation}기 {props.name}</Text>
+                    <Text>{props.state}</Text>
+                </View>
+            </>
+        )
+    }
+
+    const StackRecord = (props) => {
+        return (
+            <>
+                <View
+                style = {{
+                    flexDirection: 'row',
+                    padding: 20,
+                    paddingBottom: 10,
+                }}>
+                    <View 
+                    style = {{
+                        borderRadius: 100,
+                        backgroundColor: '#d0d0d0',
+                        height: 60,
+                        width: 60
+                    }}/>
+                    <View 
+                    style = {{
+                        flexDirection:'column',
+                        padding: 10,
+                        alignItems: 'stretch',
+                        flex: 1
+                    }}>
+                        <Text style = {{color: '#B77DE4', fontSize: 15}}>{props.position}</Text>
+                        <View
+                        style = {{
+                            flexDirection: 'row',
+                            flex: 1,
+                            justifyContent: 'space-between'
+                        }}>
+                            <Text style = {{color: '#000000'}}>{props.generation}기 {props.name}</Text>
+                            <Text style = {{color: '#000000', right: 0}}>퇴출점수: {props.point}</Text>
+                        </View>
+                    </View>
+                </View>
+            </>
+        )
+    }
 
     return (
         <>
@@ -96,6 +297,16 @@ const Page = () => {
                     component={Main}
                 />
 
+                <Stack.Screen
+                    name="stackedAttend"
+                    component={stackedAttend}
+                    options={
+                        {
+                            animation: 'none'
+                        }
+                    }
+                />
+
 
 
             </Stack.Navigator>
@@ -103,6 +314,8 @@ const Page = () => {
         </>
     );
 }
+
+
 export default Page;
 
 const styles = StyleSheet.create({
@@ -131,4 +344,21 @@ const styles = StyleSheet.create({
     floatingButtonStyle: {
        backgroundColor: '#fff'
     },
+    positionStyle: {
+        borderBottomColor: '#d0d0d0',
+        borderBottomWidth: 1,
+        padding: 10,
+        paddingTop:15,
+        paddingBottom: 5
+    }
 });
+
+/*
+const attendanceData = [
+    {id: 1, state: '출결완료', team: '팀 루케테', generation: '1', name: '홍길동', position: '팀장', point: '3'},
+    {id: 2, state: '무단결석', team: '팀 리액트', generation: '3', name: '김땡땡', position: '팀원', point: '0'},
+    {id: 3, state: '병결', team: '팀 루케테', generation: '1', name: '박출결', position: '팀원', point: '1'},
+    {id: 4, state: '출결완료', team: '팀 안드로이드', generation: '2', name: '최하눌', position: '팀장', point: '13'},
+    {id: 5, state: '출결완료', team: '팀 리액트', generation: '3', name: '5글자이름', position: '팀원', point: '0'},
+];
+*/
