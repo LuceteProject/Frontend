@@ -9,6 +9,7 @@ import { formatDate } from '../utils/DateFormat';
 import Icon from 'react-native-vector-icons/Ionicons';
 import BoardContent from './BoardContents';
 import BoardWriteContent from './BoardWrite';
+import axios from 'axios';
 const Stack = createNativeStackNavigator();
 
 type SearchBarComponentProps = {};
@@ -21,7 +22,7 @@ const SwitchComponent = () => {
   };
 };
 
-const exPost = {
+/*const exPost = {
   id: 1,
   title: '예시 게시물',
   created: '2023-10-06',
@@ -33,6 +34,7 @@ const exPost = {
   teamCode: 1,
   userId: 1
 };
+*/
 
 const Screen = ({ navigation }: any) => {
 
@@ -45,7 +47,51 @@ const Screen = ({ navigation }: any) => {
   const [currentBoard, setCurrentBoard] = useState('1'); //현재 페이지
   const [text, onChangeText] = useState(''); //검색어
 
-
+  function getPosts_1() {
+    const url = "https://lucetemusical.com/api/v1/posts/boardID/1";
+    axios.get(url)
+    .then(function(response) {
+        console.log(response.data);
+        setPosts(response.data);
+        console.log("게시판 표시 성공");
+    })
+    .catch(function(error) {
+        console.log("실패");
+    })
+}
+  function getPosts_2() {
+    const url = "https://lucetemusical.com/api/v1/posts/boardID/2";
+    axios.get(url)
+    .then(function(response) {
+        setPosts(response.data);
+        console.log("게시판 표시 성공");
+    })
+    .catch(function(error) {
+        console.log("실패");
+    })
+}
+function getPosts_3() {
+  const url = "https://lucetemusical.com/api/v1/posts/boardID/3";
+  axios.get(url)
+  .then(function(response) {
+      setPosts(response.data);
+      console.log("게시판 표시 성공");
+  })
+  .catch(function(error) {
+      console.log("실패");
+  })
+}
+function getPosts_4() {
+  const url = "https://lucetemusical.com/api/v1/posts/boardID/4";
+  axios.get(url)
+  .then(function(response) {
+      setPosts(response.data);
+      console.log("게시판 표시 성공");
+  })
+  .catch(function(error) {
+      console.log("실패");
+  })
+}
   /* API variables */
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -56,7 +102,11 @@ const Screen = ({ navigation }: any) => {
     };
     fetchPostsData();
     setLoading(false);*/
-    setPosts([exPost]);
+    getPosts_1();
+    getPosts_2();
+    getPosts_3();
+    getPosts_4();
+    //setPosts([exPost]);
   }, []);
 
   const BoardItem = (props: any) => {

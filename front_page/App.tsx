@@ -95,7 +95,7 @@ const Tabs = () => {
       <Tab.Screen name="Board" component={BoardScreen} />
       <Tab.Screen name="Todo" component={TodoScreen} />
       <Tab.Screen name="Calender" component={CalendarScreen} />
-      <Tab.Screen name="Drive" component={SignIn} />
+      <Tab.Screen name="Drive" component={DriveScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
 
     </Tab.Navigator>
@@ -104,19 +104,20 @@ const Tabs = () => {
 
 /* main part */
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  //const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  //const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  console.log(isLoggedIn);
   const handleLogin = () => {
     // 로그인 처리 로직 작성
     // http://54.237.121.196:8080/
-    setIsLoggedIn(true);
+    setIsLoggedIn(false);
   };
   /* 자동 로그인 구현 예정 */
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{
+      headerShown: false}}>
         {isLoggedIn ? (
           // 로그인이 성공한 경우 Tabs 화면으로 이동
           <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
@@ -125,10 +126,7 @@ const App = () => {
           <Stack.Screen
             name="Login"
             component={SignIn}
-            options={{
-              title: 'LUCETE Official App',
-              headerTitleStyle: { alignSelf: 'center' },
-            }}
+            
           />
 
         )}
