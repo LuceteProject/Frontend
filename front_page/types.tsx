@@ -1,71 +1,75 @@
 export type Todo = {
   id: string;
   content: string;
-  user_id: number;
-  team_code: number;
+  userId: number;
+  teamCode: number;
   completed: boolean;
   //checked: boolean;
 };
-export type TodoCategory = "All" | "Team" | "Personal";
+export type TodoCategory = "All" | "Team" | "Personal" | "Graduated";
 
 export type Post = {
   id: number;
-  header: number;
   title: string;
-  author_id: number;
-  author_name: string;
   created: string;
   updated: string;
   content: string;
-  permission: number;
-  is_notice: false;
-  board_id: number;
+  permissionCode: number;
+  isNotice: boolean;
+  boardId: number;
+  teamCode: number;
+  userId: number;
 };
 
-export type Reply = {
+export type user = {
   id: number;
-  content: string;
-  created: string;
-  updated: string;
-  post_id : number;
-  user_id : string;
-  parent: any;
-  is_deleted: boolean;
-
-};
-
-export type User = {
-  id: any;
   name: string; // 이름
-  google_id : string;
+  googleId? : string;
+  naverId?: string;
   email: string;
   phone : string;
-  team: string; // 소속
-  status : boolean;
+  passwodrd : string;
   semester: number; //기수(논의필요)
-  team_code : number;
-  permission : number;
-  profile_message?: string; //profile message
-  image?: string; //profile image(논의필요)
+  teamCode : number; //소속
+  attManager: boolean;
+  created : string;
+  updated: string;
+  permissionCode : number;
+  profileMessage?: string; //profile message
+  profileImage?: string; //profile image(논의필요)
 };
 
-export type Event = {
+export type conmments = {
   id: number;
-  user_id : number;
+  postId: number;
+  userId: number;
+  content: string;
+  created: string;
+  updated: string;
+  parent: number;
+  isDeleted: boolean;
+};
+
+export type attendances = {
+  id: number;
+  userId: number;
+  point: number;
+  date: string;
+};
+
+export type schedules = {
+  id: number;
+  userId: number;
   title: string;
   content: string;
-  team_code: number;
   start: string;
   end: string;
-  alarm?: string;
+  alarm: string;
+  teamCode: number;
 };
 
-export interface Member {
+export type boards = {
   id: number;
-  profileImage?: string;
   name: string;
-  semester: number;
-  team: string;
-  phone: string;
-  profile_message: string;
+  permissionCode: number;
 };

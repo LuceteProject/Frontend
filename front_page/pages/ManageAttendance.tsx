@@ -5,6 +5,7 @@ import { fetchData } from '../utils/APIs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import {attendances} from '../types';
 
 
 const Stack = createNativeStackNavigator();
@@ -109,7 +110,7 @@ const Page = () => {
                         paddingHorizontal: 10
                     }}>
                         {attendanceData.map((item, key) => (
-                            <Record team = {item.team} generation = {item.generation} name = {item.name} state = {item.state}/>
+                            <Record team = {item.id} generation = {item.userId} name = {item.point} state = {item.date}/>
                         ))}
                     </ScrollView>
                     
@@ -169,7 +170,7 @@ const Page = () => {
                         </View>
                         
                         {attendanceData.map((item, key)=>(
-                        <StackRecord position = {item.position} generation = {item.generation} name = {item.name} point = {item.point}/>
+                        <StackRecord position = {item.id} point = {item.point}/>
                         ))}
                         
                         <View

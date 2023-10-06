@@ -48,8 +48,8 @@ const Screen = ({ navigation }: any) => {
         id: Date.now().toString(),
         content: newTodo,
         completed: false,
-        team_code: 0,
-        user_id: 0
+        teamCode: 0,
+        userId: 0
       };
       setTodos([...todos, newTodoItem]);
     }
@@ -191,7 +191,7 @@ const Screen = ({ navigation }: any) => {
             <View>
 
               <FlatList
-                data={todos ? todos.filter(todo => todo.team_code === 10) : []}
+                data={todos ? todos.filter(todo => todo.teamCode === 10) : []}
                 renderItem={AllItem}
                 keyExtractor={(item) => item.id}
               />
@@ -219,7 +219,7 @@ const Screen = ({ navigation }: any) => {
             <View>
 
               <FlatList
-                data={todos ? todos.filter((todo) => todo.team_code === 1) : []}
+                data={todos ? todos.filter((todo) => todo.teamCode === 1) : []}
                 renderItem={TeamItem}
                 keyExtractor={(item) => item.id}
               />
@@ -246,7 +246,7 @@ const Screen = ({ navigation }: any) => {
             <View>
 
               <FlatList
-                data={todos ? todos.filter((todo) => todo.team_code === 11) : []}
+                data={todos ? todos.filter((todo) => todo.teamCode === 11) : []}
                 renderItem={PersonalItem}
                 keyExtractor={(item) => item.id}
               />

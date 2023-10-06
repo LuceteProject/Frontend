@@ -21,17 +21,16 @@ const Page = ({ route }: any) => {
     const [post, setPost] = useState<Post | null>(null);
 
     const exPost: Post = { // 예시 게시물 데이터
-        id: postId,
-        header: 2,
+        id: 1,
         title: '예시 게시물',
-        author_id: 3,
-        author_name: '예시 작성자',
-        created: '2023-09-17',
-        updated: '2023-09-17',
+        created: '2023-10-06',
+        updated: '2023-10-06',
         content: '예시 내용',
-        permission: 1,
-        is_notice: false,
-        board_id: 1, // 게시판 ID에 맞게 설정
+        permissionCode: 1,
+        isNotice: false,
+        boardId: 1,
+        teamCode: 1,
+        userId: 1
     };
     
 
@@ -118,7 +117,7 @@ const Page = ({ route }: any) => {
         return (
             <SafeAreaView>
                 <ScrollView>
-                    <Text style={{ marginTop: 10, marginLeft: 10 }} >{post.board_id}</Text>
+                    <Text style={{ marginTop: 10, marginLeft: 10 }} >{post.boardId}</Text>
                     <View style={{ margin: 10, flexDirection: 'row', justifyContent: 'space-between' }}>
 
                         <Text style={{
@@ -158,7 +157,7 @@ const Page = ({ route }: any) => {
                         <Text style={{
                             margin: 15,
                             fontSize: 15,
-                        }}>{post.author_name}</Text>
+                        }}>{post.userId}</Text>
 
                     </View>
                     <Text style={{
