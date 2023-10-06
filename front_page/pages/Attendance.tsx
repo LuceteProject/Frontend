@@ -21,6 +21,7 @@ const Page = () => {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage, setPostsPerPage] = useState(10);
+    const [attendanceData, setAttendanceData] = useState([]);
 
     /* For Data fetch from server
       useEffect(() => {
@@ -40,7 +41,7 @@ const Page = () => {
       */
 
     
-    const [attendanceData, setAttendanceData] = useState([]);
+    
 
     useEffect(() => {
         const fetchAttendanceData = async () => {
