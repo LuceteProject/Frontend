@@ -1,6 +1,6 @@
 import { SafeArea } from 'antd-mobile';
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView, TouchableOpacity, Modal} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface SignUpFormData {
@@ -17,28 +17,55 @@ interface SignUpFormData {
 
 const SignUpScreen: React.FC = () => {
     const [formData, setFormData] = useState<SignUpFormData>({
-        username: '',
-        password: '',
-        confirmPassword: '',
-        teamType: '',
-        role: '',
-        batch: 0,
-        name: '',
-        phoneNumber: '',
+        username: '', //이메일
+        password: '', //비밀번호
+        confirmPassword: '', //비밀번호 확인
+        teamType: '', //팀 종류
+        role: '', //역할
+        batch: 0, //기수
+        name: '', //이름
+        phoneNumber: '', //전화번호
         email: '',
     });
-
+    const [roleModalVisible, setRoleModalVisible] = useState(false);
+    const [teamModalVisible, setTeamModalVisible] = useState(false);
+    const roles = ['관리자', '회장', '임원진', '팀원'];
+    const teams = [
+        '극본',
+        '기획',
+        '디자인',
+        '배우',
+        '연출',
+        '음악'
+    ];
+    const handleTeamSelect = (team: string) => {
+        setFormData({ ...formData, teamType: team });
+        setTeamModalVisible(false);
+    };
     const handleChange = (name: string, value: string | number) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
             [name]: name === 'batch' ? Number(value) : value,
         }));
     };
+    const handleRoleSelect = (role: string) => {
+        setFormData({ ...formData, role });
+        setRoleModalVisible(false);
+      };
+    // 회원가입 데이터를 서버로 전송합니다.
+    const handleSubmit =async () => {
+        const username = formData.username;
+        const password = formData.password;
+        const confirmPassword = formData.confirmPassword;
+        const teamType = formData.teamType;
+        const role = formData.role;
+        const batch = formData.batch;
+        const name = formData.name;
+        const phoneNumber = formData.phoneNumber;
 
-    const handleSubmit = () => {
-        // 회원가입 데이터 처리 로직 작성
-        console.log(formData);
+        console.log(formData);  
     };
+
 
     const validatePassword = (password: string) => {
         // 비밀번호는 8자 이상이어야 합니다.
@@ -60,7 +87,7 @@ const SignUpScreen: React.FC = () => {
     return (
         <SafeAreaView>
             <ScrollView style={styles.container}>
-                <Text style={styles.label}>아이디:</Text>
+                <Text style={styles.label}>이메일:</Text>
                 <TextInput
                     style={styles.input}
                     value={formData.username}
@@ -90,14 +117,61 @@ const SignUpScreen: React.FC = () => {
                     <Text style={styles.errorText}>비밀번호가 일치하지 않습니다.</Text>
                 )}
 
-                <Text style={styles.label}>팀 종류:</Text>
-                <TextInput
+            <Text style={styles.label}>팀 종류:</Text>
+                <TouchableOpacity
                     style={styles.input}
-                    value={formData.teamType}
-                    onChangeText={(text) => handleChange('teamType', text)}
-                />
+                    onPress={() => setTeamModalVisible(true)}
+                >
+                    <Text>{formData.teamType || '선택하세요'}</Text>
+                </TouchableOpacity>
 
-                <Text style={styles.label}>역할:</Text>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={teamModalVisible}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                        {teams.map((team, index) => (
+                            <TouchableOpacity
+                            key={index}
+                            style={styles.modalButton}
+                            onPress={() => handleTeamSelect(team)}
+                            >
+                            <Text style={styles.modalText}>{team}</Text>
+                            </TouchableOpacity>
+                        ))}
+                        </View>
+                    </View>
+                </Modal>
+
+            <Text style={styles.label}>직책:</Text>
+                    <TouchableOpacity
+                    style={styles.input}
+                    onPress={() => setRoleModalVisible(true)}
+                    >
+                    <Text>{formData.role || '선택하세요'}</Text>
+                    </TouchableOpacity>
+
+                    <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={roleModalVisible}
+                    >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                        {roles.map((role, index) => (
+                            <TouchableOpacity
+                            key={index}
+                            style={styles.modalButton}
+                            onPress={() => handleRoleSelect(role)}
+                            >
+                            <Text style={styles.modalText}>{role}</Text>
+                            </TouchableOpacity>
+                        ))}
+                        </View>
+                    </View>
+                    </Modal>
 
                 <Text style={styles.label}>기수:</Text>
                 <TextInput
@@ -165,6 +239,39 @@ const styles = StyleSheet.create({
         color: 'red',
         marginBottom: 8,
     },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+      },
+      modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        //elevation: 5,
+      },
+      modalButton: {
+        //backgroundColor: '#F194FF',
+        //borderRadius: 20,
+        padding: 10,
+        //elevation: 2,
+        marginBottom: 10,
+      },
+      modalText: {
+        //color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
 });
 
 const pickerSelectStyles = StyleSheet.create({
