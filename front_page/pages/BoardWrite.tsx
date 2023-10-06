@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, Modal, StyleSheet, ScrollView, TextInput,
 import Icon from 'react-native-vector-icons/Ionicons';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { fetchData, postData } from '../utils/APIs';
+import axios from 'axios';
+import { number } from 'prop-types';
 const Stack = createNativeStackNavigator();
 
 const Page = () => {
@@ -20,10 +22,12 @@ const Page = () => {
 
         const [isBoardModalVisible, setBoardModalVisible] = useState(false);
         const [isCategoryModalVisible, setCategoryModalVisible] = useState(false);
-        const [selectedBoard, setSelectedBoard] = useState('');
-        const [selectedCategory, setSelectedCategory] = useState('');
+        const [selectedBoard, setSelectedBoard] = useState(6);
+        const [selectedCategory, setSelectedCategory] = useState(15);
         const [title, setTitle] = useState('');
         const [content, setContent] = useState('');
+        const [selectedBoardName, setSelectedBoardName] = useState('');
+        const [selectedCategoryName, setSelectedCategoryName] = useState('');
 
         const handleCancel = () => {
             Alert.alert("작성 취소", "글 작성을 취소할까요?",
@@ -43,22 +47,67 @@ const Page = () => {
 
         };
 
-        const handleConfirm = () => {
+        const handleConfirm = async() => {
             // 게시글을 서버에 업로드하는 로직 구현
             /* Api upload in here */
             //sendDataToServer();
-            Alert.alert("게시글이 작성되었습니다.");
+            try {
+                const response = await axios.post("https://lucetemusical.com/api/v1/posts", {
+                    teamCode: selectedCategory,
+                    title: title,
+                    content: content,
+                    permissionCode: selectedBoard,
+                    isNotice: false,
+                    created: Date.now,
+                    updated: Date.now,
+                    boardId: selectedBoard,
+                    userId: 1
+                });
+                console.log(response.data);
+                console.log("성공");
+              } catch (error) {
+                console.log("실패");
+              }
             navigation.pop();
         };
-
-        const handleBoardSelect = (board: string) => {
-            setSelectedBoard(board);
+        const handleBoardSelectName = (board: string) =>{
+            setSelectedBoardName(board);
             setBoardModalVisible(false);
+        }
+        const handleBoardSelect = (board: number) => {
+            setSelectedBoard(board);
+            switch(board){
+                case 1:
+                    return handleBoardSelectName('임원진')
+                case 2:
+                    return handleBoardSelectName('자유')
+                case 3:
+                    return handleBoardSelectName('익명')
+                case 4:
+                    return handleBoardSelectName('졸업생')
+            }
+            setSelectedBoard(board);
         };
-
-        const handleCategorySelect = (category: string) => {
-            setSelectedCategory(category);
+        const handleCategorySelectName = (category: string) =>{
+            setSelectedCategoryName(category);
             setCategoryModalVisible(false);
+        }
+        const handleCategorySelect = (category: number) => {
+            setSelectedCategory(category);
+            switch(category){
+                case 1:
+                    return handleCategorySelectName('극본')
+                case 2:
+                    return handleCategorySelectName('기획')
+                case 3:
+                    return handleCategorySelectName('디자인')
+                case 4:
+                    return handleCategorySelectName('배우')
+                case 5:
+                    return handleCategorySelectName('연출')
+                case 6:
+                    return handleCategorySelectName('음악')
+            }
         };
         return (
             <View style={styles.container}>
@@ -68,14 +117,17 @@ const Page = () => {
                         <View style={styles.modalContainer}>
                             <View style={styles.modalContent}>
                                 <Text style={styles.modalTitle}>게시판 선택</Text>
-                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleBoardSelect('자유')}>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleBoardSelect(2)}>
                                     <Text style={styles.attachmentButtonText}>자유</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleBoardSelect('익명')}>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleBoardSelect(1)}>
+                                    <Text style={styles.attachmentButtonText}>임원진</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleBoardSelect(3)}>
                                     <Text style={styles.attachmentButtonText}>익명</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleBoardSelect('임원진')}>
-                                    <Text style={styles.attachmentButtonText}>임원진</Text>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleBoardSelect(4)}>
+                                    <Text style={styles.attachmentButtonText}>졸업생</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.modalCloseButton} onPress={() => setBoardModalVisible(false)}>
                                     <Text style={styles.modalCloseButtonText}>닫기</Text>
@@ -89,20 +141,23 @@ const Page = () => {
                         <View style={styles.modalContainer}>
                             <View style={styles.modalContent}>
                                 <Text style={styles.modalTitle}>말머리 선택</Text>
-                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect('전체')}>
-                                    <Text style={styles.attachmentButtonText}>전체</Text>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect(1)}>
+                                    <Text style={styles.attachmentButtonText}>극본</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect('팀1')}>
-                                    <Text style={styles.attachmentButtonText}>팀1</Text>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect(2)}>
+                                    <Text style={styles.attachmentButtonText}>기획</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect('팀2')}>
-                                    <Text style={styles.attachmentButtonText}>팀2</Text>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect(3)}>
+                                    <Text style={styles.attachmentButtonText}>디자인</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect('팀3')}>
-                                    <Text style={styles.attachmentButtonText}>팀3</Text>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect(4)}>
+                                    <Text style={styles.attachmentButtonText}>배우</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect('팀4')}>
-                                    <Text style={styles.attachmentButtonText}>팀4</Text>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect(5)}>
+                                    <Text style={styles.attachmentButtonText}>연출</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.attachmentButton} onPress={() => handleCategorySelect(6)}>
+                                    <Text style={styles.attachmentButtonText}>음악</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity style={styles.modalCloseButton} onPress={() => setCategoryModalVisible(false)}>
                                     <Text style={styles.modalCloseButtonText}>닫기</Text>
@@ -123,9 +178,8 @@ const Page = () => {
 
 
                         <TouchableOpacity style={styles.inputContainer} onPress={() => setBoardModalVisible(true)}>
-
-                            {selectedBoard ? (
-                                <Text style={styles.selectedText}>{selectedBoard}</Text>
+                            {selectedBoard >=0 && selectedBoard <=3 ? (
+                                <Text style={styles.selectedText}>{selectedBoardName}</Text>
                             ) : (
                                 <Text style={styles.selectedText}>게시판을 선택하세요</Text>
                             )}
@@ -174,8 +228,8 @@ const Page = () => {
                             }}
                         />
                         <TouchableOpacity style={styles.inputContainer} onPress={() => setCategoryModalVisible(true)}>
-                            {selectedCategory ? (
-                                <Text style={styles.selectedText}>{selectedCategory}</Text>
+                            {selectedCategory >= 0 && selectedCategory <= 12 ? (
+                                <Text style={styles.selectedText}>{selectedCategoryName}</Text>
                             ) : (
                                 <Text style={styles.selectedText}>말머리를 선택하세요</Text>
                             )}
@@ -187,14 +241,6 @@ const Page = () => {
                             }}
                         />
                     </View>
-
-                    <View style={{ height: 10 }}></View>
-                    <View style={{ height: 20 }}></View>
-
-                    {/* 첨부파일 */}
-                    <TouchableOpacity style={styles.attachmentButton}>
-                        <Text style={styles.attachmentButtonText}>첨부파일</Text>
-                    </TouchableOpacity>
                 </ScrollView>
 
                 {/* 하단 버튼 */}
