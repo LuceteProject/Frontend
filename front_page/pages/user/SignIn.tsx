@@ -7,7 +7,7 @@ import axios from "axios";
 
 import FindUsernameScreen from './FindUsernameScreen';
 import FindPasswordScreen from './FindPasswordScreen';
-
+import SignUpScreen from './SignUp';
 interface LoginFormData {
   email: string;
   password: string;
@@ -23,40 +23,39 @@ const Screen = ({ navigation }: any) => {
   });
   const [autoLogin, setAutoLogin] = useState(false);
 
-
   const handleSubmit = async() => {
-    // 로그인 데이터 처리 로직 작성
     const email = formData.email;
     const password = formData.password;
     try {
       const response = await axios.post("https://lucetemusical.com/api/v1/users/login", {
         email,
-        password,
+        password
       });
-      // 로그인 성공, 토큰 저장 등의 로직
-      console.log(response.data);
+      if(response.status === 200 && response.data){
+        console.log(response.data);
+      }
     } catch (error) {
-      // 로그인 실패, 에러 메시지 표시 등의 로직
+      console.log(error);
     }
-  };
-  const handleNaverLogin = () => {
-    setWebViewVisible(true);
+    console.log(formData);
   };
 
   const handleCloseWebView = () => {
     setWebViewVisible(false);
   };
+
   const handleSignUp = () => {
-    // 회원가입 버튼 클릭 시 동작할 로직 작성
+    navigation.navigate('SignUp');  // 'SignUp'은 회원가입 페이지의 라우트 이름입니다.
+    
     console.log('회원가입 버튼 클릭');
   };
 
   const handleFindUsername = () => {
-    //navigation.navigate('FindUsername');
+    navigation.navigate('FindUsername');
   };
 
   const handleFindPassword = () => {
-    //navigation.navigate('FindPassword');
+    navigation.navigate('FindPassword');
   };
 
   const handleAutoLoginToggle = () => {
@@ -69,22 +68,18 @@ const Screen = ({ navigation }: any) => {
       [name]: value,
     }));
   };
-  const windowWidth = Dimensions.get('window').width;
-
-  //http://54.237.121.196:8080/oauth2/authorization/naver
-  return (
+  const Main = () => {
+    return (
     <SafeAreaView style={styles.container}>
       <View style={styles.imageContainer}>
         <Image source={require('../../img/logo.jpg')} style={styles.image} />
       </View>
-
       <Text style={styles.label}>아이디:</Text>
       <TextInput
         style={styles.input}
         value={formData.email}
         onChangeText={(text) => handleChange('email', text)}
       />
-
       <Text style={styles.label}>비밀번호:</Text>
       <TextInput
         style={styles.input}
@@ -100,11 +95,6 @@ const Screen = ({ navigation }: any) => {
         <Text style={styles.checkboxLabel}>자동 로그인</Text>
       </TouchableOpacity>
       <Button title="로그인" onPress={handleSubmit} />
-      <TouchableOpacity onPress={handleNaverLogin} style={{margin: 30, alignItems: 'center', justifyContent: 'center', height: 30}}>
-        <Image source={require('../../img/login_naver.png')} style={{ width: windowWidth - 40, height: 50 }}/>
-      </TouchableOpacity>
-
-      {/* Modal containing the WebView */}
       <Modal
         animationType="slide"
         transparent={false}
@@ -113,7 +103,6 @@ const Screen = ({ navigation }: any) => {
         <WebView source={{ uri: `https://lucetemusical.com/oauth2/authorization/naver` }}  style={{ flex: 1 }}/>
         <Button title="닫기" onPress={handleCloseWebView} />
       </Modal>
-
       <View style={styles.forgotContainer}>
         <Text style={styles.forgotText} onPress={handleFindUsername}>
           아이디 찾기
@@ -122,7 +111,6 @@ const Screen = ({ navigation }: any) => {
           비밀번호 찾기
         </Text>
       </View>
-
       <View style={styles.signupContainer}>
         <Text style={styles.signupText}>계정이 없으신가요?</Text>
         <Text style={styles.signupButton} onPress={handleSignUp}>
@@ -130,8 +118,6 @@ const Screen = ({ navigation }: any) => {
         </Text>
       </View>
     </SafeAreaView>
-<<<<<<< Updated upstream
-=======
     )
   };
 
@@ -139,13 +125,7 @@ const Screen = ({ navigation }: any) => {
     <Stack.Navigator
     screenOptions={{
       headerShown: false}}>
-        <Stack.Screen
-          name="Main"
-          component={Main}
-          options={{
-            title: '로그인',
-          }}
-        />
+      
         <Stack.Screen
           name="SignUp"
           component={SignUpScreen}
@@ -169,11 +149,8 @@ const Screen = ({ navigation }: any) => {
         />
 
       </Stack.Navigator>
->>>>>>> Stashed changes
   );
 };
-
-
 
 const styles = StyleSheet.create({
   container: {
