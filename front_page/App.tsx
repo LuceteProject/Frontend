@@ -22,6 +22,8 @@ import SignIn from './pages/user/SignIn';
 import Icon from 'react-native-vector-icons/Ionicons';
 import WebView from 'react-native-webview';
 
+import { useUser } from './pages/user/UserContext';
+
 // Navigator
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -104,14 +106,10 @@ const Tabs = () => {
 
 /* main part */
 const App = () => {
-  //const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  //const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   console.log(isLoggedIn);
-  const handleLogin = () => {
-    // 로그인 처리 로직 작성
-    // http://54.237.121.196:8080/
-    setIsLoggedIn(false);
-  };
   /* 자동 로그인 구현 예정 */
 
   return (

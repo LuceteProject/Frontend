@@ -130,6 +130,46 @@ const Screen = ({ navigation }: any) => {
         </Text>
       </View>
     </SafeAreaView>
+<<<<<<< Updated upstream
+=======
+    )
+  };
+
+  return (
+    <Stack.Navigator
+    screenOptions={{
+      headerShown: false}}>
+        <Stack.Screen
+          name="Main"
+          component={Main}
+          options={{
+            title: '로그인',
+          }}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUpScreen}
+          options={{
+            title: '회원가입',
+          }}
+        />
+        <Stack.Screen
+          name="FindUsername"
+          component={FindUsernameScreen}
+          options={{
+            title: '아이디 찾기',
+          }}
+        />
+        <Stack.Screen
+          name="FindPassword"
+          component={FindPasswordScreen}
+          options={{
+            title: '비밀번호 찾기',
+          }}
+        />
+
+      </Stack.Navigator>
+>>>>>>> Stashed changes
   );
 };
 
