@@ -3,12 +3,13 @@ import { View, Text, TextInput, Button, StyleSheet, Image, TouchableOpacity, Mod
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { createStackNavigator } from '@react-navigation/stack';
 import WebView from 'react-native-webview';
+import axios from "axios";
 
 import FindUsernameScreen from './FindUsernameScreen';
 import FindPasswordScreen from './FindPasswordScreen';
 
 interface LoginFormData {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -17,15 +18,27 @@ const Stack = createStackNavigator();
 const Screen = ({ navigation }: any) => {
   const [isWebViewVisible, setWebViewVisible] = useState(false);
   const [formData, setFormData] = useState<LoginFormData>({
-    username: '',
+    email: '',
     password: '',
   });
   const [autoLogin, setAutoLogin] = useState(false);
 
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
     // 로그인 데이터 처리 로직 작성
-
+    const email = formData.email;
+    const password = formData.password;
+    try {
+      const response = await axios.post("https://lucetemusical.com/api/v1/users/login", {
+        email,
+        password
+      });
+      // 로그인 성공, 토큰 저장 등의 로직
+      if(response.status === 200 && response.data.result ===1){
+      }
+    } catch (error) {
+      // 로그인 실패, 에러 메시지 표시 등의 로직
+    }
     console.log(formData);
   };
   const handleNaverLogin = () => {
@@ -70,8 +83,8 @@ const Screen = ({ navigation }: any) => {
       <Text style={styles.label}>아이디:</Text>
       <TextInput
         style={styles.input}
-        value={formData.username}
-        onChangeText={(text) => handleChange('username', text)}
+        value={formData.email}
+        onChangeText={(text) => handleChange('email', text)}
       />
 
       <Text style={styles.label}>비밀번호:</Text>

@@ -95,7 +95,7 @@ const Tabs = () => {
       <Tab.Screen name="Board" component={BoardScreen} />
       <Tab.Screen name="Todo" component={TodoScreen} />
       <Tab.Screen name="Calender" component={CalendarScreen} />
-      <Tab.Screen name="Drive" component={DriveScreen} />
+      <Tab.Screen name="Drive" component={SignIn} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
 
     </Tab.Navigator>
