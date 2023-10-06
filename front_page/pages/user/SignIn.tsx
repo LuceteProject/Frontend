@@ -31,15 +31,13 @@ const Screen = ({ navigation }: any) => {
     try {
       const response = await axios.post("https://lucetemusical.com/api/v1/users/login", {
         email,
-        password
+        password,
       });
       // 로그인 성공, 토큰 저장 등의 로직
-      if(response.status === 200 && response.data.result ===1){
-      }
+      console.log(response.data);
     } catch (error) {
       // 로그인 실패, 에러 메시지 표시 등의 로직
     }
-    console.log(formData);
   };
   const handleNaverLogin = () => {
     setWebViewVisible(true);

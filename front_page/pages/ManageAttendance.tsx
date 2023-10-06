@@ -5,6 +5,8 @@ import { fetchData } from '../utils/APIs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import axios from 'axios';
+import { convertCodeToValue } from '../components/CodeConverter';
 
 
 const Stack = createNativeStackNavigator();
@@ -12,40 +14,75 @@ const Stack = createNativeStackNavigator();
 const Page = () => {
     const [user, setUser] = useState();
     const [attendanceData, setAttendanceData] = useState([]);
-
-    useEffect(()=> {
-        const getUser = async () => {
-            const userInfoJson = JSON.parse(await EncryptedStorage.getItem('user-info') || 'null');
-            setUser(userInfoJson.user_id);
-        }
-        getUser();
-    }, []);
-
-    
-    
-    const fetchAttendanceData = async () => {
-        try {
-            const serverUrl = 'https://lucetemusical.com/api/v1/attendances';
-
-            //Get 요청 보내기
-            const response = await fetch(serverUrl);
-
-            // HTTP 응답 코드를 확인, 데이터 가져오기
-            if (response.ok) {
-                const data = await response.json();
-                setAttendanceData(data); // 데이터를 상태에 저장
-            } else {
-                // 에러 처리
-                console.error('데이터를 가져오는 데 실패했습니다.');
-            }
-        } catch (error) {
-            console.error('데이터를 가져오는 데 오류가 발생했습니다.', error);
-        }
-    };
+    const [allUserData, setAllUserData] = useState([]);
 
     useEffect(() => {
-        fetchAttendanceData(); // 페이지가 로드될 때 한 번 호출
+        const fetchAllUserData = async () => {
+            try {
+                const responseAllUser = await axios.get('https://lucetemusical.com/api/v1/users');
+                const userAllData = responseAllUser.data;
+                setAllUserData(userAllData);
+            }catch (error) {
+                console.error('전체 유저 데이터를 가져오는 동안 오류 발생:', error);
+            }
+        };
+
+        const fetchData = async () => {
+            try {
+                const responseAttendance = await axios.get('https://lucetemusical.com/api/v1/attendances');
+                const attendanceData = responseAttendance.data;
+                console.log(attendanceData);
+
+                attendanceData.map((item => {
+                    console.log(item.date);                    
+                }));
+
+                const Date = '2023-09-20T08:49:58.000+00:00';
+
+                function filterDate(e) {
+                    if(e.date.substring(0, 9) === Date.substring(0,9)) {
+                        return true;
+                    }
+                }
+        
+                const dateData = allUserData.filter(filterDate);
+
+                console.log(dateData);
+                
+                // 사용자 정보를 가져오는 모든 Axios 요청을 Promise.all로 묶습니다.
+                const combinedData = await Promise.all(attendanceData.map(async (attendanceItem) => {
+                const userId = attendanceItem.userId; // attendanceData에 user_id가 있다고 가정합니다
+    
+                try {
+                    // URL 템플릿 리터럴을 사용하여 user_id를 포함시킵니다.
+                    const responseUserInfo = await axios.get(`https://lucetemusical.com/api/v1/users/${userId}`);
+                    const userData = responseUserInfo.data;
+                    
+        
+                    // attendanceItem 및 userData를 병합합니다.
+                    return {
+                    ...attendanceItem,
+                    ...userData,
+                    };
+                } catch (error) {
+                    console.error('사용자 데이터를 가져오는 동안 오류 발생:', error);
+                    return attendanceItem; // 오류가 발생한 경우 기존의 출결 항목을 사용합니다.
+                }
+                }));
+        
+                // 이제 combinedData에 출결 데이터와 사용자 정보가 모두 포함되어 있습니다.
+                setAttendanceData(combinedData);
+            } catch (error) {
+                console.error('출결 데이터를 가져오는 동안 오류 발생:', error);
+            }
+        };
+    
+        fetchAllUserData();
+        fetchData();
     }, []);
+      
+
+    
     
     
     const clickHandler = () => {
@@ -109,7 +146,7 @@ const Page = () => {
                         paddingHorizontal: 10
                     }}>
                         {attendanceData.map((item, key) => (
-                            <Record team = {item.team} generation = {item.generation} name = {item.name} state = {item.state}/>
+                            <Record team = {convertCodeToValue(item.teamCode, 'team_code')} generation = {item.semester} name = {item.name} state = {convertCodeToValue(item.point, 'point')}/>
                         ))}
                     </ScrollView>
                     
@@ -163,23 +200,13 @@ const Page = () => {
                             
                             
                         </View>
-                        <View
-                        style = {[styles.positionStyle]}>
-                            <Text style = {{fontWeight:"bold", fontSize: 18, color: '#000000'}}>회장</Text>
-                        </View>
-                        
-                        {attendanceData.map((item, key)=>(
-                        <StackRecord position = {item.position} generation = {item.generation} name = {item.name} point = {item.point}/>
-                        ))}
-                        
-                        <View
-                        style = {[styles.positionStyle]}>
-                            <Text style = {{fontWeight:"bold", fontSize: 18, color: '#000000'}}>극본팀</Text>
-                        </View>
-                        <View
-                        style = {[styles.positionStyle]}>
-                            <Text style = {{fontWeight:"bold", fontSize: 18, color: '#000000'}}>무대팀</Text>
-                        </View>
+                        <StackedRecordBlock code = '0'/>
+                        <StackedRecordBlock code = '1'/>
+                        <StackedRecordBlock code = '2'/>
+                        <StackedRecordBlock code = '3'/>
+                        <StackedRecordBlock code = '4'/>
+                        <StackedRecordBlock code = '5'/>
+                        <StackedRecordBlock code = '6'/>
                     </View>
                 </ScrollView>
             </>
@@ -215,11 +242,16 @@ const Page = () => {
                     borderBottomWidth: 1,
                     flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'space-around'
                 }}>
-                    <Text>{props.team}</Text>
-                    <Text>{props.generation}기 {props.name}</Text>
-                    <Text>{props.state}</Text>
+                    <View style = {{flex:1, alignItems: 'center'}}>
+                        <Text>{props.team}</Text>
+                    </View>
+                    <View style = {{flex:2, alignItems: 'center'}}>
+                        <Text>{props.generation}기 {props.name}</Text>
+                    </View>
+                    <View style = {{flex:1, alignItems: 'center'}}>
+                        <Text>{props.state}</Text>
+                    </View>
                 </View>
             </>
         )
@@ -249,17 +281,33 @@ const Page = () => {
                         flex: 1
                     }}>
                         <Text style = {{color: '#B77DE4', fontSize: 15}}>{props.position}</Text>
-                        <View
-                        style = {{
-                            flexDirection: 'row',
-                            flex: 1,
-                            justifyContent: 'space-between'
-                        }}>
-                            <Text style = {{color: '#000000'}}>{props.generation}기 {props.name}</Text>
-                            <Text style = {{color: '#000000', right: 0}}>퇴출점수: {props.point}</Text>
-                        </View>
+                        <Text style = {{color: '#000000'}}>{props.generation}기 {props.name}</Text>
                     </View>
                 </View>
+            </>
+        )
+    }
+
+    const StackedRecordBlock = (props) => {
+
+        function filterCode(e) {
+            if(e.teamCode === parseInt(props.code)) {
+                return true
+            }
+        }
+
+        const blockData = allUserData.filter(filterCode);
+
+        return (
+            <>
+                <View
+                style = {[styles.positionStyle]}>
+                    <Text style = {{fontWeight:"bold", fontSize: 18, color: '#000000'}}>{convertCodeToValue(props.code, 'team_code')}</Text>
+                </View>
+                
+                {blockData.map((item, key)=>(
+                <StackRecord position = {convertCodeToValue(item.permissionCode, 'permission_code')} generation = {item.semester} name = {item.name}/>
+                ))}
             </>
         )
     }
@@ -353,12 +401,3 @@ const styles = StyleSheet.create({
     }
 });
 
-/*
-const attendanceData = [
-    {id: 1, state: '출결완료', team: '팀 루케테', generation: '1', name: '홍길동', position: '팀장', point: '3'},
-    {id: 2, state: '무단결석', team: '팀 리액트', generation: '3', name: '김땡땡', position: '팀원', point: '0'},
-    {id: 3, state: '병결', team: '팀 루케테', generation: '1', name: '박출결', position: '팀원', point: '1'},
-    {id: 4, state: '출결완료', team: '팀 안드로이드', generation: '2', name: '최하눌', position: '팀장', point: '13'},
-    {id: 5, state: '출결완료', team: '팀 리액트', generation: '3', name: '5글자이름', position: '팀원', point: '0'},
-];
-*/
