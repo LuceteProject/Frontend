@@ -5,14 +5,13 @@ import { fetchData } from '../utils/APIs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {attendances} from '../types';
 
 
 const Stack = createNativeStackNavigator();
 
 const Page = () => {
     const [user, setUser] = useState();
-    //const [attendanceData, setAttendanceData] = useState([]);
+    const [attendanceData, setAttendanceData] = useState([]);
 
     useEffect(()=> {
         const getUser = async () => {
@@ -23,7 +22,7 @@ const Page = () => {
     }, []);
 
     
-    /*
+    
     const fetchAttendanceData = async () => {
         try {
             const serverUrl = 'https://lucetemusical.com/api/v1/attendances';
@@ -47,7 +46,7 @@ const Page = () => {
     useEffect(() => {
         fetchAttendanceData(); // 페이지가 로드될 때 한 번 호출
     }, []);
-    */
+    
     
     const clickHandler = () => {
         Alert.alert("pressed!");
@@ -110,7 +109,7 @@ const Page = () => {
                         paddingHorizontal: 10
                     }}>
                         {attendanceData.map((item, key) => (
-                            <Record team = {item.id} generation = {item.userId} name = {item.point} state = {item.date}/>
+                            <Record team = {item.team} generation = {item.generation} name = {item.name} state = {item.state}/>
                         ))}
                     </ScrollView>
                     
@@ -170,7 +169,7 @@ const Page = () => {
                         </View>
                         
                         {attendanceData.map((item, key)=>(
-                        <StackRecord position = {item.id} point = {item.point}/>
+                        <StackRecord position = {item.position} generation = {item.generation} name = {item.name} point = {item.point}/>
                         ))}
                         
                         <View
@@ -354,7 +353,7 @@ const styles = StyleSheet.create({
     }
 });
 
-
+/*
 const attendanceData = [
     {id: 1, state: '출결완료', team: '팀 루케테', generation: '1', name: '홍길동', position: '팀장', point: '3'},
     {id: 2, state: '무단결석', team: '팀 리액트', generation: '3', name: '김땡땡', position: '팀원', point: '0'},
@@ -362,3 +361,4 @@ const attendanceData = [
     {id: 4, state: '출결완료', team: '팀 안드로이드', generation: '2', name: '최하눌', position: '팀장', point: '13'},
     {id: 5, state: '출결완료', team: '팀 리액트', generation: '3', name: '5글자이름', position: '팀원', point: '0'},
 ];
+*/
