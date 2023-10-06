@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Image, TouchableOpacity, Alert, Button } from 'react-native';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { fetchData } from '../utils/APIs';
-import { User } from "../types";
+import { user } from "../types";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -18,7 +18,7 @@ const Stack = createNativeStackNavigator();
 /* functional execution */
 const Screen = ({ navigation }: any) => {
   /* User 정보 받아오기 */
-  const [user, setUser] = useState<User>(); //저장되어 있는 User 정보랑 타입 일치하는지 확인해야 함
+  const [user, setUser] = useState<user>(); //저장되어 있는 User 정보랑 타입 일치하는지 확인해야 함
   useEffect(()=> {
       const getUser = async () => {
           const userInfoJson = JSON.parse(await EncryptedStorage.getItem('user-info') || 'null');
@@ -45,10 +45,10 @@ const Screen = ({ navigation }: any) => {
               {user?.semester} 기</Text>
             <Text
               style={styles.profiletext}>
-              {user?.team_code} 팀 {user?.name}</Text>
+              {user?.teamCode} 팀 {user?.name}</Text>
             <Text
               style={styles.sangme}>
-              {user?.profile_message}</Text>
+              {user?.profileMessage}</Text>
           </View>
 
         </View>

@@ -23,16 +23,15 @@ const SwitchComponent = () => {
 
 const exPost = {
   id: 1,
-  header: 2,
   title: '예시 게시물',
-  author_id: 3,
-  author_name: '예시 작성자',
-  created: '2023-09-17',
-  updated: '2023-09-17',
+  created: '2023-10-06',
+  updated: '2023-10-06',
   content: '예시 내용',
-  permission: 1,
-  is_notice: false,
-  board_id: 1, // 게시판 ID에 맞게 설정
+  permissionCode: 1,
+  isNotice: false,
+  boardId: 1,
+  teamCode: 1,
+  userId: 1
 };
 
 const Screen = ({ navigation }: any) => {
@@ -131,10 +130,10 @@ const Screen = ({ navigation }: any) => {
 
   //Tab View 항목 지정 - 게시글 post의 board_id 값에 따라 filter
   const renderScene = SceneMap({
-    first: () => <Route nav={navigation} data={posts.filter(post => post.board_id === 0)} />,
-    second: () => <Route nav={navigation} data={posts.filter(post => post.board_id === 1)} />,
-    third: () => <Route nav={navigation} data={posts.filter(post => post.board_id === 2)} />,
-    fourth: () => <Route nav={navigation} data={posts.filter(post => post.board_id === 3)} />,
+    first: () => <Route nav={navigation} data={posts.filter(post => post.boardId === 0)} />,
+    second: () => <Route nav={navigation} data={posts.filter(post => post.boardId === 1)} />,
+    third: () => <Route nav={navigation} data={posts.filter(post => post.boardId === 2)} />,
+    fourth: () => <Route nav={navigation} data={posts.filter(post => post.boardId === 3)} />,
   });
 
   const renderTabBar = (props: any) => (
