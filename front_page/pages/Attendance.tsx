@@ -1,9 +1,8 @@
 // tslint:disable:no-empty
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { StyleSheet, Image, ScrollView, Text, View, Alert, Button, TouchableOpacity } from 'react-native'
 import QRCode from 'react-native-qrcode-svg';
 import axios from 'axios';
-
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -168,7 +167,7 @@ const Page = () => {
                         marginTop: 10
                     }}>
                         {attendanceData.map((item, key) => (
-                            <AttendanceRecord state = {item.state} time = {item.time}/>
+                            <AttendanceRecord state = {item.point} date = {item.date.substring(0,10)}/>
                         ))}
                         
                     </View>
@@ -186,20 +185,42 @@ const Page = () => {
         var color = '';
 
         switch (props.state){
-            case '0' : //결석
-                text = '결석';
-                color = '#d0d0d0';
-                break;
-            case '1' : //출석
+
+            case 0 : 
                 text = '출석';
                 color = '#B77DE4';
+                break;
+
+            case 1 : 
+                text = '사유지각/조퇴';
+                color = '#B77DE4';
+                break;
+
+            case 2 : 
+                text = '사유결석';
+                color = '#B77DE4';
+                break;
+            
+            case 3 : 
+                text = '무단지각/조퇴';
+                color = '#b0b0b0';
+                break;
+
+            case 6 : 
+                text = '무단결석';
+                color = '#b0b0b0';
+                break;
+
+            case 15 : 
+                text = '무통보결석';
+                color = '#b0b0b0';
                 break;
         }
 
         return (
             <>
                 <View style = {styles.AttendanceRecordStyle}>
-                    <Text>{props.time}</Text>
+                    <Text>{props.date}</Text>
                     <View style = {[styles.AttendanceCheckStyle, {backgroundColor: color}]}>
                         <Text style = {{color: '#ffffff', fontWeight: 'bold'}}>{text}</Text>
                     </View>
@@ -304,15 +325,16 @@ const styles = StyleSheet.create({
         width: '80%',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'space-between',
         elevation: 5,
+        paddingHorizontal: 35
     },
     AttendanceCheckStyle: {
-        width: 50,
-        height: 25,
+        width: 90,
+        height: 27,
         backgroundColor: '#B77DE4',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     }
 });
 

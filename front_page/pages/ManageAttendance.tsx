@@ -7,14 +7,18 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import axios from 'axios';
 import { convertCodeToValue } from '../components/CodeConverter';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 
 const Stack = createNativeStackNavigator();
 
 const Page = () => {
     const [user, setUser] = useState();
+    const [timer, setTimer] = useState(new Date());
     const [attendanceData, setAttendanceData] = useState([]);
     const [allUserData, setAllUserData] = useState([]);
+    const [dateFiltered, setDateFiltered] = useState([]);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     useEffect(() => {
         const fetchAllUserData = async () => {
@@ -22,6 +26,7 @@ const Page = () => {
                 const responseAllUser = await axios.get('https://lucetemusical.com/api/v1/users');
                 const userAllData = responseAllUser.data;
                 setAllUserData(userAllData);
+                console.log('유저데이터 가져오기 성공');
             }catch (error) {
                 console.error('전체 유저 데이터를 가져오는 동안 오류 발생:', error);
             }
@@ -31,23 +36,8 @@ const Page = () => {
             try {
                 const responseAttendance = await axios.get('https://lucetemusical.com/api/v1/attendances');
                 const attendanceData = responseAttendance.data;
-                console.log(attendanceData);
+                console.log('출결데이터 가져오기 성공');
 
-                attendanceData.map((item => {
-                    console.log(item.date);                    
-                }));
-
-                const Date = '2023-09-20T08:49:58.000+00:00';
-
-                function filterDate(e) {
-                    if(e.date.substring(0, 9) === Date.substring(0,9)) {
-                        return true;
-                    }
-                }
-        
-                const dateData = allUserData.filter(filterDate);
-
-                console.log(dateData);
                 
                 // 사용자 정보를 가져오는 모든 Axios 요청을 Promise.all로 묶습니다.
                 const combinedData = await Promise.all(attendanceData.map(async (attendanceItem) => {
@@ -76,18 +66,59 @@ const Page = () => {
                 console.error('출결 데이터를 가져오는 동안 오류 발생:', error);
             }
         };
+        
+        const dateFilter = () => {
+            function filterDate(e) {
+                if(e.date.substring(0,10) === timeToString(timer).substring(0,10)) {
+                    return true;
+                }
+            }
+            const dateData = attendanceData.filter(filterDate);
+            setDateFiltered(dateData);
+        }
     
         fetchAllUserData();
         fetchData();
-    }, []);
-      
+        dateFilter();
+        console.log(timer);
+        
+    }, [timer]);
+
+    useEffect(() => {
+        currentTimer();
+        console.log('currentTimer 호출됨');
+    },[]);
 
     
+      
+
+    const currentTimer = () => {
+        const date = new Date();
+        setTimer(date);
+    };
+
+    const timeToString = (date) => {
+        const year = String(date.getFullYear()).padStart(4, "0");
+        const month = String(date.getMonth()+1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return (`${year}-${month}-${day}`);
+    };
+
+    const changeDate = (num) => {
+        var newDay = new Date(timer);
+        newDay.setDate(timer.getDate()+num);
+        setTimer(newDay);
+    }
     
     
     const clickHandler = () => {
         Alert.alert("pressed!");
-    }
+    };
+
+    const confirmDateModal = (date) => {
+        setTimer(date);
+        setDatePickerVisibility(false);
+    };
 
     // 게시판
     const Main = ({ navigation }: any) => {
@@ -98,6 +129,13 @@ const Page = () => {
                         flex: 1,
                         backgroundColor: '#ffffff'
                     }}>
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="date"
+                        onConfirm={confirmDateModal}
+                        onCancel={() => {setDatePickerVisibility(false)}}
+                        date={timer}
+                    />
                     <View
                     style = {{
                         flexDirection: 'row',
@@ -128,15 +166,26 @@ const Page = () => {
                         <TouchableOpacity 
                         style={{
                             marginRight: 15
-                        }}>
+                        }}
+                        onPress={() => {changeDate(-1)}}
+                        >
                             <Icon name="caret-back-circle" size={30} color="#ffffff" />
                         </TouchableOpacity>
+                        <TouchableOpacity style = {{
+                            height: "100%",
+                            justifyContent: 'center'
+                        }}
+                        onPress={()=>{setDatePickerVisibility(true)}}
+                        >
+                        <Text style = {{color: '#ffffff', fontSize: 25, fontWeight: 'bold'}}>{timeToString(timer)}</Text>
+                        </TouchableOpacity>
                         
-                        <Text style = {{color: '#ffffff', fontSize: 25, fontWeight: 'bold'}}>2023-09-23</Text>
                         <TouchableOpacity
                         style={{
                             marginLeft: 15
-                        }}>
+                        }}
+                        onPress={() => {changeDate(1)}}
+                        >
                             <Icon name="caret-forward-circle" size={30} color="#ffffff" />
                         </TouchableOpacity>
                         
@@ -145,7 +194,7 @@ const Page = () => {
                     style = {{
                         paddingHorizontal: 10
                     }}>
-                        {attendanceData.map((item, key) => (
+                        {dateFiltered.map((item, key) => (
                             <Record team = {convertCodeToValue(item.teamCode, 'team_code')} generation = {item.semester} name = {item.name} state = {convertCodeToValue(item.point, 'point')}/>
                         ))}
                     </ScrollView>
