@@ -18,7 +18,7 @@ import DriveScreen from './pages/DriveScreen';
 import SignUp from './pages/user/SignUp';
 import SignIn from './pages/user/SignIn';
 
-//import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 import WebView from 'react-native-webview';
 
